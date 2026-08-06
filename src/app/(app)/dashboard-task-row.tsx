@@ -1,10 +1,20 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
+import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import type { DashboardTaskGroup } from "./dashboard-types";
+import { completeInstanceAction, reopenInstanceAction } from "./actions";
+import type { DashboardCompanyInstance, DashboardTaskGroup } from "./dashboard-types";
+import { NaReasonDialog } from "./na-reason-dialog";
+
+function formatStamp(iso: string): string {
+  return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
+    new Date(iso),
+  );
+}
 
 export function DashboardTaskRow({
   group,
@@ -69,24 +79,91 @@ export function DashboardTaskRow({
       {expanded && (
         <ul className="divide-y border-t px-4">
           {group.instances.map((instance) => (
-            <li key={instance.instanceId} className="flex items-center justify-between py-2 text-sm">
-              <span>{instance.companyName}</span>
-              {instance.status === "open" && (
-                <span className="text-xs text-muted-foreground">Open</span>
-              )}
-              {instance.status === "completed" && (
-                <span className="text-xs text-green-600">
-                  Completed
-                  {instance.statusSetByName ? ` — ${instance.statusSetByName}` : ""}
-                </span>
-              )}
-              {instance.status === "na" && (
-                <span className="text-xs text-muted-foreground">N/A</span>
-              )}
-            </li>
+            <InstanceRow key={instance.instanceId} instance={instance} />
           ))}
         </ul>
       )}
     </div>
+  );
+}
+
+function InstanceRow({ instance }: { instance: DashboardCompanyInstance }) {
+  const [isPending, startTransition] = useTransition();
+  const [naDialogOpen, setNaDialogOpen] = useState(false);
+
+  function handleComplete() {
+    startTransition(async () => {
+      const result = await completeInstanceAction(instance.instanceId);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success(`${instance.companyName} marked complete`);
+    });
+  }
+
+  function handleReopen() {
+    startTransition(async () => {
+      const result = await reopenInstanceAction(instance.instanceId);
+      if (result.error) {
+        toast.error(result.error);
+        return;
+      }
+      toast.success(`${instance.companyName} reopened`);
+    });
+  }
+
+  const stamp =
+    instance.statusSetAt &&
+    `${instance.statusSetByName ?? "Someone"}, ${formatStamp(instance.statusSetAt)}`;
+
+  return (
+    <li className="flex flex-wrap items-center justify-between gap-3 py-2 text-sm">
+      <span>{instance.companyName}</span>
+
+      {instance.status === "open" && (
+        <div className="flex items-center gap-2">
+          <Button
+            size="sm"
+            variant="outline"
+            disabled={isPending}
+            onClick={() => setNaDialogOpen(true)}
+          >
+            N/A
+          </Button>
+          <Button size="sm" disabled={isPending} onClick={handleComplete}>
+            Complete
+          </Button>
+        </div>
+      )}
+
+      {instance.status === "completed" && (
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-green-600">Completed{stamp ? ` — ${stamp}` : ""}</span>
+          <Button size="sm" variant="ghost" disabled={isPending} onClick={handleReopen}>
+            Reopen
+          </Button>
+        </div>
+      )}
+
+      {instance.status === "na" && (
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-muted-foreground">
+            N/A{stamp ? ` — ${stamp}` : ""}
+            {instance.naReason ? ` (${instance.naReason})` : ""}
+          </span>
+          <Button size="sm" variant="ghost" disabled={isPending} onClick={handleReopen}>
+            Reopen
+          </Button>
+        </div>
+      )}
+
+      <NaReasonDialog
+        open={naDialogOpen}
+        onOpenChange={setNaDialogOpen}
+        instanceId={instance.instanceId}
+        companyName={instance.companyName}
+      />
+    </li>
   );
 }
