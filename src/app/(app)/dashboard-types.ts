@@ -14,6 +14,8 @@ export interface DashboardCompanyInstance {
   effectiveAssigneeName: string | null;
   /** Whether *this instance* is effectively assigned to the current viewer. */
   isMine: boolean;
+  /** Set when the viewer has a pending instance-scope reassignment request covering this instance. */
+  pendingReassignmentRequestId: string | null;
 }
 
 /** One row on the dashboard: a task occurrence, fanned out per company (§5, §7.1). */
@@ -32,6 +34,8 @@ export interface DashboardTaskGroup {
   assigneeTeamId: string | null;
   assigneeProfileId: string | null;
   instances: DashboardCompanyInstance[];
+  /** Set when the viewer has a pending task-scope ("whole task") reassignment request for this task. */
+  pendingTaskReassignmentRequestId: string | null;
 }
 
 export interface DashboardFilterOption {

@@ -305,6 +305,80 @@ export type Database = {
           },
         ]
       }
+      reassignment_requests: {
+        Row: {
+          created_at: string
+          decided_at: string | null
+          decided_by_profile_id: string | null
+          decision_note: string | null
+          id: string
+          reason: string
+          requested_by_profile_id: string
+          scope: Database["public"]["Enums"]["reassignment_request_scope"]
+          status: Database["public"]["Enums"]["reassignment_request_status"]
+          suggested_assignee_profile_id: string | null
+          task_id: string
+          task_instance_ids: string[]
+        }
+        Insert: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by_profile_id?: string | null
+          decision_note?: string | null
+          id?: string
+          reason: string
+          requested_by_profile_id: string
+          scope: Database["public"]["Enums"]["reassignment_request_scope"]
+          status?: Database["public"]["Enums"]["reassignment_request_status"]
+          suggested_assignee_profile_id?: string | null
+          task_id: string
+          task_instance_ids?: string[]
+        }
+        Update: {
+          created_at?: string
+          decided_at?: string | null
+          decided_by_profile_id?: string | null
+          decision_note?: string | null
+          id?: string
+          reason?: string
+          requested_by_profile_id?: string
+          scope?: Database["public"]["Enums"]["reassignment_request_scope"]
+          status?: Database["public"]["Enums"]["reassignment_request_status"]
+          suggested_assignee_profile_id?: string | null
+          task_id?: string
+          task_instance_ids?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reassignment_requests_decided_by_profile_id_fkey"
+            columns: ["decided_by_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reassignment_requests_requested_by_profile_id_fkey"
+            columns: ["requested_by_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reassignment_requests_suggested_assignee_profile_id_fkey"
+            columns: ["suggested_assignee_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reassignment_requests_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       settings_events: {
         Row: {
           changed_by: string | null
@@ -583,6 +657,13 @@ export type Database = {
         Args: { p_override_profile_id: string; p_task_id: string }
         Returns: boolean
       }
+      can_update_reassignment_request: {
+        Args: {
+          p_current_status: Database["public"]["Enums"]["reassignment_request_status"]
+          p_requested_by: string
+        }
+        Returns: boolean
+      }
       current_profile_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
@@ -598,6 +679,12 @@ export type Database = {
         | "sick_leave"
         | "parental_leave"
         | "business_travel"
+      reassignment_request_scope: "instance" | "task"
+      reassignment_request_status:
+        | "pending"
+        | "approved"
+        | "rejected"
+        | "withdrawn"
       task_assignee_type: "team" | "person"
       task_event_type:
         | "created"
@@ -749,6 +836,13 @@ export const Constants = {
         "sick_leave",
         "parental_leave",
         "business_travel",
+      ],
+      reassignment_request_scope: ["instance", "task"],
+      reassignment_request_status: [
+        "pending",
+        "approved",
+        "rejected",
+        "withdrawn",
       ],
       task_assignee_type: ["team", "person"],
       task_event_type: [

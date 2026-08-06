@@ -11,6 +11,7 @@ import type {
   DashboardFilterOption,
   DashboardTaskGroup,
 } from "./dashboard-types";
+import type { ReassignmentRequestSummary } from "./reassignment-types";
 
 export default async function DashboardPage() {
   const profile = await requireProfile();
@@ -57,6 +58,14 @@ export default async function DashboardPage() {
     supabase.from("company_dimension_values").select("company_id, dimension_id, dimension_value_id"),
   ]);
 
+  // Own requests only — RLS would let an admin see everyone's, but "My
+  // requests" is specifically the viewer's own (addendum §15.4.1).
+  const { data: myRequestRows } = await supabase
+    .from("reassignment_requests")
+    .select("*")
+    .eq("requested_by_profile_id", profile.id)
+    .order("created_at", { ascending: false });
+
   const taskById = new Map((tasksRes.data ?? []).map((t) => [t.id, t]));
   const companyNameById = new Map((companiesRes.data ?? []).map((c) => [c.id, c.name]));
   const teamNameById = new Map((teamsRes.data ?? []).map((t) => [t.id, t.name]));
@@ -64,6 +73,33 @@ export default async function DashboardPage() {
     (profilesRes.data ?? []).map((p) => [p.id, p.full_name ?? p.email]),
   );
   const dimensionValueLabelById = new Map((dimensionValuesRes.data ?? []).map((v) => [v.id, v.value]));
+
+  // Pending-request lookups for the row chips — only the viewer's own
+  // requests exist in myRequestRows to begin with, so these naturally
+  // only ever flag rows the viewer themselves asked to reassign.
+  const pendingTaskRequestByTaskId = new Map<string, string>();
+  const pendingInstanceRequestByInstanceId = new Map<string, string>();
+  for (const r of myRequestRows ?? []) {
+    if (r.status !== "pending") continue;
+    if (r.scope === "task") pendingTaskRequestByTaskId.set(r.task_id, r.id);
+    else for (const instanceId of r.task_instance_ids) pendingInstanceRequestByInstanceId.set(instanceId, r.id);
+  }
+
+  const myRequests: ReassignmentRequestSummary[] = (myRequestRows ?? []).map((r) => ({
+    id: r.id,
+    taskId: r.task_id,
+    taskTitle: taskById.get(r.task_id)?.title ?? "Unknown task",
+    scope: r.scope,
+    taskInstanceIds: r.task_instance_ids,
+    status: r.status,
+    reason: r.reason,
+    suggestedAssigneeName: r.suggested_assignee_profile_id
+      ? (profileNameById.get(r.suggested_assignee_profile_id) ?? null)
+      : null,
+    createdAt: r.created_at,
+    decidedAt: r.decided_at,
+    decisionNote: r.decision_note,
+  }));
 
   const teamOptions: DashboardFilterOption[] = (teamsRes.data ?? []).map((t) => ({
     id: t.id,
@@ -115,6 +151,7 @@ export default async function DashboardPage() {
         assigneeTeamId: task.assignee_team_id,
         assigneeProfileId: task.assignee_profile_id,
         instances: [],
+        pendingTaskReassignmentRequestId: pendingTaskRequestByTaskId.get(task.id) ?? null,
       };
       groups.set(key, group);
     }
@@ -151,6 +188,7 @@ export default async function DashboardPage() {
         ? (profileNameById.get(effective.profileId) ?? null)
         : null,
       isMine: instanceIsMine,
+      pendingReassignmentRequestId: pendingInstanceRequestByInstanceId.get(instance.id) ?? null,
     };
     group.instances.push(companyInstance);
     if (instanceIsMine) group.isMine = true;
@@ -177,10 +215,12 @@ export default async function DashboardPage() {
   ).length;
 
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
+  const isAdmin = profile.role === "admin" || profile.role === "master_admin";
 
   return (
     <DashboardView
       currentProfileId={profile.id}
+      isAdmin={isAdmin}
       firstName={firstName}
       todayCount={todayOpenMineCount}
       overdueCount={overdueMineCount}
@@ -190,6 +230,7 @@ export default async function DashboardPage() {
       assigneeOptions={assigneeOptions}
       dimensionOptions={dimensionOptions}
       companyDimensionValues={companyDimensionValues}
+      myRequests={myRequests}
     />
   );
 }

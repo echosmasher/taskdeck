@@ -13,6 +13,8 @@ import type {
   DashboardFilterOption,
   DashboardTaskGroup,
 } from "./dashboard-types";
+import { MyRequestsPanel } from "./my-requests-panel";
+import type { ReassignmentRequestSummary } from "./reassignment-types";
 
 type DashboardScope = "mine" | "all";
 
@@ -20,6 +22,7 @@ const EMPTY_FILTERS: DashboardFilterState = { teamId: null, assigneeId: null, di
 
 export function DashboardView({
   currentProfileId,
+  isAdmin,
   firstName,
   todayCount,
   overdueCount,
@@ -29,8 +32,10 @@ export function DashboardView({
   assigneeOptions,
   dimensionOptions,
   companyDimensionValues,
+  myRequests,
 }: {
   currentProfileId: string;
+  isAdmin: boolean;
   firstName: string;
   todayCount: number;
   overdueCount: number;
@@ -40,6 +45,7 @@ export function DashboardView({
   assigneeOptions: DashboardFilterOption[];
   dimensionOptions: DashboardDimensionOption[];
   companyDimensionValues: CompanyDimensionValues;
+  myRequests: ReassignmentRequestSummary[];
 }) {
   const [period, setPeriod] = useState<DashboardPeriod>("today");
   const [scope, setScope] = useState<DashboardScope>("mine");
@@ -127,6 +133,8 @@ export function DashboardView({
         />
       )}
 
+      {!isAdmin && <MyRequestsPanel requests={myRequests} />}
+
       <div className="flex flex-col gap-3">
         {visible.length === 0 && (
           <p className="text-muted-foreground">No tasks in this view.</p>
@@ -137,6 +145,8 @@ export function DashboardView({
             group={group}
             todayISO={todayISO}
             currentProfileId={currentProfileId}
+            isAdmin={isAdmin}
+            assigneeOptions={assigneeOptions}
           />
         ))}
       </div>

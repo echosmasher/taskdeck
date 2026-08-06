@@ -8,8 +8,9 @@ import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { completeInstanceAction, reopenInstanceAction } from "./actions";
 import { CompleteRemainingDialog } from "./complete-remaining-dialog";
-import type { DashboardCompanyInstance, DashboardTaskGroup } from "./dashboard-types";
+import type { DashboardCompanyInstance, DashboardFilterOption, DashboardTaskGroup } from "./dashboard-types";
 import { NaReasonDialog } from "./na-reason-dialog";
+import { RequestReassignmentDialog } from "./request-reassignment-dialog";
 
 function formatStamp(iso: string): string {
   return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
@@ -21,13 +22,18 @@ export function DashboardTaskRow({
   group,
   todayISO,
   currentProfileId,
+  isAdmin,
+  assigneeOptions,
 }: {
   group: DashboardTaskGroup;
   todayISO: string;
   currentProfileId: string;
+  isAdmin: boolean;
+  assigneeOptions: DashboardFilterOption[];
 }) {
   const [expanded, setExpanded] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
+  const [requestOpen, setRequestOpen] = useState(false);
 
   const total = group.instances.length;
   const resolved = group.instances.filter((i) => i.status !== "open").length;
@@ -66,10 +72,19 @@ export function DashboardTaskRow({
                 </Badge>
               ))}
               {isOverdue && <Badge variant="destructive">Overdue</Badge>}
+              {group.pendingTaskReassignmentRequestId && (
+                <Badge variant="outline">Reassignment requested</Badge>
+              )}
             </div>
             <p className="mt-1 text-xs text-muted-foreground">Due {group.dueDate}</p>
           </div>
         </button>
+
+        {!isAdmin && !group.pendingTaskReassignmentRequestId && (
+          <Button size="sm" variant="ghost" onClick={() => setRequestOpen(true)}>
+            Request reassignment
+          </Button>
+        )}
 
         {!allResolved && total > 0 && (
           <Button size="sm" variant="outline" onClick={() => setBulkOpen(true)}>
@@ -111,6 +126,19 @@ export function DashboardTaskRow({
           instanceId: i.instanceId,
           companyName: i.companyName,
         }))}
+      />
+
+      <RequestReassignmentDialog
+        open={requestOpen}
+        onOpenChange={setRequestOpen}
+        taskId={group.taskId}
+        taskTitle={group.title}
+        instances={group.instances.map((i) => ({
+          instanceId: i.instanceId,
+          companyName: i.companyName,
+          isMine: i.isMine,
+        }))}
+        assigneeOptions={assigneeOptions}
       />
     </div>
   );
@@ -167,6 +195,11 @@ function InstanceRow({
         {overrideLabel && (
           <Badge variant="outline" className="text-xs">
             {overrideLabel}
+          </Badge>
+        )}
+        {instance.pendingReassignmentRequestId && (
+          <Badge variant="outline" className="text-xs">
+            Reassignment requested
           </Badge>
         )}
       </div>
