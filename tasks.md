@@ -17,7 +17,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 11. Build Tasks admin page with create/edit dialog
 - [x] 12. Add copy-previous-task, reassign, and archive actions
 - [x] 13. Implement idempotent instance generation with scope resolution
-- [ ] 14. Build Dashboard shell with greeting, toggles, and grouped task rows — blocked by 13
+- [x] 14. Build Dashboard shell with greeting, toggles, and grouped task rows
 - [ ] 15. Add per-company checklist with complete/N-A/reopen and audit events — blocked by 14
 - [ ] 16. Add bulk complete, overdue banner, and all-tasks filters — blocked by 15
 - [ ] 17. Build CSV import for companies with validation preview

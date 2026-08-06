@@ -7,8 +7,11 @@ import {
   isOverdue,
   isOverdueInstance,
   isWorkingDay,
+  monthRange,
   nthWorkingDayOfMonth,
+  periodRange,
   toISODate,
+  weekRange,
   weeklyOccurrencesInRange,
 } from "./dates";
 
@@ -170,6 +173,50 @@ describe("isOverdue", () => {
 
   it("is false when due date is after today", () => {
     expect(isOverdue("2026-04-03", "2026-04-02")).toBe(false);
+  });
+});
+
+describe("weekRange", () => {
+  it("spans Monday to Sunday for a mid-week date", () => {
+    // 2026-04-08 is a Wednesday
+    expect(weekRange("2026-04-08")).toEqual({ start: "2026-04-06", end: "2026-04-12" });
+  });
+
+  it("treats Sunday as the end of the week it started on Monday", () => {
+    expect(weekRange("2026-04-12")).toEqual({ start: "2026-04-06", end: "2026-04-12" });
+  });
+
+  it("treats Monday as the start of its own week", () => {
+    expect(weekRange("2026-04-06")).toEqual({ start: "2026-04-06", end: "2026-04-12" });
+  });
+
+  it("handles a week that crosses a month boundary", () => {
+    // 2026-04-30 is a Thursday; that week runs Mon 27 Apr - Sun 3 May.
+    expect(weekRange("2026-04-30")).toEqual({ start: "2026-04-27", end: "2026-05-03" });
+  });
+});
+
+describe("monthRange", () => {
+  it("spans the 1st to the last day of the month", () => {
+    expect(monthRange("2026-04-15")).toEqual({ start: "2026-04-01", end: "2026-04-30" });
+  });
+
+  it("handles February in a leap year", () => {
+    expect(monthRange("2028-02-10")).toEqual({ start: "2028-02-01", end: "2028-02-29" });
+  });
+});
+
+describe("periodRange", () => {
+  it("today is a single-day range", () => {
+    expect(periodRange("today", "2026-04-08")).toEqual({ start: "2026-04-08", end: "2026-04-08" });
+  });
+
+  it("week delegates to weekRange", () => {
+    expect(periodRange("week", "2026-04-08")).toEqual(weekRange("2026-04-08"));
+  });
+
+  it("month delegates to monthRange", () => {
+    expect(periodRange("month", "2026-04-08")).toEqual(monthRange("2026-04-08"));
   });
 });
 

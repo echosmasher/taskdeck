@@ -103,6 +103,37 @@ export function getTodayInTimezone(timezone: string, now: Date = new Date()): st
   }).format(now);
 }
 
+/** The Monday–Sunday week containing `dateISO`, as an inclusive ISO range. */
+export function weekRange(dateISO: string): { start: string; end: string } {
+  const date = fromISODate(dateISO);
+  const weekday = date.getUTCDay(); // 0 = Sunday
+  const mondayOffset = weekday === 0 ? -6 : 1 - weekday;
+  const start = new Date(
+    Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + mondayOffset),
+  );
+  const end = new Date(Date.UTC(start.getUTCFullYear(), start.getUTCMonth(), start.getUTCDate() + 6));
+  return { start: toISODate(start), end: toISODate(end) };
+}
+
+/** The calendar month containing `dateISO`, as an inclusive ISO range. */
+export function monthRange(dateISO: string): { start: string; end: string } {
+  const date = fromISODate(dateISO);
+  const year = date.getUTCFullYear();
+  const month = date.getUTCMonth() + 1;
+  const start = new Date(Date.UTC(year, month - 1, 1));
+  const end = new Date(Date.UTC(year, month - 1, daysInMonth(year, month)));
+  return { start: toISODate(start), end: toISODate(end) };
+}
+
+export type DashboardPeriod = "today" | "week" | "month";
+
+/** Due-date range for the dashboard's Today/This week/This month toggle (§7.1). */
+export function periodRange(period: DashboardPeriod, todayISO: string): { start: string; end: string } {
+  if (period === "today") return { start: todayISO, end: todayISO };
+  if (period === "week") return weekRange(todayISO);
+  return monthRange(todayISO);
+}
+
 /** Pure date comparison — both args are YYYY-MM-DD strings. */
 export function isOverdue(dueDateISO: string, todayISO: string): boolean {
   return dueDateISO < todayISO;
