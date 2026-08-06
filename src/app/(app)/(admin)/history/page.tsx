@@ -1,4 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAppTimezone } from "@/lib/app-settings";
+import { getTodayInTimezone } from "@/lib/dates";
 import { HistoryTable } from "./history-table";
 import type { FilterOption, HistoryEvent, HistoryRow } from "./types";
 
@@ -77,6 +79,7 @@ export default async function HistoryPage() {
         taskOptions={taskOptions}
         companyOptions={companyOptions}
         assigneeOptions={assigneeOptions}
+        todayISO={getTodayInTimezone(await getAppTimezone())}
       />
     </div>
   );

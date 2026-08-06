@@ -1,6 +1,6 @@
 import { requireProfile } from "@/lib/auth/require-profile";
 import { createClient } from "@/lib/supabase/server";
-import { APP_TIMEZONE } from "@/lib/config";
+import { getAppTimezone } from "@/lib/app-settings";
 import { getTodayInTimezone, monthRange, weekRange } from "@/lib/dates";
 import { DashboardView } from "./dashboard-view";
 import type {
@@ -15,7 +15,7 @@ export default async function DashboardPage() {
   const profile = await requireProfile();
   const supabase = await createClient();
 
-  const todayISO = getTodayInTimezone(APP_TIMEZONE);
+  const todayISO = getTodayInTimezone(await getAppTimezone());
   const week = weekRange(todayISO);
   const month = monthRange(todayISO);
   // The client-side period toggle (Today/This week/This month) filters

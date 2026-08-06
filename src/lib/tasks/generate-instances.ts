@@ -1,6 +1,6 @@
 import "server-only";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { APP_TIMEZONE } from "@/lib/config";
+import { DEFAULT_APP_TIMEZONE } from "@/lib/config";
 import { fromISODate, getTodayInTimezone } from "@/lib/dates";
 import { companyMatchesScope } from "./scope-match";
 import { dueDateForOccurrence, occurrencesInWindow } from "./occurrences";
@@ -25,7 +25,11 @@ const GENERATION_WINDOW_DAYS = 60;
 export async function generateTaskInstances(): Promise<{ attempted: number; created: number }> {
   const admin = createAdminClient();
 
-  const todayISO = getTodayInTimezone(APP_TIMEZONE);
+  // Runs as service-role (no user session for a cron-triggered call to
+  // ride along on), so the timezone setting is read directly here
+  // rather than through the cookie-based getAppSettings() helper.
+  const { data: settings } = await admin.from("app_settings").select("timezone").single();
+  const todayISO = getTodayInTimezone(settings?.timezone ?? DEFAULT_APP_TIMEZONE);
   const windowStart = fromISODate(todayISO);
   const windowEnd = new Date(
     Date.UTC(

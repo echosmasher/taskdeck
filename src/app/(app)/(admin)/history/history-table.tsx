@@ -19,8 +19,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { APP_TIMEZONE } from "@/lib/config";
-import { getTodayInTimezone } from "@/lib/dates";
 import { cn } from "@/lib/utils";
 import { describeEvent, formatTimestamp } from "./history-format";
 import type { FilterOption, HistoryEvent, HistoryRow } from "./types";
@@ -30,24 +28,22 @@ type StatusFilter = "all" | "completed" | "na";
 type SortKey = "dueDate" | "companyName" | "statusSetAt";
 type SortDir = "asc" | "desc";
 
-function currentMonth(): string {
-  return getTodayInTimezone(APP_TIMEZONE).slice(0, 7);
-}
-
 export function HistoryTable({
   rows,
   eventsByInstanceId,
   taskOptions,
   companyOptions,
   assigneeOptions,
+  todayISO,
 }: {
   rows: HistoryRow[];
   eventsByInstanceId: Record<string, HistoryEvent[]>;
   taskOptions: FilterOption[];
   companyOptions: FilterOption[];
   assigneeOptions: FilterOption[];
+  todayISO: string;
 }) {
-  const [month, setMonth] = useState(currentMonth());
+  const [month, setMonth] = useState(todayISO.slice(0, 7));
   const [companyId, setCompanyId] = useState<string | null>(null);
   const [taskId, setTaskId] = useState<string | null>(null);
   const [status, setStatus] = useState<StatusFilter>("all");

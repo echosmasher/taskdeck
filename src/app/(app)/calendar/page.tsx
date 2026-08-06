@@ -1,6 +1,6 @@
 import { requireProfile } from "@/lib/auth/require-profile";
 import { createClient } from "@/lib/supabase/server";
-import { APP_TIMEZONE } from "@/lib/config";
+import { getAppTimezone } from "@/lib/app-settings";
 import { getTodayInTimezone } from "@/lib/dates";
 import { CalendarView } from "./calendar-view";
 import type { CalendarMember, CalendarTeam } from "./types";
@@ -30,6 +30,7 @@ export default async function CalendarPage() {
 
   const teams: CalendarTeam[] = (teamsRes.data ?? []).map((t) => ({ id: t.id, name: t.name }));
   const isAdmin = profile.role === "admin" || profile.role === "master_admin";
+  const todayISO = getTodayInTimezone(await getAppTimezone());
 
   return (
     <div className="flex min-w-0 flex-col gap-6">
@@ -44,7 +45,7 @@ export default async function CalendarPage() {
       <CalendarView
         currentProfileId={profile.id}
         isAdmin={isAdmin}
-        todayISO={getTodayInTimezone(APP_TIMEZONE)}
+        todayISO={todayISO}
         members={members}
         teams={teams}
         entries={entriesRes.data ?? []}

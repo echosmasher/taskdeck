@@ -10,5 +10,6 @@ export const NAV_ITEMS: NavItem[] = [
   { href: "/history", label: "History", adminOnly: true },
   { href: "/companies", label: "Companies", adminOnly: true },
   { href: "/teams", label: "Teams & members", adminOnly: true },
+  { href: "/settings", label: "Settings", adminOnly: true },
   { href: "/calendar", label: "Office calendar", adminOnly: false },
 ];

@@ -34,6 +34,44 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_settings: {
+        Row: {
+          calendar_edit_permission: Database["public"]["Enums"]["calendar_edit_permission"]
+          id: boolean
+          long_absence_min_days: number
+          long_absence_statuses: string[]
+          timezone: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          calendar_edit_permission?: Database["public"]["Enums"]["calendar_edit_permission"]
+          id?: boolean
+          long_absence_min_days?: number
+          long_absence_statuses?: string[]
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          calendar_edit_permission?: Database["public"]["Enums"]["calendar_edit_permission"]
+          id?: boolean
+          long_absence_min_days?: number
+          long_absence_statuses?: string[]
+          timezone?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "app_settings_updated_by_fkey"
+            columns: ["updated_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       calendar_entries: {
         Row: {
           date: string
@@ -250,6 +288,35 @@ export type Database = {
             columns: ["team_id"]
             isOneToOne: false
             referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      settings_events: {
+        Row: {
+          changed_by: string | null
+          changes: Json
+          id: string
+          occurred_at: string
+        }
+        Insert: {
+          changed_by?: string | null
+          changes: Json
+          id?: string
+          occurred_at?: string
+        }
+        Update: {
+          changed_by?: string | null
+          changes?: Json
+          id?: string
+          occurred_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "settings_events_changed_by_fkey"
+            columns: ["changed_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
         ]
@@ -479,6 +546,7 @@ export type Database = {
       }
     }
     Enums: {
+      calendar_edit_permission: "admins_only" | "members_own" | "members_all"
       calendar_entry_status:
         | "in_office"
         | "remote"
@@ -627,6 +695,7 @@ export const Constants = {
   },
   public: {
     Enums: {
+      calendar_edit_permission: ["admins_only", "members_own", "members_all"],
       calendar_entry_status: [
         "in_office",
         "remote",
