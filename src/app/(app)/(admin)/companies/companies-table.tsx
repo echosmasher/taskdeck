@@ -23,17 +23,21 @@ import {
 import { setCompanyArchivedAction } from "./actions";
 import { CompanyFormDialog } from "./company-form-dialog";
 import { DeleteCompanyDialog } from "./delete-company-dialog";
+import { ManageDimensionsDialog } from "./dimensions/manage-dimensions-dialog";
 import type { CompanyWithDimensions, DimensionWithValues } from "./types";
 
 export function CompaniesTable({
   companies,
   dimensions,
+  activeCompanies,
 }: {
   companies: CompanyWithDimensions[];
   dimensions: DimensionWithValues[];
+  activeCompanies: { id: string; name: string }[];
 }) {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [manageDimensionsOpen, setManageDimensionsOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<CompanyWithDimensions | null>(null);
   const [deletingCompany, setDeletingCompany] = useState<CompanyWithDimensions | null>(null);
   const [, startTransition] = useTransition();
@@ -69,7 +73,12 @@ export function CompaniesTable({
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-xs"
         />
-        <Button onClick={() => setCreateOpen(true)}>New company</Button>
+        <div className="flex gap-2">
+          <Button variant="outline" onClick={() => setManageDimensionsOpen(true)}>
+            Manage dimensions
+          </Button>
+          <Button onClick={() => setCreateOpen(true)}>New company</Button>
+        </div>
       </div>
 
       <Table>
@@ -131,6 +140,13 @@ export function CompaniesTable({
       </Table>
 
       <CompanyFormDialog open={createOpen} onOpenChange={setCreateOpen} dimensions={dimensions} />
+
+      <ManageDimensionsDialog
+        open={manageDimensionsOpen}
+        onOpenChange={setManageDimensionsOpen}
+        dimensions={dimensions}
+        activeCompanies={activeCompanies}
+      />
 
       {editingCompany && (
         <CompanyFormDialog

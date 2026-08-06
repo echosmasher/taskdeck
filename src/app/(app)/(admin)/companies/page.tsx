@@ -1,16 +1,22 @@
 import { createClient } from "@/lib/supabase/server";
 import { CompaniesTable } from "./companies-table";
+import { IncompleteDataWarning } from "./incomplete-data-warning";
 import type { CompanyWithDimensions, DimensionWithValues } from "./types";
 
 export default async function CompaniesPage() {
   const supabase = await createClient();
 
-  const [companiesRes, dimensionsRes, dimensionValuesRes, cdvRes] = await Promise.all([
-    supabase.from("companies").select("id, name, is_archived").order("name"),
-    supabase.from("dimensions").select("id, name").order("created_at"),
-    supabase.from("dimension_values").select("id, dimension_id, value").order("value"),
-    supabase.from("company_dimension_values").select("company_id, dimension_id, dimension_value_id"),
-  ]);
+  const [companiesRes, dimensionsRes, dimensionValuesRes, cdvRes, missingRes] = await Promise.all(
+    [
+      supabase.from("companies").select("id, name, is_archived").order("name"),
+      supabase.from("dimensions").select("id, name").order("created_at"),
+      supabase.from("dimension_values").select("id, dimension_id, value").order("value"),
+      supabase
+        .from("company_dimension_values")
+        .select("company_id, dimension_id, dimension_value_id"),
+      supabase.from("companies_missing_dimension_values").select("*"),
+    ],
+  );
 
   const dimensions: DimensionWithValues[] = (dimensionsRes.data ?? []).map((dim) => ({
     id: dim.id,
@@ -31,6 +37,15 @@ export default async function CompaniesPage() {
     ),
   }));
 
+  const activeCompanies = companies
+    .filter((c) => !c.is_archived)
+    .map((c) => ({ id: c.id, name: c.name }));
+
+  const missingRows = (missingRes.data ?? []).filter(
+    (row): row is NonNullable<typeof row> & Record<"company_id" | "company_name" | "dimension_id" | "dimension_name", string> =>
+      !!row.company_id && !!row.company_name && !!row.dimension_id && !!row.dimension_name,
+  );
+
   return (
     <div className="flex flex-col gap-6">
       <div>
@@ -39,7 +54,8 @@ export default async function CompaniesPage() {
           Every dimension must be set for a company before it can be saved.
         </p>
       </div>
-      <CompaniesTable companies={companies} dimensions={dimensions} />
+      <IncompleteDataWarning rows={missingRows} />
+      <CompaniesTable companies={companies} dimensions={dimensions} activeCompanies={activeCompanies} />
     </div>
   );
 }

@@ -80,6 +80,20 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "company_dimension_values_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies_missing_dimension_values"
+            referencedColumns: ["company_id"]
+          },
+          {
+            foreignKeyName: "company_dimension_values_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "companies_missing_dimension_values"
+            referencedColumns: ["dimension_id"]
+          },
+          {
             foreignKeyName: "company_dimension_values_dimension_id_fkey"
             columns: ["dimension_id"]
             isOneToOne: false
@@ -115,6 +129,13 @@ export type Database = {
           value?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "dimension_values_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "companies_missing_dimension_values"
+            referencedColumns: ["dimension_id"]
+          },
           {
             foreignKeyName: "dimension_values_dimension_id_fkey"
             columns: ["dimension_id"]
@@ -206,7 +227,15 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      companies_missing_dimension_values: {
+        Row: {
+          company_id: string | null
+          company_name: string | null
+          dimension_id: string | null
+          dimension_name: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       current_profile_role: {
