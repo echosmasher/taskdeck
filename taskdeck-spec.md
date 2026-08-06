@@ -184,3 +184,11 @@ The public deploy must let a recruiter explore in under 30 seconds with zero sig
 10. Polish: responsive pass, accessibility pass, E2E smoke tests, README, CI, Vercel deploy.
 
 Each step should end in a working, committed, deployable state.
+
+## 14. Clarifications (post-1.0)
+
+Resolved during implementation kickoff (2026-08-06):
+
+- **Scope resolution is AND-across-dimensions, OR-within-dimension.** `scope = [Norway, Sweden, Comfort]` matches companies that are (Norway OR Sweden) AND Comfort. This is the only reading consistent with §4's one-value-per-company-per-dimension constraint — pure AND across raw values would make any multi-value-same-dimension scope match nothing.
+- **`deadline_rule` is a nullable override, not a parallel spec.** For the large majority of tasks, the due date *is* the recurrence occurrence date (e.g. "25th of each month" is both when it recurs and when it's due). `deadline_rule` only needs to be set when the deadline differs from the occurrence date — e.g. an offset of N working/calendar days after generation. Leave it null and the instance's `due_date` equals the occurrence date.
+- **All dimensions are required when creating a new company.** A company cannot be saved unless every currently-defined dimension has a value selected. The §7.4 "fill later" flow is narrower than it first reads: it applies only to the guided **backfill** prompted when an admin adds a *new* dimension after companies already exist — not to ordinary company creation, which is always fully validated.
