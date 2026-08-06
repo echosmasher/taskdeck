@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Teams &amp; Members - TaskHub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "surface-container-low": "#f3f3fe",
+                        "on-surface-variant": "#434655",
+                        "surface": "#faf8ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-variant": "#e1e2ed",
+                        "tertiary": "#525657",
+                        "surface-dim": "#d9d9e5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#b4c5ff",
+                        "outline": "#737686",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "surface-container-highest": "#e1e2ed",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#2e3039",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-high": "#e7e7f3",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f0f0fb",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#004ac6",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#eff1f3",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#ededf9",
+                        "on-surface": "#191b23",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "secondary-container": "#d5e3fc",
+                        "tertiary-container": "#6b6e70",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "secondary": "#515f74",
+                        "on-primary-container": "#eeefff",
+                        "on-background": "#191b23",
+                        "on-secondary-container": "#57657a"
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    spacing: {
+                        "gutter": "1.5rem",
+                        "sidebar-width": "260px",
+                        "stack-xs": "0.25rem",
+                        "margin-page": "2rem",
+                        "container-max": "1440px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    fontFamily: {
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md-mobile": ["Inter"]
+                    },
+                    fontSize: {
+                        "headline-sm": ["20px", { lineHeight: "28px", fontWeight: "600" }],
+                        "body-sm": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "display-lg": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "headline-md": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "600" }],
+                        "body-md": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+                        "title-lg": ["18px", { lineHeight: "24px", fontWeight: "600" }],
+                        "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "600" }],
+                        "label-sm": ["11px", { lineHeight: "14px", fontWeight: "500" }],
+                        "headline-md-mobile": ["20px", { lineHeight: "28px", fontWeight: "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ghost-border {
+            border: 1px solid rgba(226, 232, 240, 0.5); /* #E2E8F0 */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased overflow-x-hidden min-h-screen">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-[260px] bg-surface-container-lowest border-r border-outline-variant flex flex-col py-gutter px-4 z-20 hidden md:flex">
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-on-primary font-bold">
+<span class="material-symbols-outlined">domain</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TaskHub</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Corporate Admin</p>
+</div>
+</div>
+<div class="flex flex-col gap-1 flex-1">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-title-lg text-title-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined">assignment</span>
+<span class="font-title-lg text-title-lg">Tasks</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined">business</span>
+<span class="font-title-lg text-title-lg">Companies</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-full transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-title-lg text-title-lg">Teams &amp; Members</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="font-title-lg text-title-lg">OOO Calendar</span>
+</a>
+</div>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-title-lg text-title-lg">Settings</span>
+</a>
+</div>
+</nav>
+<!-- TopNavBar -->
+<header class="fixed top-0 ml-[260px] w-[calc(100%-260px)] h-16 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter z-10 hidden md:flex">
+<div class="font-title-lg text-title-lg font-bold text-on-surface">
+            TaskHub <span class="font-body-sm text-body-sm font-normal text-on-surface-variant ml-2">/ Teams &amp; Members</span>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-primary w-64 border-none text-on-surface" placeholder="Search members or teams..." type="text"/>
+</div>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant ml-2">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate admin user in a modern office setting, bright lighting, high quality." src="https://lh3.googleusercontent.com/aida-public/AB6AXuATcl09AF4kIazau2fF5eXAeRS5-sqHxhMlwKWnVye96dEFcgTWyJYa9K9SfEmstI_6NmtLrMKBzr1wTpggJZRnurrVyaQ6v0p_wjbVjtmTI5papFE5UsSO1KDJQyWlVqMsuitKa8yeBJ6aym8YlQrSo2rtUCwD_DYJlWSmRISScGrCA0bflzSyx1xK8OqPSj-3AOksY0NXZ4W6GDYypqjiN2EIXftVVHMYUkqobL6WF_LKAU23VmeK"/>
+</div>
+</div>
+</header>
+<!-- Main Content Area -->
+<main class="md:ml-[260px] md:mt-16 p-margin-page min-h-screen">
+<!-- Header Actions -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-stack-lg gap-4">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Teams &amp; Members</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage departmental structure and personnel access.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 border border-outline rounded text-on-surface hover:bg-surface-container transition-colors font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">security</span>
+                    Assign Admin Access
+                </button>
+<button class="px-4 py-2 bg-primary text-on-primary rounded hover:bg-primary/90 transition-colors font-label-md text-label-md flex items-center gap-2">
+<span class="material-symbols-outlined text-sm">person_add</span>
+                    Add Member
+                </button>
+</div>
+</div>
+<div class="grid grid-cols-1 xl:grid-cols-12 gap-gutter">
+<!-- Teams Section (Left/Top) -->
+<section class="xl:col-span-4 flex flex-col gap-stack-md">
+<div class="flex justify-between items-center mb-2">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Active Teams</h3>
+<button class="text-primary hover:underline font-label-sm text-label-sm">Manage</button>
+</div>
+<!-- Team Card 1 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant ghost-border hover:shadow-sm transition-all group relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-title-lg text-title-lg text-on-surface group-hover:text-primary transition-colors">Accounts Receivable</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">A/R Department</p>
+</div>
+<div class="bg-secondary-container text-on-secondary-container px-2 py-1 rounded font-label-sm text-label-sm">
+                            12 Members
+                        </div>
+</div>
+<div class="flex -space-x-2 overflow-hidden mt-4">
+<img alt="" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest" data-alt="Small circular avatar of a professional office worker, smiling, soft office background, high res." src="https://lh3.googleusercontent.com/aida-public/AB6AXuACkawwR0rasaGBqSsk-rezlxWZFz7lNfeBJ0hNvuUo2mTnnqCZZqzSxMpZG5dCTvxHPxQzuuQe5dLICE4dTf-wo_pMPxZk_UP6oQM4EWvfp3zWKFcaAgr0bDUM2KGFJRJ1Vipjy226gpa8xagM21K66acYRQDLW850nHcRxprbgEkQ8pFAGX_y3XF7yFk3Pyh3Nt8atQNSP_02gCCLVqFvWjwfrMAK6jhPxEUAnhpQe9cHT3U4RmOi"/>
+<img alt="" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest" data-alt="Small circular avatar of a corporate manager, glasses, neutral expression, light background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDrykN_MlBnaExE3zAOKGUezmdXgN9mCq75JisYxt9Tyo1zdPvW6YESZB8YSWj5t6aLqx3FIK1-Sa4Oj6uHYFy1qt_bt36ldwlTzUzWVguW1yCnqWfxJSrqkmakFCceCAM_Tr61OWoGLxhaaEdsdS8Ma63XaA6hpbSxcR97Hv7X9YhkqHU2LrEhX-slZ_kVOFX9elNvuG-QiXJGfgnMw4rETsLwsdnA4PvHit-ZzRGZ6RwZDGCqom-d"/>
+<img alt="" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest" data-alt="Small circular avatar of a young professional, bright lighting, modern corporate style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCNgDJ0UBRZRweF6lYctov6jzv8DO_zDJUhr5D2M9_CzB_5PYva4t4v7_FG5Lg4UM5vdSJp7M-KEtMkbPWHSPdiS5nFSj9ePwW8vDC6I68TyUODWut9hp6P_XS7ITZqc4kNkpTi29miU_8dV9c5gDulZUaGVhF_gF9V1m1QE7ohmFU5gSqhomUlGn-knl6k9EHfrhiCpUm4prxtqMPcikHn3JAHhdKmKuOSpj5lgWN2WItIYgJL4lLc"/>
+<div class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest bg-surface-variant flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant">+9</div>
+</div>
+</div>
+<!-- Team Card 2 -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-outline-variant ghost-border hover:shadow-sm transition-all group relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-tertiary"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-title-lg text-title-lg text-on-surface group-hover:text-primary transition-colors">Accounts Payable</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">A/P Department</p>
+</div>
+<div class="bg-surface-variant text-on-surface-variant px-2 py-1 rounded font-label-sm text-label-sm">
+                            8 Members
+                        </div>
+</div>
+<div class="flex -space-x-2 overflow-hidden mt-4">
+<img alt="" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest" data-alt="Small avatar of an accountant, serious expression, office setting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA7BcGIGp1KgkF3APdI6IgKdUW1EyheMY2i6G7cvcwcFxl_Yjtx9LEO2uMEITSOGpmIS0E67ifaKy4X1b5nTxTtOxcV4WkvEoLaZLf9z0y4pENc3RFWjOGqzo_chNwBE7IX9Jh7IFZMrfoWjwoUyiQZN9zQ1wc6k_FuHEfaoq-JwtM5ePrVKiBhYzpmygfuH9qV-NM4qv992QoMaqYmhwIlxg9hFsQotmdxRbiXfhPS5VynhbJuAvPE"/>
+<img alt="" class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest" data-alt="Small avatar of a female finance professional, confident look." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCn8Q1Tra7bkOApSsQNtEdtaA_InyA9aOXq-QuDb5hBhs1RPihO4dpCclUefzEb7NlY3XcvvYtsZzWZnIm52yy1N0bkWk7SJKRd7YE8f9krE2czr_fQ5Gl_aDLXAoftpidCz-fMxiqc0Xc6md_DV1Q_Gqhb2INW5XAwtx5crMQfM_sBEnWWfwigi6Uu-z5s-HkKBrf7TB7t0bm43g-pmW_G5x3m94xkslQFO1__2zxiTIIU0GWa1jE2"/>
+<div class="inline-block h-8 w-8 rounded-full ring-2 ring-surface-container-lowest bg-surface-variant flex items-center justify-center font-label-sm text-label-sm text-on-surface-variant">+6</div>
+</div>
+</div>
+<!-- Team Card 3 (Empty Warning) -->
+<div class="bg-surface-container-lowest p-5 rounded-xl border border-error-container bg-error-container/10 hover:shadow-sm transition-all group relative overflow-hidden">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<div class="flex justify-between items-start mb-4">
+<div>
+<h4 class="font-title-lg text-title-lg text-on-surface">Record to Report</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-1">R2R Department</p>
+</div>
+<div class="text-error flex items-center gap-1">
+<span class="material-symbols-outlined text-sm" style="font-variation-settings: 'FILL' 1;">warning</span>
+<span class="font-label-sm text-label-sm">Empty</span>
+</div>
+</div>
+<div class="mt-4 flex items-center gap-2 text-on-surface-variant font-body-sm text-body-sm">
+<span class="material-symbols-outlined text-sm">person_off</span>
+                        No active members assigned.
+                    </div>
+<button class="mt-3 text-primary font-label-sm text-label-sm hover:underline flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">add</span> Assign Staff
+                    </button>
+</div>
+<!-- Create New Team -->
+<button class="w-full border-2 border-dashed border-outline-variant rounded-xl p-5 text-on-surface-variant hover:text-primary hover:border-primary hover:bg-surface-container-low transition-all flex flex-col items-center justify-center gap-2">
+<span class="material-symbols-outlined text-3xl">add_circle</span>
+<span class="font-title-lg text-title-lg">Create New Team</span>
+</button>
+</section>
+<!-- Members Section (Right/Bottom) -->
+<section class="xl:col-span-8">
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant ghost-border overflow-hidden flex flex-col h-full">
+<!-- Table Header Controls -->
+<div class="p-4 border-b border-outline-variant flex justify-between items-center bg-surface-bright">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Directory</h3>
+<div class="flex gap-2">
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span>
+</button>
+<button class="p-2 border border-outline-variant rounded hover:bg-surface-container text-on-surface-variant transition-colors">
+<span class="material-symbols-outlined text-sm">more_vert</span>
+</button>
+</div>
+</div>
+<!-- Data Table -->
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-[#F1F5F9] border-b border-outline-variant">
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Member</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Position</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Team</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="px-4 py-3 font-label-md text-label-md text-on-surface-variant uppercase tracking-wider text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors h-12">
+<td class="px-4 py-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-sm">JS</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Jane Smith</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">jane.s@taskhub.co</div>
+</div>
+</div>
+</td>
+<td class="px-4 py-2 font-body-sm text-body-sm text-on-surface">Senior Analyst</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-variant text-on-surface-variant">Accounts Receivable</span>
+</td>
+<td class="px-4 py-2">
+<div class="flex items-center gap-1.5 text-primary">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-sm text-label-sm">Active</span>
+</div>
+</td>
+<td class="px-4 py-2 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors h-12">
+<td class="px-4 py-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-sm">MR</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Michael Ross</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">m.ross@taskhub.co</div>
+</div>
+</div>
+</td>
+<td class="px-4 py-2 font-body-sm text-body-sm text-on-surface">AP Specialist</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-variant text-on-surface-variant">Accounts Payable</span>
+</td>
+<td class="px-4 py-2">
+<div class="flex items-center gap-1.5 text-primary">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-sm text-label-sm">Active</span>
+</div>
+</td>
+<td class="px-4 py-2 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors h-12">
+<td class="px-4 py-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-sm">AL</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">Amanda Lee</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">alee@taskhub.co</div>
+</div>
+</div>
+</td>
+<td class="px-4 py-2 font-body-sm text-body-sm text-on-surface">Manager</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-variant text-on-surface-variant">Accounts Receivable</span>
+</td>
+<td class="px-4 py-2">
+<div class="flex items-center gap-1.5 text-tertiary">
+<div class="w-2 h-2 rounded-full bg-tertiary border border-outline"></div>
+<span class="font-label-sm text-label-sm">OOO</span>
+</div>
+</td>
+<td class="px-4 py-2 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-surface-container-low transition-colors h-12">
+<td class="px-4 py-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-variant text-on-surface-variant flex items-center justify-center font-bold text-sm">DK</div>
+<div>
+<div class="font-body-md text-body-md font-medium text-on-surface">David Kim</div>
+<div class="font-label-sm text-label-sm text-on-surface-variant">dkim@taskhub.co</div>
+</div>
+</div>
+</td>
+<td class="px-4 py-2 font-body-sm text-body-sm text-on-surface">Controller</td>
+<td class="px-4 py-2">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-container text-on-primary-container">Admin</span>
+</td>
+<td class="px-4 py-2">
+<div class="flex items-center gap-1.5 text-primary">
+<div class="w-2 h-2 rounded-full bg-primary"></div>
+<span class="font-label-sm text-label-sm">Active</span>
+</div>
+</td>
+<td class="px-4 py-2 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Footer/Pagination -->
+<div class="p-4 border-t border-outline-variant flex justify-between items-center bg-surface-bright">
+<span class="font-label-sm text-label-sm text-on-surface-variant">Showing 4 of 42 members</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<span class="font-label-md text-label-md px-2">1</span>
+<button class="p-1 rounded text-on-surface-variant hover:bg-surface-container">
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+</body></html>

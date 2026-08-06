@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TaskHub - Tasks (Admin View)</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "surface-container-low": "#f3f3fe",
+                        "on-surface-variant": "#434655",
+                        "surface": "#faf8ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-variant": "#e1e2ed",
+                        "tertiary": "#525657",
+                        "surface-dim": "#d9d9e5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#b4c5ff",
+                        "outline": "#737686",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "surface-container-highest": "#e1e2ed",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#2e3039",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-high": "#e7e7f3",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f0f0fb",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#004ac6",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#eff1f3",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#ededf9",
+                        "on-surface": "#191b23",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "secondary-container": "#d5e3fc",
+                        "tertiary-container": "#6b6e70",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "secondary": "#515f74",
+                        "on-primary-container": "#eeefff",
+                        "on-background": "#191b23",
+                        "on-secondary-container": "#57657a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "1.5rem",
+                        "sidebar-width": "260px",
+                        "stack-xs": "0.25rem",
+                        "margin-page": "2rem",
+                        "container-max": "1440px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "headline-md-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Base styles to ensure height */
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* Custom scrollbar for webkit */
+        ::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Modal interaction classes */
+        .modal-enter {
+            opacity: 0;
+            transform: translateX(100%);
+        }
+        .modal-enter-active {
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .modal-exit {
+            opacity: 1;
+            transform: translateX(0);
+        }
+        .modal-exit-active {
+            opacity: 0;
+            transform: translateX(100%);
+            transition: opacity 300ms, transform 300ms;
+        }
+        .backdrop-enter { opacity: 0; }
+        .backdrop-enter-active { opacity: 1; transition: opacity 300ms; }
+        .backdrop-exit { opacity: 1; }
+        .backdrop-exit-active { opacity: 0; transition: opacity 300ms; }
+        
+        /* Table styles */
+        table { border-collapse: collapse; width: 100%; }
+        th { border-bottom: 1px solid #e1e2ed; }
+        td { border-bottom: 1px solid #e1e2ed; }
+        tr:last-child td { border-bottom: none; }
+    </style>
+</head>
+<body class="bg-background text-on-surface font-body-sm h-full flex overflow-hidden">
+<!-- SideNavBar -->
+<aside class="hidden md:flex bg-surface-container-lowest fixed left-0 top-0 h-screen w-[260px] border-r border-outline-variant flex-col py-gutter px-4 z-20">
+<!-- Brand -->
+<div class="flex items-center gap-3 mb-8 px-2">
+<div class="w-8 h-8 rounded-lg bg-primary-container flex items-center justify-center shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">dataset</span>
+</div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TaskHub</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Corporate Admin</p>
+</div>
+</div>
+<!-- Navigation -->
+<nav class="flex-1 flex flex-col gap-1 overflow-y-auto">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">dashboard</span>
+<span class="font-body-md text-body-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-full group" href="#">
+<span class="material-symbols-outlined text-primary" style="font-variation-settings: 'FILL' 1;">assignment</span>
+<span class="font-body-md text-body-md font-semibold text-primary">Tasks</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">business</span>
+<span class="font-body-md text-body-md">Companies</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">group</span>
+<span class="font-body-md text-body-md">Teams &amp; Members</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">calendar_today</span>
+<span class="font-body-md text-body-md">OOO Calendar</span>
+</a>
+</nav>
+<!-- Bottom Settings -->
+<div class="mt-auto pt-4 border-t border-outline-variant/50">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-colors rounded-full group" href="#">
+<span class="material-symbols-outlined group-hover:text-on-surface">settings</span>
+<span class="font-body-md text-body-md">Settings</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Wrapper -->
+<div class="flex-1 flex flex-col md:ml-[260px] h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface docked full-width top-0 border-b border-outline-variant flex justify-between items-center h-16 px-gutter shrink-0 z-10">
+<div class="flex items-center gap-4">
+<!-- Mobile Menu Button -->
+<button class="md:hidden p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="pl-10 pr-4 py-2 bg-surface-container-low border border-outline-variant rounded-full font-body-sm text-body-sm text-on-surface placeholder:text-on-surface-variant focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary w-64 transition-all" placeholder="Search tasks, users..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-2 sm:gap-4">
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors rounded-full relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border border-surface"></span>
+</button>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors rounded-full hidden sm:block">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-secondary-container overflow-hidden border border-outline-variant ml-2 shrink-0 cursor-pointer">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional headshot of a corporate administrator in a modern office environment. High key lighting, modern aesthetic, clean background. Shallow depth of field." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSe61H8VwAgWV4Ba-Vcjkgh7W8sVEIDb9hCO5jItYthKTOF7KI1XQiLi4nFHHEhH4j9z6XbQiAB5M6sbej3DZK3lCCB2WjOb-ZJZJexJBnOBgm91Ymu4d96A8TUnAUd0BpX806nhm01ckW26V-zGMOjZs9AYJbcJ1V7hGSUGJcG5i3OSXGcQcQoErRDquuyLcOolGxcDa3xOqNj2RVmqngA2z3WnItGXJ0zV0gzknen-z2xKkYrSEn"/>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="flex-1 overflow-y-auto bg-background p-4 sm:p-6 md:p-margin-page">
+<div class="max-w-container-max mx-auto h-full flex flex-col gap-6">
+<!-- Page Header & Actions -->
+<div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Task Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-1">Manage and assign organizational tasks across all departments.</p>
+</div>
+<button class="flex items-center justify-center gap-2 bg-primary hover:bg-surface-tint text-on-primary px-4 py-2 rounded-lg font-title-lg text-title-lg transition-colors shadow-sm self-start sm:self-auto" id="btn-open-panel">
+<span class="material-symbols-outlined">add</span>
+                        Add New Task
+                    </button>
+</div>
+<!-- Filters & Controls (Bento-ish bar) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-2 flex flex-wrap gap-2 items-center">
+<div class="flex items-center gap-1 bg-surface-container-low rounded-lg p-1">
+<button class="px-3 py-1.5 rounded-md bg-surface border border-outline-variant text-on-surface font-label-sm text-label-sm shadow-sm">All</button>
+<button class="px-3 py-1.5 rounded-md text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">Active</button>
+<button class="px-3 py-1.5 rounded-md text-on-surface-variant hover:bg-surface-container font-label-sm text-label-sm transition-colors">Completed</button>
+</div>
+<div class="h-6 w-px bg-outline-variant hidden sm:block mx-2"></div>
+<div class="flex gap-2 w-full sm:w-auto mt-2 sm:mt-0">
+<div class="relative flex-1 sm:w-40">
+<select class="w-full appearance-none bg-surface border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:border-primary">
+<option>All Departments</option>
+<option>Marketing</option>
+<option>Engineering</option>
+<option>HR</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Data Table / Main Grid Area -->
+<div class="flex-1 bg-surface-container-lowest border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<div class="overflow-x-auto flex-1">
+<table class="w-full text-left whitespace-nowrap">
+<thead class="bg-surface-container font-label-md text-label-md text-on-surface-variant sticky top-0 z-10">
+<tr>
+<th class="px-4 py-3 w-8">
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</th>
+<th class="px-4 py-3 font-semibold">Task ID &amp; Description</th>
+<th class="px-4 py-3 font-semibold">Assigned To</th>
+<th class="px-4 py-3 font-semibold">Dimension</th>
+<th class="px-4 py-3 font-semibold">Deadline</th>
+<th class="px-4 py-3 font-semibold">Status</th>
+<th class="px-4 py-3 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface divide-y divide-outline-variant/50">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container-low transition-colors relative group">
+<td class="px-4 py-4">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-error"></div>
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-on-surface">Q3 Financial Audit</span>
+<span class="text-on-surface-variant text-xs truncate w-64">Review all Q3 expenses and prepare preliminary report for board...</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary text-xs">FT</div>
+<span>Finance Team</span>
+</div>
+</td>
+<td class="px-4 py-4 text-on-surface-variant">Global / US</td>
+<td class="px-4 py-4 text-error font-medium flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]">warning</span> Oct 15
+                                    </td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-error-container text-on-error-container border border-error/20">Overdue</span>
+</td>
+<td class="px-4 py-4 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Reassign">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container-low transition-colors relative group">
+<td class="px-4 py-4">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-primary"></div>
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-on-surface">Update Brand Guidelines</span>
+<span class="text-on-surface-variant text-xs truncate w-64">Incorporate new logo variants into the central design system repo.</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-2">
+<img alt="Avatar" class="w-6 h-6 rounded-full object-cover" data-alt="A small circular avatar of a female designer with glasses. Professional, modern lighting, subtle background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMRAzBfZzeXWr6woIAIybiL0cRV3Zj2AlnxzJaPWOLVN2LS45RxMTNrU5iiqNYE5Mj757nUReKBceeq23HlcBGnaW2kBaTI3JmcG5M1Kh5WvJd8XOddgnotAK7Qixd39OKv31IqwzWdYnx7RGOT6B7-O0jSG9dNOo8O2tAAUSkjnvr_FwSJeuz7FBXTMnbpsxnIlAWa8-lU4BxwP8Zk_2In92tK27-vrisz1r1OOCTbhlLMC0Wtnok"/>
+<span>Sarah J.</span>
+</div>
+</td>
+<td class="px-4 py-4 text-on-surface-variant">Brand A</td>
+<td class="px-4 py-4 text-on-surface-variant">Oct 22</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-primary-container/20 text-on-primary-fixed-variant border border-primary/20">In Progress</span>
+</td>
+<td class="px-4 py-4 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Reassign">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container-low transition-colors relative group">
+<td class="px-4 py-4">
+<div class="absolute left-0 top-0 bottom-0 w-1 bg-outline-variant"></div>
+<input class="rounded border-outline text-primary focus:ring-primary h-4 w-4" type="checkbox"/>
+</td>
+<td class="px-4 py-4">
+<div class="flex flex-col">
+<span class="font-title-lg text-title-lg text-on-surface">Monthly Server Patching</span>
+<span class="text-on-surface-variant text-xs truncate w-64">Apply security patches to production environment servers.</span>
+</div>
+</td>
+<td class="px-4 py-4">
+<div class="flex items-center gap-2">
+<div class="w-6 h-6 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container text-xs">IT</div>
+<span>DevOps Team</span>
+</div>
+</td>
+<td class="px-4 py-4 text-on-surface-variant">Infrastructure</td>
+<td class="px-4 py-4 text-on-surface-variant">Oct 31</td>
+<td class="px-4 py-4">
+<span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-surface-variant text-on-surface-variant border border-outline-variant/50">Scheduled</span>
+</td>
+<td class="px-4 py-4 text-right">
+<div class="flex items-center justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Edit">
+<span class="material-symbols-outlined text-[20px]">edit</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded" title="Reassign">
+<span class="material-symbols-outlined text-[20px]">person_add</span>
+</button>
+<button class="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container rounded" title="Delete">
+<span class="material-symbols-outlined text-[20px]">delete</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="bg-surface border-t border-outline-variant p-3 flex items-center justify-between">
+<span class="font-body-sm text-body-sm text-on-surface-variant">Showing 1 to 3 of 42 results</span>
+<div class="flex gap-1">
+<button class="p-1 rounded text-outline hover:bg-surface-container hover:text-on-surface disabled:opacity-50" disabled="">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="p-1 rounded text-outline hover:bg-surface-container hover:text-on-surface">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Side Panel (Add Task Modal Concept) -->
+<div class="fixed inset-0 bg-inverse-surface/40 z-40 hidden opacity-0 transition-opacity duration-300" id="side-panel-backdrop"></div>
+<div class="fixed top-0 right-0 h-full w-full sm:w-[480px] bg-surface-container-lowest shadow-2xl z-50 transform translate-x-full transition-transform duration-300 flex flex-col border-l border-outline-variant" id="side-panel">
+<!-- Panel Header -->
+<div class="flex items-center justify-between px-6 py-4 border-b border-outline-variant bg-surface">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Add New Task</h3>
+<button class="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors" id="btn-close-panel">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<!-- Panel Body -->
+<div class="flex-1 overflow-y-auto p-6 flex flex-col gap-6">
+<!-- Template Selection -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Select from previous tasks (Optional)</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all" placeholder="Search templates..." type="text"/>
+</div>
+</div>
+<hr class="border-outline-variant/50"/>
+<!-- Task Form -->
+<form class="flex flex-col gap-5">
+<!-- Description -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Description <span class="text-error">*</span></label>
+<textarea class="w-full p-3 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all resize-none" placeholder="Enter task details..." rows="3"></textarea>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Deadline -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Deadline</label>
+<div class="relative">
+<input class="w-full pl-3 pr-8 py-2 bg-surface border border-outline-variant rounded-lg font-body-sm text-body-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all" type="date"/>
+</div>
+</div>
+<!-- Occurrence -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Occurrence</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all">
+<option>Once</option>
+<option>Weekly</option>
+<option>Monthly</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</div>
+<!-- Group Dimension -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Group Dimension</label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all">
+<option disabled="" selected="" value="">Select Region / Brand</option>
+<option>Global</option>
+<option>North America</option>
+<option>EMEA</option>
+<option>Brand A</option>
+<option>Brand B</option>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+<!-- Assigned To -->
+<div class="flex flex-col gap-2">
+<label class="font-label-md text-label-md text-on-surface-variant">Assigned To <span class="text-error">*</span></label>
+<div class="relative">
+<select class="w-full appearance-none bg-surface border border-outline-variant text-on-surface font-body-sm text-body-sm rounded-lg pl-3 pr-8 py-2 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary/20 transition-all">
+<option disabled="" selected="" value="">Select Team or Person</option>
+<optgroup label="Teams">
+<option>Finance Team</option>
+<option>DevOps Team</option>
+<option>Marketing Dept</option>
+</optgroup>
+<optgroup label="Individuals">
+<option>Sarah J.</option>
+<option>Michael T.</option>
+<option>Alex R.</option>
+</optgroup>
+</select>
+<span class="material-symbols-outlined absolute right-2 top-1/2 -translate-y-1/2 text-outline pointer-events-none text-[20px]">expand_more</span>
+</div>
+</div>
+</form>
+</div>
+<!-- Panel Footer -->
+<div class="p-4 border-t border-outline-variant bg-surface flex justify-end gap-3">
+<button class="px-4 py-2 border border-outline bg-surface hover:bg-surface-container-low text-on-surface rounded-lg font-title-lg text-title-lg transition-colors" id="btn-cancel-panel">
+                Cancel
+            </button>
+<button class="px-4 py-2 bg-primary hover:bg-surface-tint text-on-primary rounded-lg font-title-lg text-title-lg transition-colors shadow-sm">
+                Create Task
+            </button>
+</div>
+</div>
+<script>
+        // Simple side panel interaction logic
+        document.addEventListener('DOMContentLoaded', () => {
+            const btnOpen = document.getElementById('btn-open-panel');
+            const btnClose = document.getElementById('btn-close-panel');
+            const btnCancel = document.getElementById('btn-cancel-panel');
+            const panel = document.getElementById('side-panel');
+            const backdrop = document.getElementById('side-panel-backdrop');
+
+            function openPanel() {
+                backdrop.classList.remove('hidden');
+                // Small delay to allow display block to apply before transition
+                setTimeout(() => {
+                    backdrop.classList.remove('opacity-0');
+                    panel.classList.remove('translate-x-full');
+                }, 10);
+            }
+
+            function closePanel() {
+                backdrop.classList.add('opacity-0');
+                panel.classList.add('translate-x-full');
+                setTimeout(() => {
+                    backdrop.classList.add('hidden');
+                }, 300); // match duration-300
+            }
+
+            btnOpen.addEventListener('click', openPanel);
+            btnClose.addEventListener('click', closePanel);
+            btnCancel.addEventListener('click', closePanel);
+            backdrop.addEventListener('click', closePanel);
+        });
+    </script>
+</body></html>

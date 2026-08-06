@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>OOO Calendar | TaskHub</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                            "on-secondary": "#ffffff",
+                            "on-primary": "#ffffff",
+                            "error-container": "#ffdad6",
+                            "secondary-fixed-dim": "#b9c7df",
+                            "surface-container-low": "#f3f3fe",
+                            "on-surface-variant": "#434655",
+                            "surface": "#faf8ff",
+                            "tertiary-fixed": "#e0e3e5",
+                            "surface-variant": "#e1e2ed",
+                            "tertiary": "#525657",
+                            "surface-dim": "#d9d9e5",
+                            "primary-fixed-dim": "#b4c5ff",
+                            "inverse-primary": "#b4c5ff",
+                            "outline": "#737686",
+                            "on-primary-fixed-variant": "#003ea8",
+                            "primary-container": "#2563eb",
+                            "surface-container-highest": "#e1e2ed",
+                            "outline-variant": "#c3c6d7",
+                            "inverse-surface": "#2e3039",
+                            "surface-bright": "#faf8ff",
+                            "surface-container-high": "#e7e7f3",
+                            "on-secondary-fixed": "#0d1c2e",
+                            "on-error-container": "#93000a",
+                            "error": "#ba1a1a",
+                            "inverse-on-surface": "#f0f0fb",
+                            "on-tertiary-fixed": "#191c1e",
+                            "surface-container-lowest": "#ffffff",
+                            "primary": "#004ac6",
+                            "background": "#faf8ff",
+                            "on-tertiary-container": "#eff1f3",
+                            "secondary-fixed": "#d5e3fc",
+                            "on-error": "#ffffff",
+                            "surface-tint": "#0053db",
+                            "on-primary-fixed": "#00174b",
+                            "surface-container": "#ededf9",
+                            "on-surface": "#191b23",
+                            "on-secondary-fixed-variant": "#3a485b",
+                            "secondary-container": "#d5e3fc",
+                            "tertiary-container": "#6b6e70",
+                            "tertiary-fixed-dim": "#c4c7c9",
+                            "on-tertiary": "#ffffff",
+                            "primary-fixed": "#dbe1ff",
+                            "on-tertiary-fixed-variant": "#444749",
+                            "secondary": "#515f74",
+                            "on-primary-container": "#eeefff",
+                            "on-background": "#191b23",
+                            "on-secondary-container": "#57657a"
+                    },
+                    "borderRadius": {
+                            "DEFAULT": "0.125rem",
+                            "lg": "0.25rem",
+                            "xl": "0.5rem",
+                            "full": "0.75rem"
+                    },
+                    "spacing": {
+                            "gutter": "1.5rem",
+                            "sidebar-width": "260px",
+                            "stack-xs": "0.25rem",
+                            "margin-page": "2rem",
+                            "container-max": "1440px",
+                            "stack-md": "1rem",
+                            "stack-sm": "0.5rem",
+                            "stack-lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                            "headline-sm": ["Inter"],
+                            "body-sm": ["Inter"],
+                            "display-lg": ["Inter"],
+                            "headline-md": ["Inter"],
+                            "body-md": ["Inter"],
+                            "title-lg": ["Inter"],
+                            "label-md": ["Inter"],
+                            "label-sm": ["Inter"],
+                            "headline-md-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                            "headline-sm": ["20px", {"lineHeight": "28px", "fontWeight": "600"}],
+                            "body-sm": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                            "display-lg": ["36px", {"lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                            "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                            "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                            "title-lg": ["18px", {"lineHeight": "24px", "fontWeight": "600"}],
+                            "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                            "label-sm": ["11px", {"lineHeight": "14px", "fontWeight": "500"}],
+                            "headline-md-mobile": ["20px", {"lineHeight": "28px", "fontWeight": "600"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .ghost-border {
+            border: 1px solid rgba(226, 232, 240, 0.5); /* #E2E8F0 */
+        }
+        .ooo-block {
+            background-color: rgba(0, 74, 198, 0.5); /* Primary with 50% opacity */
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md h-screen w-screen overflow-hidden flex">
+<!-- SideNavBar -->
+<nav class="bg-surface-container-lowest dark:bg-surface-dim font-body-md text-body-md fixed left-0 top-0 h-screen w-[260px] border-r border-outline-variant dark:border-outline hidden md:flex transition-all duration-150 ease-in-out z-20">
+<div class="flex flex-col h-full py-gutter px-4 w-full">
+<!-- Brand Area -->
+<div class="flex items-center gap-4 mb-8 px-2">
+<div class="w-10 h-10 rounded-lg overflow-hidden shrink-0 bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-lg">
+                    T
+                </div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary dark:text-primary-fixed">TaskHub</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Corporate Admin</p>
+</div>
+</div>
+<!-- Navigation Links -->
+<ul class="flex flex-col gap-1 w-full flex-grow">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">dashboard</span>
+<span>Dashboard</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">assignment</span>
+<span>Tasks</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">business</span>
+<span>Companies</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors rounded-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">group</span>
+<span>Teams &amp; Members</span>
+</a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-full hover:bg-surface-container-high dark:hover:bg-surface-container-highest transition-colors w-full" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">calendar_today</span>
+<span class="font-bold">OOO Calendar</span>
+</a>
+</li>
+</ul>
+</div>
+</nav>
+<!-- Main Content Wrapper -->
+<div class="flex-grow flex flex-col md:ml-[260px] w-full h-full overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-background font-body-sm text-body-sm docked full-width top-0 border-b border-outline-variant dark:border-outline z-10 hidden md:flex transition-all duration-150">
+<div class="flex justify-between items-center h-16 px-gutter w-full">
+<!-- Search (Search on left configuration) -->
+<div class="flex-1 max-w-md relative flex items-center">
+<span class="material-symbols-outlined absolute left-3 text-on-surface-variant" style="font-size: 20px;">search</span>
+<input class="w-full h-10 pl-10 pr-4 bg-surface-container-lowest border border-outline-variant rounded-full text-body-sm focus:outline-none focus:border-primary focus:ring-2 focus:ring-primary/10 transition-shadow" placeholder="Search team members..." type="text"/>
+</div>
+<!-- Right Actions -->
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 rounded-full flex items-center justify-center text-on-surface-variant hover:bg-surface-container-high hover:text-primary transition-colors">
+<span class="material-symbols-outlined">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant ml-2">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A highly detailed close-up portrait of a professional corporate user avatar, smiling softly, bright studio lighting, modern office background slightly blurred, hyper-realistic, 8k resolution, crisp details, natural skin tones, professional attire, soft shadows, pristine corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJPlExOn3QVw6iILxGW0ZZ-EmRH_leIGfIbGjphhu93JVV7xJis6WMjxb4nbrATGF7ZuYYQTAbCb9RlnRrSErTJh85eq8fmEn4hOEd3GWNvo_aUHhuW2YC3fBSfbYEP_qX1mpZ_5RGovr0woMbVOH-euaYigIs_4OejpC3DJbK7HMVoqSGZg9oqShiipmxcNh9YOFlAJEyoWGRseb66SjPQA0tBkRmVy8p4ct6LMe63YHtIecvDJB3"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Mobile Header (Visible only on small screens) -->
+<header class="bg-surface border-b border-outline-variant flex md:hidden items-center justify-between h-14 px-4 shrink-0">
+<div class="flex items-center gap-2">
+<button class="text-on-surface-variant">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<span class="font-title-lg text-title-lg font-bold text-on-surface">OOO Calendar</span>
+</div>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-outline-variant">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A highly detailed close-up portrait of a professional corporate user avatar, smiling softly, bright studio lighting, modern office background slightly blurred, hyper-realistic, 8k resolution, crisp details, natural skin tones, professional attire, soft shadows, pristine corporate aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBaeezxvKYqI02Gxc7hakhJokjiVHPRM_9GjwA1zIu_wmyjBDuNRzX6Od1t2P-tN6uUCVNZTI8sl4mMdjPW7QepMU0PmF4UWxYXQFGCB6xdP79Rl7W7Yq_Ghkldvnrq8Vd-8BncyOfsE7EDOkLXhuHBxEsGIN85_IMQEPi1w8SLnLp9Le2G2HlnD7y8iYlqH4qZ2lQ8bUw8n_FSJO-BKG8PS6hm2mNvyAVLG-gBLM3WiFf8w_lziZSN"/>
+</div>
+</header>
+<!-- Page ContentCanvas -->
+<main class="flex-grow overflow-auto p-4 md:p-margin-page bg-background flex flex-col gap-6">
+<!-- Page Header & Controls -->
+<div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 shrink-0">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface hidden md:block">OOO Calendar</h2>
+<p class="text-on-surface-variant mt-1">Manage team availability and out-of-office schedules.</p>
+</div>
+<div class="flex items-center gap-3">
+<!-- Date Navigator -->
+<div class="flex items-center bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden p-1 shadow-sm">
+<button class="p-1 hover:bg-surface-container-high rounded text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 20px;">chevron_left</span>
+</button>
+<span class="px-3 font-title-lg text-title-lg whitespace-nowrap">October 2023</span>
+<button class="p-1 hover:bg-surface-container-high rounded text-on-surface-variant">
+<span class="material-symbols-outlined" style="font-size: 20px;">chevron_right</span>
+</button>
+</div>
+<!-- View Toggles -->
+<div class="flex bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden p-1 shadow-sm">
+<button class="px-3 py-1.5 text-body-sm font-medium rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">Day</button>
+<button class="px-3 py-1.5 text-body-sm font-medium rounded text-on-surface-variant hover:bg-surface-container-high transition-colors">Week</button>
+<button class="px-3 py-1.5 text-body-sm font-medium rounded bg-secondary-container text-on-secondary-container shadow-sm transition-colors">Month</button>
+</div>
+</div>
+</div>
+<!-- Calendar Container (Bento/Card style) -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant overflow-hidden flex-grow flex flex-col shadow-sm min-h-[500px]">
+<!-- Legend -->
+<div class="p-4 border-b border-outline-variant flex gap-6 bg-surface-bright shrink-0 overflow-x-auto">
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-3 h-3 rounded-full bg-emerald-500"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">In Office</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-3 h-3 rounded-full bg-blue-400"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Remote</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-3 h-3 rounded-full bg-amber-400"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Sick</span>
+</div>
+<div class="flex items-center gap-2 whitespace-nowrap">
+<div class="w-3 h-3 rounded-full bg-primary/50 border border-primary/20"></div>
+<span class="font-label-sm text-label-sm text-on-surface-variant uppercase tracking-wider">Out of Office</span>
+</div>
+</div>
+<!-- The Grid -->
+<div class="flex-grow overflow-auto relative">
+<!-- Minimalist Table Design for Data Density -->
+<table class="w-full min-w-[800px] border-collapse text-left">
+<thead class="sticky top-0 bg-surface-container z-10 shadow-[0_1px_0_0_rgba(226,232,240,1)]">
+<tr>
+<th class="p-3 w-48 font-label-md text-label-md text-on-surface-variant uppercase bg-surface-container sticky left-0 z-20 shadow-[1px_0_0_0_rgba(226,232,240,1)]">Team Member</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant">M<br/>16</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant">T<br/>17</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-primary bg-primary/5">W<br/>18</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant">T<br/>19</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant">F<br/>20</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant opacity-50 bg-surface-container-low">S<br/>21</th>
+<th class="p-3 text-center border-l ghost-border min-w-[48px] font-label-md text-label-md text-on-surface-variant opacity-50 bg-surface-container-low">S<br/>22</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<!-- Row 1 -->
+<tr class="border-b ghost-border hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-3 sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container-highest shadow-[1px_0_0_0_rgba(226,232,240,1)] z-10 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img alt="Alice Freeman" class="w-full h-full object-cover" data-alt="A professional corporate headshot of a woman with short dark hair, wearing a white blouse, neutral grey background, studio lighting, sharp focus, bright light-mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDhiALPK10FsQyhZJKZhnCR5QOleHRmq-sghuZuAwD2LbSKzShsuxh15enqe-B5hUWpjo0fB0XRStDx47GhG50pLUMdJthF_Xb0-sG8loiC7RnEa07e9JHRg03kYiBXNsW3O4ixu1IOdhGxGIBpJs5KBrDFCIGQfAckokdD9NXL47hl4VdME765LEdFosOsdq8CS-ObcLCFEU1rBeoqyaJYNJ8w2PidV_dogf7OMV_rgK1p5GhNP0-y"/>
+</div>
+<div class="truncate">
+<div class="font-medium">Alice Freeman</div>
+<div class="text-[10px] text-on-surface-variant">Design Lead</div>
+</div>
+</div>
+</td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-emerald-500 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-emerald-500 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20 bg-primary/5"><div class="w-2 h-2 rounded-full bg-emerald-500 mx-auto"></div></td>
+<!-- OOO Span -->
+<td class="p-1 border-l ghost-border relative" colspan="2">
+<div class="absolute inset-y-1 left-1 right-1 ooo-block rounded flex items-center justify-center border border-primary/20">
+<span class="text-[10px] font-bold text-on-primary">Vacation</span>
+</div>
+</td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+</tr>
+<!-- Row 2 -->
+<tr class="border-b ghost-border hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-3 sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container-highest shadow-[1px_0_0_0_rgba(226,232,240,1)] z-10 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0">
+<img alt="Bob Smith" class="w-full h-full object-cover" data-alt="A professional corporate headshot of a man with a neat beard, wearing a light blue button-down shirt, neutral light background, studio lighting, sharp focus, professional tech aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCN-uw-yvzGu2rs_KxeZkisnvSXWSGiL_HwUh1tkePluJGk0n-VVVtdja4OxdzioEnft28hbVI-PPn8eF6GdWzd6wAJcrmilfPUbdayrVZGlCfuTqlIzw6rUfz4ZFCi0JKjJo4jfd6pisHqKfxY3NleVv6SluH7UR5byrsnGKUEh6UFnSMjMp71aEux8ObZ4dCy_diAVRNHUd-8hjn53gvG7g68NxHOf3zNRM1dRE2PP3oYEe5Lsgqk"/>
+</div>
+<div class="truncate">
+<div class="font-medium">Bob Smith</div>
+<div class="text-[10px] text-on-surface-variant">Frontend Eng</div>
+</div>
+</div>
+</td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-blue-400 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-blue-400 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20 bg-primary/5">
+<!-- Admin Status Dropdown Simulation (Open) -->
+<div class="w-2 h-2 rounded-full bg-amber-400 mx-auto ring-2 ring-primary ring-offset-1"></div>
+<div class="absolute top-full left-1/2 -translate-x-1/2 mt-1 w-32 bg-surface-container-lowest border border-outline-variant shadow-lg rounded-lg py-1 z-30 flex flex-col text-left font-body-sm text-body-sm">
+<button class="px-3 py-1.5 hover:bg-surface-container text-on-surface flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-emerald-500"></div> In Office</button>
+<button class="px-3 py-1.5 hover:bg-surface-container text-on-surface flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-blue-400"></div> Remote</button>
+<button class="px-3 py-1.5 hover:bg-surface-container text-on-surface flex items-center gap-2 bg-surface-variant"><div class="w-2 h-2 rounded-full bg-amber-400"></div> Sick</button>
+<button class="px-3 py-1.5 hover:bg-surface-container text-on-surface flex items-center gap-2 border-t border-outline-variant mt-1 pt-2"><div class="w-2 h-2 rounded-full bg-primary/50"></div> Set OOO...</button>
+</div>
+</td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-emerald-500 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center relative cursor-pointer hover:bg-surface-variant/20"><div class="w-2 h-2 rounded-full bg-emerald-500 mx-auto"></div></td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+</tr>
+<!-- Row 3 -->
+<tr class="border-b ghost-border hover:bg-surface-container-lowest/50 transition-colors group">
+<td class="p-3 sticky left-0 bg-surface-container-lowest group-hover:bg-surface-container-highest shadow-[1px_0_0_0_rgba(226,232,240,1)] z-10 transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full overflow-hidden bg-surface-variant shrink-0 flex items-center justify-center text-secondary font-bold text-xs bg-secondary-container">
+                                             CJ
+                                        </div>
+<div class="truncate">
+<div class="font-medium">Carol Jones</div>
+<div class="text-[10px] text-on-surface-variant">Product Manager</div>
+</div>
+</div>
+</td>
+<!-- OOO Span -->
+<td class="p-1 border-l ghost-border relative" colspan="5">
+<div class="absolute inset-y-1 left-1 right-1 ooo-block rounded flex items-center justify-center border border-primary/20">
+<span class="text-[10px] font-bold text-on-primary">Conference (NYC)</span>
+</div>
+</td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+<td class="p-1 border-l ghost-border text-center bg-surface-container-low"></td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</main>
+</div>
+</body></html>

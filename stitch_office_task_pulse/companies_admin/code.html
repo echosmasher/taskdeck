@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>TaskHub - Company Management</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary": "#ffffff",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#b9c7df",
+                        "surface-container-low": "#f3f3fe",
+                        "on-surface-variant": "#434655",
+                        "surface": "#faf8ff",
+                        "tertiary-fixed": "#e0e3e5",
+                        "surface-variant": "#e1e2ed",
+                        "tertiary": "#525657",
+                        "surface-dim": "#d9d9e5",
+                        "primary-fixed-dim": "#b4c5ff",
+                        "inverse-primary": "#b4c5ff",
+                        "outline": "#737686",
+                        "on-primary-fixed-variant": "#003ea8",
+                        "primary-container": "#2563eb",
+                        "surface-container-highest": "#e1e2ed",
+                        "outline-variant": "#c3c6d7",
+                        "inverse-surface": "#2e3039",
+                        "surface-bright": "#faf8ff",
+                        "surface-container-high": "#e7e7f3",
+                        "on-secondary-fixed": "#0d1c2e",
+                        "on-error-container": "#93000a",
+                        "error": "#ba1a1a",
+                        "inverse-on-surface": "#f0f0fb",
+                        "on-tertiary-fixed": "#191c1e",
+                        "surface-container-lowest": "#ffffff",
+                        "primary": "#004ac6",
+                        "background": "#faf8ff",
+                        "on-tertiary-container": "#eff1f3",
+                        "secondary-fixed": "#d5e3fc",
+                        "on-error": "#ffffff",
+                        "surface-tint": "#0053db",
+                        "on-primary-fixed": "#00174b",
+                        "surface-container": "#ededf9",
+                        "on-surface": "#191b23",
+                        "on-secondary-fixed-variant": "#3a485b",
+                        "secondary-container": "#d5e3fc",
+                        "tertiary-container": "#6b6e70",
+                        "tertiary-fixed-dim": "#c4c7c9",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed": "#dbe1ff",
+                        "on-tertiary-fixed-variant": "#444749",
+                        "secondary": "#515f74",
+                        "on-primary-container": "#eeefff",
+                        "on-background": "#191b23",
+                        "on-secondary-container": "#57657a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "gutter": "1.5rem",
+                        "sidebar-width": "260px",
+                        "stack-xs": "0.25rem",
+                        "margin-page": "2rem",
+                        "container-max": "1440px",
+                        "stack-md": "1rem",
+                        "stack-sm": "0.5rem",
+                        "stack-lg": "1.5rem"
+                    },
+                    "fontFamily": {
+                        "headline-sm": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "display-lg": ["Inter"],
+                        "headline-md": ["Inter"],
+                        "body-md": ["Inter"],
+                        "title-lg": ["Inter"],
+                        "label-md": ["Inter"],
+                        "label-sm": ["Inter"],
+                        "headline-md-mobile": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm": ["20px", { "lineHeight": "28px", "fontWeight": "600" }],
+                        "body-sm": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-lg": ["36px", { "lineHeight": "44px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "headline-md": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+                        "title-lg": ["18px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "label-md": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600" }],
+                        "label-sm": ["11px", { "lineHeight": "14px", "fontWeight": "500" }],
+                        "headline-md-mobile": ["20px", { "lineHeight": "28px", "fontWeight": "600" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf8ff;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background flex h-screen overflow-hidden">
+<!-- SideNavBar -->
+<nav class="fixed left-0 top-0 h-screen w-[260px] bg-surface-container-lowest border-r border-outline-variant flex flex-col py-gutter px-4 z-20">
+<div class="flex items-center gap-3 mb-8 px-4">
+<div class="w-8 h-8 rounded bg-primary flex items-center justify-center text-on-primary font-bold">
+                T
+            </div>
+<div>
+<h1 class="font-headline-md text-headline-md font-bold text-primary">TaskHub</h1>
+<p class="font-label-sm text-label-sm text-on-surface-variant">Corporate Admin</p>
+</div>
+</div>
+<ul class="flex flex-col gap-1 flex-1 font-body-md text-body-md">
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                    Dashboard
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="assignment">assignment</span>
+                    Tasks
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 bg-secondary-container text-on-secondary-container rounded-full transition-all duration-150 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="business">business</span>
+                    Companies
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                    Teams &amp; Members
+                </a>
+</li>
+<li>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_today">calendar_today</span>
+                    OOO Calendar
+                </a>
+</li>
+</ul>
+<div class="mt-auto border-t border-outline-variant pt-4">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant hover:bg-surface-container-high transition-all duration-150 ease-in-out rounded-lg" href="#">
+<span class="material-symbols-outlined" data-icon="logout">logout</span>
+                Logout
+            </a>
+</div>
+</nav>
+<!-- Main Content Area Wrapper -->
+<div class="flex-1 flex flex-col ml-[260px] w-[calc(100%-260px)] h-screen overflow-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface border-b border-outline-variant flex justify-between items-center h-16 px-gutter shrink-0 z-10">
+<div class="flex items-center gap-4 flex-1">
+<div class="relative w-64">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-sm">search</span>
+<input class="w-full pl-9 pr-4 py-2 bg-surface-container rounded-full border-none focus:ring-1 focus:ring-primary text-sm font-body-sm text-on-surface placeholder:text-on-surface-variant transition-shadow" placeholder="Search..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-150 p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors duration-150 p-2 rounded-full hover:bg-surface-container">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="w-8 h-8 rounded-full bg-surface-container-high overflow-hidden border border-outline-variant ml-2">
+<img alt="User Profile Avatar" class="w-full h-full object-cover" data-alt="A professional corporate headshot of a person looking confidently at the camera. The lighting is clean, bright, and modern, reflecting a sterile but welcoming office environment. Neutral background with soft focus. High-key light mode aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCVM-L2Pp9X9QtOImu50dY7MrbhFgMAIPhfojSJej4B0gYkf5PNvH010ARV-bzW_AtE5knh--LA_lqBv2mSBSPN5DwRQSklovVwrugOeroQSjBYtHFNhATmNncVCFL4krR568Cb4nqJ71O5ag01AzxxNZdVAmuk-HMMQgIHXVXxDTkPgDtKE3lsufLaODd3rGCMAVA-eSXO0Qql4n_UngKfys2b3j86KuzaV9J7GDkrSSvT1OCj9Hly"/>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-1 overflow-y-auto p-margin-page bg-background">
+<div class="max-w-container-max mx-auto space-y-stack-lg">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="font-display-lg text-display-lg text-on-surface">Company Management</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">Manage client companies, configurations, and global dimensions.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-4 py-2 border border-outline text-secondary font-label-md text-label-md rounded hover:bg-surface-container-low transition-colors duration-150">
+<span class="material-symbols-outlined text-sm">download</span>
+                            Download .csv Template
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-surface-container border border-outline text-on-surface font-label-md text-label-md rounded hover:bg-surface-container-high transition-colors duration-150">
+<span class="material-symbols-outlined text-sm">upload</span>
+                            Upload .csv
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-primary text-on-primary font-label-md text-label-md rounded hover:bg-surface-tint transition-colors duration-150 ml-2" onclick="document.getElementById('dimension-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-sm">add</span>
+                            Add New Dimension
+                        </button>
+</div>
+</div>
+<!-- Data Table Card -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-lg overflow-hidden flex flex-col shadow-sm">
+<!-- Table Actions/Filters -->
+<div class="p-4 border-b border-outline-variant bg-surface-bright flex justify-between items-center">
+<div class="flex gap-2">
+<button class="px-3 py-1.5 bg-surface-container-high text-on-surface text-label-sm font-label-sm rounded border border-outline-variant">All Companies</button>
+<button class="px-3 py-1.5 text-on-surface-variant text-label-sm font-label-sm rounded hover:bg-surface-container border border-transparent">Active</button>
+<button class="px-3 py-1.5 text-on-surface-variant text-label-sm font-label-sm rounded hover:bg-surface-container border border-transparent">Archived</button>
+</div>
+<div class="text-label-sm font-label-sm text-on-surface-variant">
+                            Showing 1-10 of 142
+                        </div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container border-b border-outline-variant font-label-md text-label-md text-on-surface h-[48px]">
+<th class="px-4 py-3 font-semibold">Company Name</th>
+<th class="px-4 py-3 font-semibold">Country</th>
+<th class="px-4 py-3 font-semibold">Brand Group</th>
+<th class="px-4 py-3 font-semibold">Size (Employees)</th>
+<th class="px-4 py-3 font-semibold text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="font-body-sm text-body-sm text-on-surface">
+<tr class="border-b border-outline-variant hover:bg-surface-container-lowest transition-colors h-[48px] group">
+<td class="px-4 py-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary-container text-on-primary-container flex items-center justify-center font-bold text-xs">AC</div>
+<span class="font-medium">Acme Corp Global</span>
+</td>
+<td class="px-4 py-3 text-on-surface-variant">United States</td>
+<td class="px-4 py-3">
+<span class="px-2 py-1 rounded bg-surface-container-high text-xs font-medium">Acme Industries</span>
+</td>
+<td class="px-4 py-3">10,000+</td>
+<td class="px-4 py-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container-lowest transition-colors h-[48px] group">
+<td class="px-4 py-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-tertiary-container text-on-tertiary-container flex items-center justify-center font-bold text-xs">WL</div>
+<span class="font-medium">Weyland-Yutani</span>
+</td>
+<td class="px-4 py-3 text-on-surface-variant">United Kingdom</td>
+<td class="px-4 py-3">
+<span class="px-2 py-1 rounded bg-surface-container-high text-xs font-medium">Heavy Ind.</span>
+</td>
+<td class="px-4 py-3">50,000+</td>
+<td class="px-4 py-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+</td>
+</tr>
+<tr class="border-b border-outline-variant hover:bg-surface-container-lowest transition-colors h-[48px] group">
+<td class="px-4 py-3 flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-secondary-container text-on-secondary-container flex items-center justify-center font-bold text-xs">SO</div>
+<span class="font-medium">Soylent Corp</span>
+</td>
+<td class="px-4 py-3 text-on-surface-variant">Germany</td>
+<td class="px-4 py-3">
+<span class="px-2 py-1 rounded bg-surface-container-high text-xs font-medium">Food &amp; Bev</span>
+</td>
+<td class="px-4 py-3">5,000 - 10,000</td>
+<td class="px-4 py-3 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors opacity-0 group-hover:opacity-100"><span class="material-symbols-outlined text-[18px]">more_vert</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination (Simplified) -->
+<div class="p-4 bg-surface-bright flex justify-between items-center border-t border-outline-variant">
+<button class="text-on-surface-variant hover:text-primary text-sm font-medium flex items-center gap-1 disabled:opacity-50"><span class="material-symbols-outlined text-[18px]">chevron_left</span> Prev</button>
+<button class="text-on-surface-variant hover:text-primary text-sm font-medium flex items-center gap-1">Next <span class="material-symbols-outlined text-[18px]">chevron_right</span></button>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal: Add New Dimension -->
+<div class="fixed inset-0 z-50 hidden flex items-center justify-center" id="dimension-modal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm" onclick="document.getElementById('dimension-modal').classList.add('hidden')"></div>
+<!-- Modal Content -->
+<div class="relative bg-surface-container-lowest w-full max-w-md rounded-xl border border-outline-variant shadow-lg flex flex-col">
+<div class="p-6 border-b border-outline-variant flex justify-between items-center">
+<h3 class="font-title-lg text-title-lg text-on-surface">Add New Dimension</h3>
+<button class="text-on-surface-variant hover:text-error transition-colors" onclick="document.getElementById('dimension-modal').classList.add('hidden')">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<div class="p-6 space-y-4">
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Dimension Name</label>
+<input class="w-full px-3 py-2 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-on-surface" placeholder="e.g., Department, Region" type="text"/>
+</div>
+<div>
+<label class="block font-label-sm text-label-sm text-on-surface-variant mb-1 uppercase tracking-wider">Values (Comma separated)</label>
+<textarea class="w-full px-3 py-2 bg-surface border border-outline-variant rounded focus:border-primary focus:ring-2 focus:ring-primary/20 outline-none transition-all font-body-sm text-on-surface resize-none" placeholder="e.g., Sales, Engineering, Marketing" rows="3"></textarea>
+</div>
+<div class="flex items-center gap-2 mt-2">
+<input class="rounded border-outline-variant text-primary focus:ring-primary" id="global-dim" type="checkbox"/>
+<label class="font-body-sm text-on-surface-variant" for="global-dim">Apply as Global Dimension (All Companies)</label>
+</div>
+</div>
+<div class="p-6 border-t border-outline-variant bg-surface-bright flex justify-end gap-3 rounded-b-xl">
+<button class="px-4 py-2 border border-outline-variant text-on-surface font-label-md text-label-md rounded hover:bg-surface-container transition-colors" onclick="document.getElementById('dimension-modal').classList.add('hidden')">Cancel</button>
+<button class="px-4 py-2 bg-primary text-on-primary font-label-md text-label-md rounded hover:bg-surface-tint transition-colors" onclick="document.getElementById('dimension-modal').classList.add('hidden')">Save Dimension</button>
+</div>
+</div>
+</div>
+</body></html>
