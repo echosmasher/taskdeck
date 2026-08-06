@@ -19,7 +19,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 13. Implement idempotent instance generation with scope resolution
 - [x] 14. Build Dashboard shell with greeting, toggles, and grouped task rows
 - [x] 15. Add per-company checklist with complete/N-A/reopen and audit events
-- [ ] 16. Add bulk complete, overdue banner, and all-tasks filters — blocked by 15
+- [x] 16. Add bulk complete, overdue banner, and all-tasks filters
 - [ ] 17. Build CSV import for companies with validation preview
 - [ ] 18. Build History audit-trail page with filters and event timelines — blocked by 15
 - [ ] 19. Create calendar_entries schema and office calendar grid

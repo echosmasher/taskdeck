@@ -49,3 +49,32 @@ export async function markInstanceNaAction(
 export async function reopenInstanceAction(instanceId: string): Promise<InstanceActionState> {
   return updateInstanceStatus(instanceId, { status: "open", na_reason: null });
 }
+
+export interface BulkCompleteState {
+  error?: string;
+  completed?: number;
+}
+
+/**
+ * "Complete remaining" (§7.1): a single UPDATE affecting several rows,
+ * not a loop — the per-row stamp/na_reason-clear trigger and the
+ * per-row task_events insert trigger both fire once per affected row,
+ * so the audit trail still ends up one row per company even though
+ * this is one statement.
+ */
+export async function completeRemainingAction(instanceIds: string[]): Promise<BulkCompleteState> {
+  if (instanceIds.length === 0) return { completed: 0 };
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("task_instances")
+    .update({ status: "completed", na_reason: null })
+    .in("id", instanceIds)
+    .eq("status", "open")
+    .select("id");
+
+  if (error) return { error: error.message };
+
+  revalidatePath("/");
+  return { completed: data?.length ?? 0 };
+}

@@ -3,7 +3,13 @@ import { createClient } from "@/lib/supabase/server";
 import { APP_TIMEZONE } from "@/lib/config";
 import { getTodayInTimezone, monthRange, weekRange } from "@/lib/dates";
 import { DashboardView } from "./dashboard-view";
-import type { DashboardCompanyInstance, DashboardTaskGroup } from "./dashboard-types";
+import type {
+  CompanyDimensionValues,
+  DashboardCompanyInstance,
+  DashboardDimensionOption,
+  DashboardFilterOption,
+  DashboardTaskGroup,
+} from "./dashboard-types";
 
 export default async function DashboardPage() {
   const profile = await requireProfile();
@@ -19,22 +25,36 @@ export default async function DashboardPage() {
   const queryStart = week.start < month.start ? week.start : month.start;
   const queryEnd = week.end > month.end ? week.end : month.end;
 
-  const [instancesRes, tasksRes, companiesRes, teamsRes, profilesRes, dimensionValuesRes] =
-    await Promise.all([
-      supabase
-        .from("task_instances")
-        .select("*")
-        .lte("due_date", queryEnd)
-        .or(`status.eq.open,due_date.gte.${queryStart}`),
-      supabase
-        .from("tasks")
-        .select("id, title, assignee_type, assignee_team_id, assignee_profile_id, scope")
-        .eq("is_archived", false),
-      supabase.from("companies").select("id, name"),
-      supabase.from("teams").select("id, name"),
-      supabase.from("profiles").select("id, full_name, email"),
-      supabase.from("dimension_values").select("id, value"),
-    ]);
+  const [
+    instancesRes,
+    tasksRes,
+    companiesRes,
+    teamsRes,
+    profilesRes,
+    dimensionsRes,
+    dimensionValuesRes,
+    companyDimensionValuesRes,
+  ] = await Promise.all([
+    supabase
+      .from("task_instances")
+      .select("*")
+      .lte("due_date", queryEnd)
+      .or(`status.eq.open,due_date.gte.${queryStart}`),
+    supabase
+      .from("tasks")
+      .select("id, title, assignee_type, assignee_team_id, assignee_profile_id, scope")
+      .eq("is_archived", false),
+    supabase.from("companies").select("id, name"),
+    supabase.from("teams").select("id, name").eq("is_archived", false).order("name"),
+    supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .eq("is_archived", false)
+      .order("full_name"),
+    supabase.from("dimensions").select("id, name").order("created_at"),
+    supabase.from("dimension_values").select("id, dimension_id, value").order("value"),
+    supabase.from("company_dimension_values").select("company_id, dimension_id, dimension_value_id"),
+  ]);
 
   const taskById = new Map((tasksRes.data ?? []).map((t) => [t.id, t]));
   const companyNameById = new Map((companiesRes.data ?? []).map((c) => [c.id, c.name]));
@@ -43,6 +63,26 @@ export default async function DashboardPage() {
     (profilesRes.data ?? []).map((p) => [p.id, p.full_name ?? p.email]),
   );
   const dimensionValueLabelById = new Map((dimensionValuesRes.data ?? []).map((v) => [v.id, v.value]));
+
+  const teamOptions: DashboardFilterOption[] = (teamsRes.data ?? []).map((t) => ({
+    id: t.id,
+    label: t.name,
+  }));
+  const assigneeOptions: DashboardFilterOption[] = (profilesRes.data ?? []).map((p) => ({
+    id: p.id,
+    label: p.full_name ?? p.email,
+  }));
+  const dimensionOptions: DashboardDimensionOption[] = (dimensionsRes.data ?? []).map((dim) => ({
+    id: dim.id,
+    name: dim.name,
+    values: (dimensionValuesRes.data ?? [])
+      .filter((v) => v.dimension_id === dim.id)
+      .map((v) => ({ id: v.id, value: v.value })),
+  }));
+  const companyDimensionValues: CompanyDimensionValues = {};
+  for (const row of companyDimensionValuesRes.data ?? []) {
+    (companyDimensionValues[row.company_id] ??= {})[row.dimension_id] = row.dimension_value_id;
+  }
 
   const groups = new Map<string, DashboardTaskGroup>();
 
@@ -70,6 +110,8 @@ export default async function DashboardPage() {
           task.assignee_type === "person"
             ? task.assignee_profile_id === profile.id
             : task.assignee_team_id !== null && task.assignee_team_id === profile.team_id,
+        assigneeTeamId: task.assignee_team_id,
+        assigneeProfileId: task.assignee_profile_id,
         instances: [],
       };
       groups.set(key, group);
@@ -101,14 +143,23 @@ export default async function DashboardPage() {
     .filter((g) => g.isMine && g.dueDate === todayISO)
     .reduce((sum, g) => sum + g.instances.filter((i) => i.status === "open").length, 0);
 
+  const overdueMineCount = taskGroups
+    .filter((g) => g.isMine && g.dueDate < todayISO)
+    .reduce((sum, g) => sum + g.instances.filter((i) => i.status === "open").length, 0);
+
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
 
   return (
     <DashboardView
       firstName={firstName}
       todayCount={todayOpenMineCount}
+      overdueCount={overdueMineCount}
       todayISO={todayISO}
       groups={taskGroups}
+      teamOptions={teamOptions}
+      assigneeOptions={assigneeOptions}
+      dimensionOptions={dimensionOptions}
+      companyDimensionValues={companyDimensionValues}
     />
   );
 }

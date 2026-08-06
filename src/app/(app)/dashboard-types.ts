@@ -21,5 +21,21 @@ export interface DashboardTaskGroup {
   scopeChips: string[];
   /** Assigned to the current user directly, or to their team. */
   isMine: boolean;
+  assigneeTeamId: string | null;
+  assigneeProfileId: string | null;
   instances: DashboardCompanyInstance[];
 }
+
+export interface DashboardFilterOption {
+  id: string;
+  label: string;
+}
+
+export interface DashboardDimensionOption {
+  id: string;
+  name: string;
+  values: { id: string; value: string }[];
+}
+
+/** company id -> dimension id -> dimension value id, for the all-tasks dimension filters. */
+export type CompanyDimensionValues = Record<string, Record<string, string>>;
