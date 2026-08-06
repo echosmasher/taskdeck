@@ -81,3 +81,28 @@ export function classifyAbsence(
 
   return "short_term";
 }
+
+/**
+ * The first working day after `date` that is no longer classified
+ * long-term absent — an "expected return date" derived purely from
+ * the entries actually on the calendar (there's no separate "leave
+ * ends on X" field). Reuses classifyAbsence itself so it stays exactly
+ * consistent with it: both the custom-status and out_of_office-run
+ * paths are handled the same way, one candidate day at a time.
+ */
+export function findExpectedReturnDate(
+  date: string,
+  entriesByDate: ReadonlyMap<string, string>,
+  options: AbsenceClassifyOptions,
+): string {
+  let cursor = addDays(date, 1);
+  for (let i = 0; i < MAX_RUN_WALK_DAYS; i++) {
+    if (!isWorkingDay(fromISODate(cursor), options.holidays)) {
+      cursor = addDays(cursor, 1);
+      continue;
+    }
+    if (classifyAbsence(cursor, entriesByDate, options) !== "long_term") return cursor;
+    cursor = addDays(cursor, 1);
+  }
+  return cursor;
+}

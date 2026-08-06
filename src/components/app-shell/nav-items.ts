@@ -7,6 +7,7 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { href: "/", label: "Dashboard", adminOnly: false },
   { href: "/tasks", label: "Tasks", adminOnly: true },
+  { href: "/coverage", label: "Coverage", adminOnly: true },
   { href: "/history", label: "History", adminOnly: true },
   { href: "/companies", label: "Companies", adminOnly: true },
   { href: "/teams", label: "Teams & members", adminOnly: true },

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { classifyAbsence } from "./absence";
+import { classifyAbsence, findExpectedReturnDate } from "./absence";
 
 // Same Norway 2026 holiday subset used in dates.test.ts.
 const NO_2026 = new Set([
@@ -177,5 +177,47 @@ describe("classifyAbsence — out_of_office runs", () => {
     // Same data, empty holiday set: 2026-05-01 is now treated as an
     // ordinary working day, has no entry, and breaks the run at 4 days.
     expect(classifyAbsence("2026-04-27", e, DEFAULT_OPTIONS)).toBe("short_term");
+  });
+});
+
+describe("findExpectedReturnDate", () => {
+  it("returns the first working day after a custom-status run ends", () => {
+    const e = entries([
+      ["2026-04-13", "parental_leave"],
+      ["2026-04-14", "parental_leave"],
+      ["2026-04-15", "parental_leave"],
+      // 4-16 has no entry — the run ends there
+    ]);
+    expect(findExpectedReturnDate("2026-04-13", e, DEFAULT_OPTIONS)).toBe("2026-04-16");
+  });
+
+  it("skips a weekend to find the return date", () => {
+    const e = entries([
+      ["2026-04-16", "parental_leave"], // Thu
+      ["2026-04-17", "parental_leave"], // Fri
+      // weekend has no entries
+      // 4-20 (Mon) has no entry — the run ends there
+    ]);
+    expect(findExpectedReturnDate("2026-04-16", e, DEFAULT_OPTIONS)).toBe("2026-04-20");
+  });
+
+  it("returns the first working day after an out_of_office run clears the threshold", () => {
+    const e = entries([
+      ["2026-04-13", "out_of_office"],
+      ["2026-04-14", "out_of_office"],
+      ["2026-04-15", "out_of_office"],
+      ["2026-04-16", "out_of_office"],
+      ["2026-04-17", "out_of_office"], // 5 days — meets the default threshold
+      // 4-20 has no entry
+    ]);
+    expect(findExpectedReturnDate("2026-04-13", e, DEFAULT_OPTIONS)).toBe("2026-04-20");
+  });
+
+  it("keeps walking through a day that's still (but only short-term) absent", () => {
+    const e = entries([
+      ["2026-04-13", "sick_leave"],
+      ["2026-04-14", "sick"], // short-term on its own — not long-term, so this is the return date
+    ]);
+    expect(findExpectedReturnDate("2026-04-13", e, DEFAULT_OPTIONS)).toBe("2026-04-14");
   });
 });

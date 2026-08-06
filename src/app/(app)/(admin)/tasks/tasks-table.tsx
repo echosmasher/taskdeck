@@ -24,7 +24,13 @@ import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { describeDeadlineRule, describeRecurrence } from "@/lib/tasks/recurrence-format";
 import { setTaskArchivedAction } from "./actions";
 import { TaskFormDialog } from "./task-form-dialog";
-import type { DimensionOption, MemberOption, TaskRow, TeamOption } from "./types";
+import type {
+  AbsenceWarningContext,
+  DimensionOption,
+  MemberOption,
+  TaskRow,
+  TeamOption,
+} from "./types";
 
 export function TasksTable({
   tasks,
@@ -32,12 +38,14 @@ export function TasksTable({
   teams,
   members,
   countries,
+  absenceWarningContext,
 }: {
   tasks: TaskRow[];
   dimensions: DimensionOption[];
   teams: TeamOption[];
   members: MemberOption[];
   countries: string[];
+  absenceWarningContext: AbsenceWarningContext;
 }) {
   const [search, setSearch] = useState("");
   const [statusFilter, setStatusFilter] = useState<"active" | "archived" | "all">("active");
@@ -170,6 +178,7 @@ export function TasksTable({
         members={members}
         countries={countries}
         allTasksForCopy={tasks}
+        absenceWarningContext={absenceWarningContext}
       />
 
       {editingTask && (
@@ -181,6 +190,7 @@ export function TasksTable({
           members={members}
           countries={countries}
           task={editingTask}
+          absenceWarningContext={absenceWarningContext}
         />
       )}
     </div>

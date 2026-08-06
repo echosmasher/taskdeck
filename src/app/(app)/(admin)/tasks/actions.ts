@@ -86,18 +86,35 @@ export async function createTaskAction(
     data: { user },
   } = await supabase.auth.getUser();
 
-  const { error } = await supabase.from("tasks").insert({
-    title: parsed.title,
-    description: parsed.description,
-    assignee_type: parsed.assigneeType,
-    assignee_team_id: parsed.assigneeTeamId,
-    assignee_profile_id: parsed.assigneeProfileId,
-    scope: parsed.scope,
-    recurrence: parsed.recurrence,
-    deadline_rule: parsed.deadlineRule,
-    created_by: user?.id,
-  });
+  const { data: created, error } = await supabase
+    .from("tasks")
+    .insert({
+      title: parsed.title,
+      description: parsed.description,
+      assignee_type: parsed.assigneeType,
+      assignee_team_id: parsed.assigneeTeamId,
+      assignee_profile_id: parsed.assigneeProfileId,
+      scope: parsed.scope,
+      recurrence: parsed.recurrence,
+      deadline_rule: parsed.deadlineRule,
+      created_by: user?.id,
+    })
+    .select("id")
+    .single();
   if (error) return { error: error.message };
+
+  // Non-blocking absence warning (addendum §15.3.2): "the warning is
+  // recorded in task_events details so the decision is traceable" —
+  // only written when the client actually showed one at save time.
+  const absenceWarning = readJson(formData, "absence_warning");
+  if (created && absenceWarning) {
+    await supabase.from("task_events").insert({
+      task_id: created.id,
+      event: "edited",
+      actor_profile_id: user?.id,
+      details: { absence_warning: absenceWarning } as unknown as Json,
+    });
+  }
 
   revalidatePath("/tasks");
   return {};
@@ -176,6 +193,17 @@ export async function updateTaskAction(
         details: {},
       });
     }
+
+    const absenceWarning = readJson(formData, "absence_warning");
+    if (absenceWarning) {
+      events.push({
+        task_id: taskId,
+        event: "edited",
+        actor_profile_id: actorId,
+        details: { absence_warning: absenceWarning } as unknown as Json,
+      });
+    }
+
     if (events.length > 0) {
       await supabase.from("task_events").insert(events);
     }
@@ -195,4 +223,42 @@ export async function setTaskArchivedAction(taskId: string, archived: boolean) {
 
   revalidatePath("/tasks");
   return {};
+}
+
+export interface OverridableInstance {
+  instanceId: string;
+  companyName: string;
+  dueDate: string;
+}
+
+/**
+ * The instances "Assign and cover" can act on: this task's still-open
+ * instances already generated within the absence warning's affected
+ * date range. Only ever non-empty in edit mode — a brand-new task has
+ * no instances yet, so there's nothing to pre-fill until the next
+ * generation run (the Coverage view will surface it then).
+ */
+export async function findOverridableInstancesAction(
+  taskId: string,
+  rangeStart: string,
+  rangeEnd: string,
+): Promise<OverridableInstance[]> {
+  const supabase = await createClient();
+  const [{ data: instances }, { data: companies }] = await Promise.all([
+    supabase
+      .from("task_instances")
+      .select("id, company_id, due_date")
+      .eq("task_id", taskId)
+      .eq("status", "open")
+      .gte("due_date", rangeStart)
+      .lte("due_date", rangeEnd),
+    supabase.from("companies").select("id, name"),
+  ]);
+
+  const companyNameById = new Map((companies ?? []).map((c) => [c.id, c.name]));
+  return (instances ?? []).map((i) => ({
+    instanceId: i.id,
+    companyName: companyNameById.get(i.company_id) ?? "Unknown company",
+    dueDate: i.due_date,
+  }));
 }

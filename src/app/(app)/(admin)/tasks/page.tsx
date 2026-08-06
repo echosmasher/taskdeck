@@ -1,24 +1,45 @@
 import { createClient } from "@/lib/supabase/server";
+import { getAppSettings } from "@/lib/app-settings";
+import { getTodayInTimezone } from "@/lib/dates";
 import type { DeadlineRule, Recurrence } from "@/lib/tasks/recurrence-types";
 import { TasksTable } from "./tasks-table";
-import type { DimensionOption, MemberOption, TaskRow, TeamOption } from "./types";
+import type {
+  AbsenceWarningContext,
+  DimensionOption,
+  MemberOption,
+  TaskRow,
+  TeamOption,
+} from "./types";
 
 export default async function TasksPage() {
   const supabase = await createClient();
+  const settings = await getAppSettings();
 
-  const [tasksRes, dimensionsRes, dimensionValuesRes, teamsRes, profilesRes, holidaysRes] =
-    await Promise.all([
-      supabase.from("tasks").select("*").order("title"),
-      supabase.from("dimensions").select("id, name").order("created_at"),
-      supabase.from("dimension_values").select("id, dimension_id, value").order("value"),
-      supabase.from("teams").select("id, name").eq("is_archived", false).order("name"),
-      supabase
-        .from("profiles")
-        .select("id, full_name, email")
-        .eq("is_archived", false)
-        .order("full_name"),
-      supabase.from("holidays").select("country_code"),
-    ]);
+  const [
+    tasksRes,
+    dimensionsRes,
+    dimensionValuesRes,
+    teamsRes,
+    profilesRes,
+    holidaysRes,
+    companiesRes,
+    companyDimensionValuesRes,
+    calendarEntriesRes,
+  ] = await Promise.all([
+    supabase.from("tasks").select("*").order("title"),
+    supabase.from("dimensions").select("id, name").order("created_at"),
+    supabase.from("dimension_values").select("id, dimension_id, value").order("value"),
+    supabase.from("teams").select("id, name").eq("is_archived", false).order("name"),
+    supabase
+      .from("profiles")
+      .select("id, full_name, email")
+      .eq("is_archived", false)
+      .order("full_name"),
+    supabase.from("holidays").select("date, country_code"),
+    supabase.from("companies").select("id").eq("is_archived", false),
+    supabase.from("company_dimension_values").select("company_id, dimension_id, dimension_value_id"),
+    supabase.from("calendar_entries").select("profile_id, date, status"),
+  ]);
 
   const dimensions: DimensionOption[] = (dimensionsRes.data ?? []).map((dim) => ({
     id: dim.id,
@@ -40,6 +61,40 @@ export default async function TasksPage() {
   const countries = [
     ...new Set((holidaysRes.data ?? []).map((h) => h.country_code)),
   ].sort();
+
+  const dimensionValueToDimension: Record<string, string> = {};
+  for (const v of dimensionValuesRes.data ?? []) dimensionValueToDimension[v.id] = v.dimension_id;
+
+  const companiesForWarning: AbsenceWarningContext["companies"] = (companiesRes.data ?? []).map(
+    (c) => ({
+      id: c.id,
+      dimensionValues: Object.fromEntries(
+        (companyDimensionValuesRes.data ?? [])
+          .filter((cdv) => cdv.company_id === c.id)
+          .map((cdv) => [cdv.dimension_id, cdv.dimension_value_id]),
+      ),
+    }),
+  );
+
+  const holidaysByCountry: Record<string, string[]> = {};
+  for (const h of holidaysRes.data ?? []) {
+    (holidaysByCountry[h.country_code] ??= []).push(h.date);
+  }
+
+  const entriesByProfile: Record<string, Record<string, string>> = {};
+  for (const e of calendarEntriesRes.data ?? []) {
+    (entriesByProfile[e.profile_id] ??= {})[e.date] = e.status;
+  }
+
+  const absenceWarningContext: AbsenceWarningContext = {
+    companies: companiesForWarning,
+    dimensionValueToDimension,
+    entriesByProfile,
+    holidaysByCountry,
+    longAbsenceStatuses: settings.long_absence_statuses,
+    longAbsenceMinDays: settings.long_absence_min_days,
+    todayISO: getTodayInTimezone(settings.timezone),
+  };
 
   const tasks: TaskRow[] = (tasksRes.data ?? []).map((task) => ({
     ...task,
@@ -66,6 +121,7 @@ export default async function TasksPage() {
         teams={teams}
         members={members}
         countries={countries.length > 0 ? countries : ["NO"]}
+        absenceWarningContext={absenceWarningContext}
       />
     </div>
   );

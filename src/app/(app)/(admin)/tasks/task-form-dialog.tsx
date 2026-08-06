@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, useTransition } from "react";
+import { useMemo, useRef, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
@@ -13,14 +13,23 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { computeAssignmentWarning } from "@/lib/tasks/assignment-warning";
 import type { DeadlineRule, Recurrence } from "@/lib/tasks/recurrence-types";
+import { AbsenceWarningBanner } from "./absence-warning-banner";
 import { createTaskAction, updateTaskAction } from "./actions";
 import { AssigneeField } from "./assignee-field";
+import { AssignAndCoverDialog } from "./assign-and-cover-dialog";
 import { CopyTaskPicker } from "./copy-task-picker";
 import { DeadlineRuleField } from "./deadline-rule-field";
 import { RecurrenceField } from "./recurrence-field";
 import { ScopeField } from "./scope-field";
-import type { DimensionOption, MemberOption, TaskRow, TeamOption } from "./types";
+import type {
+  AbsenceWarningContext,
+  DimensionOption,
+  MemberOption,
+  TaskRow,
+  TeamOption,
+} from "./types";
 
 const DEFAULT_RECURRENCE: Recurrence = { type: "one_off", date: "" };
 
@@ -33,6 +42,7 @@ export function TaskFormDialog({
   countries,
   task,
   allTasksForCopy,
+  absenceWarningContext,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -44,6 +54,7 @@ export function TaskFormDialog({
   task?: TaskRow;
   /** Only needed in create mode, for the "copy from existing" picker. */
   allTasksForCopy?: TaskRow[];
+  absenceWarningContext: AbsenceWarningContext;
 }) {
   const isEdit = !!task;
   const formRef = useRef<HTMLFormElement>(null);
@@ -62,6 +73,40 @@ export function TaskFormDialog({
   const [scope, setScope] = useState<string[]>(task?.scope ?? []);
   const [recurrence, setRecurrence] = useState<Recurrence>(task?.recurrence ?? DEFAULT_RECURRENCE);
   const [deadlineRule, setDeadlineRule] = useState<DeadlineRule>(task?.deadline_rule ?? null);
+  const [assignAndCoverOpen, setAssignAndCoverOpen] = useState(false);
+
+  // Assignment-time absence warning (addendum §15.3.2) — team
+  // assignments aren't warned on, since a team task is completable by
+  // any member and absence self-heals.
+  const warning = useMemo(() => {
+    if (assigneeType !== "person" || !assigneeId) return null;
+    return computeAssignmentWarning({
+      recurrence,
+      deadlineRule,
+      scope,
+      assigneeEntriesByDate: new Map(
+        Object.entries(absenceWarningContext.entriesByProfile[assigneeId] ?? {}),
+      ),
+      companies: absenceWarningContext.companies.map((c) => ({
+        id: c.id,
+        dimensionValues: new Map(Object.entries(c.dimensionValues)),
+      })),
+      dimensionValueToDimension: new Map(
+        Object.entries(absenceWarningContext.dimensionValueToDimension),
+      ),
+      holidaysByCountry: new Map(
+        Object.entries(absenceWarningContext.holidaysByCountry).map(([k, v]) => [k, new Set(v)]),
+      ),
+      classifyOptions: {
+        longAbsenceStatuses: absenceWarningContext.longAbsenceStatuses,
+        longAbsenceMinDays: absenceWarningContext.longAbsenceMinDays,
+        holidays: new Set(Object.values(absenceWarningContext.holidaysByCountry).flat()),
+      },
+      todayISO: absenceWarningContext.todayISO,
+    });
+  }, [assigneeType, assigneeId, recurrence, deadlineRule, scope, absenceWarningContext]);
+
+  const assigneeName = members.find((m) => m.id === assigneeId)?.label ?? "This person";
 
   function reset() {
     setTitle(task?.title ?? "");
@@ -192,6 +237,24 @@ export function TaskFormDialog({
               countries={countries}
             />
 
+            {warning && (
+              <AbsenceWarningBanner
+                warning={warning}
+                assigneeName={assigneeName}
+                canCover={isEdit}
+                onAssignAndCover={
+                  isEdit && warning.longTerm ? () => setAssignAndCoverOpen(true) : undefined
+                }
+              />
+            )}
+            {warning?.longTerm && (
+              <input
+                type="hidden"
+                name="absence_warning"
+                value={JSON.stringify({ assigneeId, assigneeName, ...warning.longTerm })}
+              />
+            )}
+
             {error && (
               <p role="alert" className="text-sm text-destructive">
                 {error}
@@ -208,6 +271,18 @@ export function TaskFormDialog({
           </DialogFooter>
         </form>
       </DialogContent>
+
+      {isEdit && warning?.longTerm && (
+        <AssignAndCoverDialog
+          open={assignAndCoverOpen}
+          onOpenChange={setAssignAndCoverOpen}
+          taskId={task.id}
+          rangeStart={warning.longTerm.rangeStart}
+          rangeEnd={warning.longTerm.rangeEnd}
+          excludeProfileId={assigneeId}
+          members={members}
+        />
+      )}
     </Dialog>
   );
 }
