@@ -34,6 +34,35 @@ export type Database = {
   }
   public: {
     Tables: {
+      calendar_entries: {
+        Row: {
+          date: string
+          id: string
+          profile_id: string
+          status: Database["public"]["Enums"]["calendar_entry_status"]
+        }
+        Insert: {
+          date: string
+          id?: string
+          profile_id: string
+          status: Database["public"]["Enums"]["calendar_entry_status"]
+        }
+        Update: {
+          date?: string
+          id?: string
+          profile_id?: string
+          status?: Database["public"]["Enums"]["calendar_entry_status"]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "calendar_entries_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       companies: {
         Row: {
           created_at: string
@@ -450,6 +479,14 @@ export type Database = {
       }
     }
     Enums: {
+      calendar_entry_status:
+        | "in_office"
+        | "remote"
+        | "out_of_office"
+        | "sick"
+        | "sick_leave"
+        | "parental_leave"
+        | "business_travel"
       task_assignee_type: "team" | "person"
       task_event_type:
         | "created"
@@ -590,6 +627,15 @@ export const Constants = {
   },
   public: {
     Enums: {
+      calendar_entry_status: [
+        "in_office",
+        "remote",
+        "out_of_office",
+        "sick",
+        "sick_leave",
+        "parental_leave",
+        "business_travel",
+      ],
       task_assignee_type: ["team", "person"],
       task_event_type: [
         "created",

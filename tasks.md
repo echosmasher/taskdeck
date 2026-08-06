@@ -22,8 +22,8 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 16. Add bulk complete, overdue banner, and all-tasks filters
 - [x] 17. Build CSV import for companies with validation preview
 - [x] 18. Build History audit-trail page with filters and event timelines
-- [ ] 19. Create calendar_entries schema and office calendar grid
-- [ ] 20. Add calendar sort toggle and admin cell editing — blocked by 19
+- [x] 19. Create calendar_entries schema and office calendar grid
+- [x] 20. Add calendar sort toggle and admin cell editing (built together with 19 — a grid without a working sort toggle or editing wasn't a meaningful checkpoint to stop at)
 - [ ] 21. Write idempotent seed script with realistic demo data — blocked by 13, 19
 - [ ] 22. Build demo mode landing page, banner, and reset job — blocked by 21
 - [ ] 23. Run responsive and accessibility passes (also realigns the app shell/Companies/Teams UI to the stitch_office_task_pulse/ design template — see task 23 notes below) — blocked by 16, 18, 20
@@ -39,3 +39,4 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - Local dev: Supabase runs on non-default ports (see `supabase/config.toml` — shifted +1000 to avoid colliding with other projects on this machine). Colima needs 4 CPU/6GB to run multiple local Supabase stacks at once.
 - Every migration must `grant ... to authenticated, service_role` explicitly — this Supabase version doesn't auto-expose new tables to service_role either.
 - Never wrap a server action in `startTransition` and pass it via a form's `action=` prop — use `onSubmit` + `preventDefault()` + `new FormData(e.currentTarget)` instead. See the task 11 commit for why.
+- The app shell's content column (`AppShell`'s `<div className="flex flex-1 flex-col">`) needed `min-w-0` added — without it, any page with intrinsically-wide content (e.g. the calendar's month view, ~30 columns) pushes the whole page wider instead of scrolling inside its own `overflow-x-auto` container. Keep that in mind for any other wide-content page (e.g. a future data table).

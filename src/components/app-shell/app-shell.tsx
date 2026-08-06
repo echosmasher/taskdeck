@@ -19,7 +19,7 @@ export function AppShell({
         <div className="border-b p-4 text-lg font-semibold">TaskDeck</div>
         <Sidebar isAdmin={isAdmin} />
       </aside>
-      <div className="flex flex-1 flex-col">
+      <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-4 border-b px-4 py-3 md:px-6">
           <MobileNav isAdmin={isAdmin} />
           <div className="ml-auto">

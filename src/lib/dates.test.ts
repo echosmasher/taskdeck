@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
 import {
+  addDays,
+  addMonths,
   clampDayOfMonth,
+  datesInRange,
   daysInMonth,
   fromISODate,
   getTodayInTimezone,
@@ -173,6 +176,54 @@ describe("isOverdue", () => {
 
   it("is false when due date is after today", () => {
     expect(isOverdue("2026-04-03", "2026-04-02")).toBe(false);
+  });
+});
+
+describe("addDays", () => {
+  it("adds within a month", () => {
+    expect(addDays("2026-04-05", 3)).toBe("2026-04-08");
+  });
+
+  it("rolls over a month boundary", () => {
+    expect(addDays("2026-04-29", 3)).toBe("2026-05-02");
+  });
+
+  it("subtracts with a negative count", () => {
+    expect(addDays("2026-04-05", -10)).toBe("2026-03-26");
+  });
+});
+
+describe("addMonths", () => {
+  it("adds within the same year", () => {
+    expect(addMonths("2026-04-15", 2)).toBe("2026-06-15");
+  });
+
+  it("rolls over a year boundary", () => {
+    expect(addMonths("2026-11-10", 3)).toBe("2027-02-10");
+  });
+
+  it("goes backward across a year boundary", () => {
+    expect(addMonths("2026-01-10", -2)).toBe("2025-11-10");
+  });
+
+  it("clamps the day when the target month is shorter", () => {
+    expect(addMonths("2026-01-31", 1)).toBe("2026-02-28");
+  });
+});
+
+describe("datesInRange", () => {
+  it("lists every date inclusive of both ends", () => {
+    expect(datesInRange("2026-04-28", "2026-05-02")).toEqual([
+      "2026-04-28",
+      "2026-04-29",
+      "2026-04-30",
+      "2026-05-01",
+      "2026-05-02",
+    ]);
+  });
+
+  it("returns a single date when start equals end", () => {
+    expect(datesInRange("2026-04-28", "2026-04-28")).toEqual(["2026-04-28"]);
   });
 });
 

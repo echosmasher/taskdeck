@@ -93,6 +93,30 @@ export function weeklyOccurrencesInRange(weekday: Weekday, rangeStart: Date, ran
   return results;
 }
 
+export function addDays(dateISO: string, days: number): string {
+  const d = fromISODate(dateISO);
+  return toISODate(new Date(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate() + days)));
+}
+
+/** Adds calendar months, clamping the day-of-month to the target month's length. */
+export function addMonths(dateISO: string, months: number): string {
+  const d = fromISODate(dateISO);
+  const targetIndex = d.getUTCMonth() + months;
+  const year = d.getUTCFullYear() + Math.floor(targetIndex / 12);
+  const month = ((targetIndex % 12) + 12) % 12; // 0-indexed
+  const day = Math.min(d.getUTCDate(), daysInMonth(year, month + 1));
+  return toISODate(new Date(Date.UTC(year, month, day)));
+}
+
+/** Every date from `startISO` to `endISO`, inclusive. */
+export function datesInRange(startISO: string, endISO: string): string[] {
+  const dates: string[] = [];
+  for (let d = fromISODate(startISO); toISODate(d) <= endISO; d.setUTCDate(d.getUTCDate() + 1)) {
+    dates.push(toISODate(d));
+  }
+  return dates;
+}
+
 /** "Today" as YYYY-MM-DD in the given IANA timezone (default: `now`). */
 export function getTodayInTimezone(timezone: string, now: Date = new Date()): string {
   return new Intl.DateTimeFormat("en-CA", {
