@@ -12,6 +12,9 @@ export interface HistoryRow {
   statusSetByName: string | null;
   statusSetAt: string | null;
   naReason: string | null;
+  /** True when this instance had assignee_override_profile_id set (addendum §15.3.3). */
+  isOverride: boolean;
+  effectiveAssigneeName: string | null;
 }
 
 export interface HistoryEvent {

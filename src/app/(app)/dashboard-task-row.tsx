@@ -20,9 +20,11 @@ function formatStamp(iso: string): string {
 export function DashboardTaskRow({
   group,
   todayISO,
+  currentProfileId,
 }: {
   group: DashboardTaskGroup;
   todayISO: string;
+  currentProfileId: string;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
@@ -91,7 +93,12 @@ export function DashboardTaskRow({
       {expanded && (
         <ul className="divide-y border-t px-4">
           {group.instances.map((instance) => (
-            <InstanceRow key={instance.instanceId} instance={instance} />
+            <InstanceRow
+              key={instance.instanceId}
+              instance={instance}
+              currentProfileId={currentProfileId}
+              originalAssigneeLabel={group.originalAssigneeLabel}
+            />
           ))}
         </ul>
       )}
@@ -109,7 +116,15 @@ export function DashboardTaskRow({
   );
 }
 
-function InstanceRow({ instance }: { instance: DashboardCompanyInstance }) {
+function InstanceRow({
+  instance,
+  currentProfileId,
+  originalAssigneeLabel,
+}: {
+  instance: DashboardCompanyInstance;
+  currentProfileId: string;
+  originalAssigneeLabel: string;
+}) {
   const [isPending, startTransition] = useTransition();
   const [naDialogOpen, setNaDialogOpen] = useState(false);
 
@@ -139,9 +154,22 @@ function InstanceRow({ instance }: { instance: DashboardCompanyInstance }) {
     instance.statusSetAt &&
     `${instance.statusSetByName ?? "Someone"}, ${formatStamp(instance.statusSetAt)}`;
 
+  const overrideLabel = instance.isOverride
+    ? instance.effectiveAssigneeProfileId === currentProfileId
+      ? `Covering for ${originalAssigneeLabel}`
+      : `Covered by ${instance.effectiveAssigneeName ?? "someone"}`
+    : null;
+
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 py-2 text-sm">
-      <span>{instance.companyName}</span>
+      <div className="flex items-center gap-2">
+        <span>{instance.companyName}</span>
+        {overrideLabel && (
+          <Badge variant="outline" className="text-xs">
+            {overrideLabel}
+          </Badge>
+        )}
+      </div>
 
       {instance.status === "open" && (
         <div className="flex items-center gap-2">

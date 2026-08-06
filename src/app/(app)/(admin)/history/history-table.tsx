@@ -223,7 +223,16 @@ export function HistoryTable({
                       <ChevronRight className="h-4 w-4 text-muted-foreground" />
                     )}
                   </TableCell>
-                  <TableCell className="font-medium">{row.taskTitle}</TableCell>
+                  <TableCell className="font-medium">
+                    <div className="flex items-center gap-2">
+                      {row.taskTitle}
+                      {row.isOverride && (
+                        <Badge variant="outline" className="text-xs">
+                          Covered by {row.effectiveAssigneeName ?? "someone"}
+                        </Badge>
+                      )}
+                    </div>
+                  </TableCell>
                   <TableCell>{row.companyName}</TableCell>
                   <TableCell>{row.dueDate}</TableCell>
                   <TableCell>
@@ -249,6 +258,11 @@ export function HistoryTable({
                             <span className="text-muted-foreground">
                               {formatTimestamp(event.occurredAt)}
                             </span>
+                            {typeof event.details.override_reason === "string" && (
+                              <span className="text-muted-foreground">
+                                ({event.details.override_reason})
+                              </span>
+                            )}
                             {typeof event.details.na_reason === "string" && (
                               <span className="text-muted-foreground">
                                 ({event.details.na_reason})

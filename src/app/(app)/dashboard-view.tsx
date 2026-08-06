@@ -19,6 +19,7 @@ type DashboardScope = "mine" | "all";
 const EMPTY_FILTERS: DashboardFilterState = { teamId: null, assigneeId: null, dimensionValues: {} };
 
 export function DashboardView({
+  currentProfileId,
   firstName,
   todayCount,
   overdueCount,
@@ -29,6 +30,7 @@ export function DashboardView({
   dimensionOptions,
   companyDimensionValues,
 }: {
+  currentProfileId: string;
   firstName: string;
   todayCount: number;
   overdueCount: number;
@@ -130,7 +132,12 @@ export function DashboardView({
           <p className="text-muted-foreground">No tasks in this view.</p>
         )}
         {visible.map((group) => (
-          <DashboardTaskRow key={group.key} group={group} todayISO={todayISO} />
+          <DashboardTaskRow
+            key={group.key}
+            group={group}
+            todayISO={todayISO}
+            currentProfileId={currentProfileId}
+          />
         ))}
       </div>
     </div>

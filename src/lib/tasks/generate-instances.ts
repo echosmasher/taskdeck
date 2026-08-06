@@ -21,6 +21,13 @@ const GENERATION_WINDOW_DAYS = 60;
  * system operation, not a member/admin action, and task_instances has
  * no INSERT policy for plain authenticated users (see the tasks
  * migration) specifically so this is the only path that creates rows.
+ *
+ * Never copies assignee overrides forward (addendum §15.3.3): the rows
+ * inserted here never set assignee_override_profile_id, and the
+ * upsert-ignore means an existing instance — override included — is
+ * never touched by a later generation run. A new occurrence for a
+ * still-absent member always starts unoverridden and has to be
+ * re-covered explicitly.
  */
 export async function generateTaskInstances(): Promise<{ attempted: number; created: number }> {
   const admin = createAdminClient();

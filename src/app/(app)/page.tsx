@@ -2,6 +2,7 @@ import { requireProfile } from "@/lib/auth/require-profile";
 import { createClient } from "@/lib/supabase/server";
 import { getAppTimezone } from "@/lib/app-settings";
 import { getTodayInTimezone, monthRange, weekRange } from "@/lib/dates";
+import { resolveEffectiveAssignee } from "@/lib/tasks/effective-assignee";
 import { DashboardView } from "./dashboard-view";
 import type {
   CompanyDimensionValues,
@@ -103,19 +104,36 @@ export default async function DashboardPage() {
           task.assignee_type === "team"
             ? `Group – ${teamNameById.get(task.assignee_team_id ?? "") ?? "Unknown team"}`
             : null,
+        originalAssigneeLabel:
+          task.assignee_type === "team"
+            ? (teamNameById.get(task.assignee_team_id ?? "") ?? "Unknown team")
+            : (profileNameById.get(task.assignee_profile_id ?? "") ?? "Unknown person"),
         scopeChips: scope
           .map((id) => dimensionValueLabelById.get(id))
           .filter((v): v is string => !!v),
-        isMine:
-          task.assignee_type === "person"
-            ? task.assignee_profile_id === profile.id
-            : task.assignee_team_id !== null && task.assignee_team_id === profile.team_id,
+        isMine: false, // finalized below, once every instance in the group is known
         assigneeTeamId: task.assignee_team_id,
         assigneeProfileId: task.assignee_profile_id,
         instances: [],
       };
       groups.set(key, group);
     }
+
+    // Effective assignee (addendum §15.3.3): an instance-level override
+    // takes precedence over the task's own assignee for every dashboard
+    // read, including "is this mine" and the greeting/overdue counts.
+    const effective = resolveEffectiveAssignee(
+      {
+        assigneeType: task.assignee_type,
+        assigneeTeamId: task.assignee_team_id,
+        assigneeProfileId: task.assignee_profile_id,
+      },
+      instance.assignee_override_profile_id,
+    );
+    const instanceIsMine =
+      effective.type === "person"
+        ? effective.profileId === profile.id
+        : effective.teamId !== null && effective.teamId === profile.team_id;
 
     const companyInstance: DashboardCompanyInstance = {
       instanceId: instance.id,
@@ -127,8 +145,15 @@ export default async function DashboardPage() {
         : null,
       statusSetAt: instance.status_set_at,
       naReason: instance.na_reason,
+      isOverride: effective.isOverride,
+      effectiveAssigneeProfileId: effective.profileId,
+      effectiveAssigneeName: effective.profileId
+        ? (profileNameById.get(effective.profileId) ?? null)
+        : null,
+      isMine: instanceIsMine,
     };
     group.instances.push(companyInstance);
+    if (instanceIsMine) group.isMine = true;
   }
 
   for (const group of groups.values()) {
@@ -139,18 +164,23 @@ export default async function DashboardPage() {
     (a, b) => a.dueDate.localeCompare(b.dueDate) || a.title.localeCompare(b.title),
   );
 
-  const todayOpenMineCount = taskGroups
-    .filter((g) => g.isMine && g.dueDate === todayISO)
-    .reduce((sum, g) => sum + g.instances.filter((i) => i.status === "open").length, 0);
+  const allInstances = taskGroups.flatMap((g) =>
+    g.instances.map((i) => ({ ...i, dueDate: g.dueDate })),
+  );
 
-  const overdueMineCount = taskGroups
-    .filter((g) => g.isMine && g.dueDate < todayISO)
-    .reduce((sum, g) => sum + g.instances.filter((i) => i.status === "open").length, 0);
+  const todayOpenMineCount = allInstances.filter(
+    (i) => i.isMine && i.status === "open" && i.dueDate === todayISO,
+  ).length;
+
+  const overdueMineCount = allInstances.filter(
+    (i) => i.isMine && i.status === "open" && i.dueDate < todayISO,
+  ).length;
 
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
 
   return (
     <DashboardView
+      currentProfileId={profile.id}
       firstName={firstName}
       todayCount={todayOpenMineCount}
       overdueCount={overdueMineCount}

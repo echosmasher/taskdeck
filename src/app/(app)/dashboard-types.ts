@@ -8,6 +8,12 @@ export interface DashboardCompanyInstance {
   statusSetByName: string | null;
   statusSetAt: string | null;
   naReason: string | null;
+  /** True when assignee_override_profile_id is set on this instance (addendum §15.3.3). */
+  isOverride: boolean;
+  effectiveAssigneeProfileId: string | null;
+  effectiveAssigneeName: string | null;
+  /** Whether *this instance* is effectively assigned to the current viewer. */
+  isMine: boolean;
 }
 
 /** One row on the dashboard: a task occurrence, fanned out per company (§5, §7.1). */
@@ -18,8 +24,10 @@ export interface DashboardTaskGroup {
   title: string;
   /** "Group – {team}" for team tasks, null for person tasks (§7.1). */
   assigneeChip: string | null;
+  /** The task's raw declared assignee, always a plain name/team label — used for "Covering for {x}" chips. */
+  originalAssigneeLabel: string;
   scopeChips: string[];
-  /** Assigned to the current user directly, or to their team. */
+  /** True when any instance in this group is effectively assigned to the current viewer. */
   isMine: boolean;
   assigneeTeamId: string | null;
   assigneeProfileId: string | null;

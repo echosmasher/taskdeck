@@ -27,7 +27,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 20a. Create `app_settings` schema with RLS and admin Settings page
 - [x] 20b. Implement three-mode calendar edit permissions in RLS and UI
 - [x] 20c. Build `lib/absence.ts` classification helper with unit tests
-- [ ] 20d. Add `assignee_override_profile_id` to task_instances; effective-assignee resolution across dashboard, History and generation — blocked by 15, 18
+- [x] 20d. Add `assignee_override_profile_id` to task_instances; effective-assignee resolution across dashboard, History and generation
 - [ ] 20e. Add assignment-time absence warnings and the admin coverage view — blocked by 20c, 20d
 - [ ] 20f. Create `reassignment_requests` schema with RLS and member request flow — blocked by 20d
 - [ ] 20g. Build admin Requests page with approve/reject, badge, and audit events — blocked by 20f

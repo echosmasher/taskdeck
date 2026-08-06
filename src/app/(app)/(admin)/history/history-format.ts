@@ -14,6 +14,10 @@ export function describeEvent(event: Tables<"task_events">["event"]): string {
       return "Reassigned";
     case "edited":
       return "Edited";
+    case "override_set":
+      return "Coverage assigned";
+    case "override_cleared":
+      return "Coverage cleared";
   }
 }
 

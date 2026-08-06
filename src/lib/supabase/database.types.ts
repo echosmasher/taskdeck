@@ -388,36 +388,55 @@ export type Database = {
       }
       task_instances: {
         Row: {
+          assignee_override_profile_id: string | null
           company_id: string
           due_date: string
           id: string
           na_reason: string | null
+          override_reason: string | null
+          override_set_at: string | null
+          override_set_by: string | null
           status: Database["public"]["Enums"]["task_instance_status"]
           status_set_at: string | null
           status_set_by: string | null
           task_id: string
         }
         Insert: {
+          assignee_override_profile_id?: string | null
           company_id: string
           due_date: string
           id?: string
           na_reason?: string | null
+          override_reason?: string | null
+          override_set_at?: string | null
+          override_set_by?: string | null
           status?: Database["public"]["Enums"]["task_instance_status"]
           status_set_at?: string | null
           status_set_by?: string | null
           task_id: string
         }
         Update: {
+          assignee_override_profile_id?: string | null
           company_id?: string
           due_date?: string
           id?: string
           na_reason?: string | null
+          override_reason?: string | null
+          override_set_at?: string | null
+          override_set_by?: string | null
           status?: Database["public"]["Enums"]["task_instance_status"]
           status_set_at?: string | null
           status_set_by?: string | null
           task_id?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "task_instances_assignee_override_profile_id_fkey"
+            columns: ["assignee_override_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "task_instances_company_id_fkey"
             columns: ["company_id"]
@@ -431,6 +450,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "companies_missing_dimension_values"
             referencedColumns: ["company_id"]
+          },
+          {
+            foreignKeyName: "task_instances_override_set_by_fkey"
+            columns: ["override_set_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "task_instances_status_set_by_fkey"
@@ -554,7 +580,7 @@ export type Database = {
         Returns: boolean
       }
       can_manage_task_instance: {
-        Args: { p_task_id: string }
+        Args: { p_override_profile_id: string; p_task_id: string }
         Returns: boolean
       }
       current_profile_role: {
@@ -580,6 +606,8 @@ export type Database = {
         | "reopened"
         | "reassigned"
         | "edited"
+        | "override_set"
+        | "override_cleared"
       task_instance_status: "open" | "completed" | "na"
       user_role: "master_admin" | "admin" | "member"
     }
@@ -730,6 +758,8 @@ export const Constants = {
         "reopened",
         "reassigned",
         "edited",
+        "override_set",
+        "override_cleared",
       ],
       task_instance_status: ["open", "completed", "na"],
       user_role: ["master_admin", "admin", "member"],
