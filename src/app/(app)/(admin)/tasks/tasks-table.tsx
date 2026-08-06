@@ -169,6 +169,7 @@ export function TasksTable({
         teams={teams}
         members={members}
         countries={countries}
+        allTasksForCopy={tasks}
       />
 
       {editingTask && (

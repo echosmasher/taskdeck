@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { parseDeadlineRule, parseRecurrence } from "@/lib/tasks/recurrence-validate";
 import type { DeadlineRule, Recurrence } from "@/lib/tasks/recurrence-types";
+import type { Json } from "@/lib/supabase/database.types";
 
 export interface TaskActionState {
   error?: string;
@@ -35,7 +36,6 @@ interface ParsedTaskForm {
 }
 
 function parseTaskForm(formData: FormData): ParsedTaskForm | { error: string } {
-  console.log("DEBUG formData entries:", [...formData.entries()]);
   const title = String(formData.get("title") ?? "").trim();
   if (!title) return { error: "Title is required." };
 
@@ -112,6 +112,12 @@ export async function updateTaskAction(
   if ("error" in parsed) return { error: parsed.error };
 
   const supabase = await createClient();
+
+  const [{ data: before }, { data: userData }] = await Promise.all([
+    supabase.from("tasks").select("*").eq("id", taskId).single(),
+    supabase.auth.getUser(),
+  ]);
+
   const { error } = await supabase
     .from("tasks")
     .update({
@@ -126,6 +132,54 @@ export async function updateTaskAction(
     })
     .eq("id", taskId);
   if (error) return { error: error.message };
+
+  // §5 "reassignment is logged in task_events" — a separate, more
+  // specific event than the generic edit, so History can show exactly
+  // when and by whom a task changed hands.
+  if (before) {
+    const actorId = userData.user?.id;
+    const reassigned =
+      before.assignee_type !== parsed.assigneeType ||
+      before.assignee_team_id !== parsed.assigneeTeamId ||
+      before.assignee_profile_id !== parsed.assigneeProfileId;
+
+    const otherFieldsChanged =
+      before.title !== parsed.title ||
+      before.description !== parsed.description ||
+      JSON.stringify(before.scope) !== JSON.stringify(parsed.scope) ||
+      JSON.stringify(before.recurrence) !== JSON.stringify(parsed.recurrence) ||
+      JSON.stringify(before.deadline_rule) !== JSON.stringify(parsed.deadlineRule);
+
+    const events: {
+      task_id: string;
+      event: "reassigned" | "edited";
+      actor_profile_id?: string;
+      details: Json;
+    }[] = [];
+
+    if (reassigned) {
+      events.push({
+        task_id: taskId,
+        event: "reassigned",
+        actor_profile_id: actorId,
+        details: {
+          from: { type: before.assignee_type, team_id: before.assignee_team_id, profile_id: before.assignee_profile_id },
+          to: { type: parsed.assigneeType, team_id: parsed.assigneeTeamId, profile_id: parsed.assigneeProfileId },
+        },
+      });
+    }
+    if (otherFieldsChanged) {
+      events.push({
+        task_id: taskId,
+        event: "edited",
+        actor_profile_id: actorId,
+        details: {},
+      });
+    }
+    if (events.length > 0) {
+      await supabase.from("task_events").insert(events);
+    }
+  }
 
   revalidatePath("/tasks");
   return {};

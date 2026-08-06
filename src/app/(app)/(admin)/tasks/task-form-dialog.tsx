@@ -16,10 +16,13 @@ import { Textarea } from "@/components/ui/textarea";
 import type { DeadlineRule, Recurrence } from "@/lib/tasks/recurrence-types";
 import { createTaskAction, updateTaskAction } from "./actions";
 import { AssigneeField } from "./assignee-field";
+import { CopyTaskPicker } from "./copy-task-picker";
 import { DeadlineRuleField } from "./deadline-rule-field";
 import { RecurrenceField } from "./recurrence-field";
 import { ScopeField } from "./scope-field";
 import type { DimensionOption, MemberOption, TaskRow, TeamOption } from "./types";
+
+const DEFAULT_RECURRENCE: Recurrence = { type: "one_off", date: "" };
 
 export function TaskFormDialog({
   open,
@@ -29,6 +32,7 @@ export function TaskFormDialog({
   members,
   countries,
   task,
+  allTasksForCopy,
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -38,12 +42,17 @@ export function TaskFormDialog({
   countries: string[];
   /** Omit for create mode. */
   task?: TaskRow;
+  /** Only needed in create mode, for the "copy from existing" picker. */
+  allTasksForCopy?: TaskRow[];
 }) {
   const isEdit = !!task;
   const formRef = useRef<HTMLFormElement>(null);
   const [error, setError] = useState<string>();
+  const [copyWarning, setCopyWarning] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
+  const [title, setTitle] = useState(task?.title ?? "");
+  const [description, setDescription] = useState(task?.description ?? "");
   const [assigneeType, setAssigneeType] = useState<"team" | "person">(
     task?.assignee_type ?? "person",
   );
@@ -51,18 +60,42 @@ export function TaskFormDialog({
     task?.assignee_team_id ?? task?.assignee_profile_id ?? "",
   );
   const [scope, setScope] = useState<string[]>(task?.scope ?? []);
-  const [recurrence, setRecurrence] = useState<Recurrence>(
-    task?.recurrence ?? { type: "one_off", date: "" },
-  );
+  const [recurrence, setRecurrence] = useState<Recurrence>(task?.recurrence ?? DEFAULT_RECURRENCE);
   const [deadlineRule, setDeadlineRule] = useState<DeadlineRule>(task?.deadline_rule ?? null);
 
   function reset() {
+    setTitle(task?.title ?? "");
+    setDescription(task?.description ?? "");
     setAssigneeType(task?.assignee_type ?? "person");
     setAssigneeId(task?.assignee_team_id ?? task?.assignee_profile_id ?? "");
     setScope(task?.scope ?? []);
-    setRecurrence(task?.recurrence ?? { type: "one_off", date: "" });
+    setRecurrence(task?.recurrence ?? DEFAULT_RECURRENCE);
     setDeadlineRule(task?.deadline_rule ?? null);
     setError(undefined);
+    setCopyWarning(undefined);
+  }
+
+  function handleCopy(source: TaskRow) {
+    setTitle(source.title);
+    setDescription(source.description ?? "");
+    setAssigneeType(source.assignee_type);
+    setScope(source.scope);
+    setRecurrence(source.recurrence);
+    setDeadlineRule(source.deadline_rule);
+
+    const sourceAssigneeId = source.assignee_team_id ?? source.assignee_profile_id ?? "";
+    const activeOptions = source.assignee_type === "team" ? teams : members;
+    const stillActive = activeOptions.some((option) => option.id === sourceAssigneeId);
+
+    if (stillActive) {
+      setAssigneeId(sourceAssigneeId);
+      setCopyWarning(undefined);
+    } else {
+      setAssigneeId("");
+      setCopyWarning(
+        `Copied from "${source.title}", but the original ${source.assignee_type} is archived — pick a new assignee.`,
+      );
+    }
   }
 
   function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
@@ -103,26 +136,46 @@ export function TaskFormDialog({
     >
       <DialogContent className="flex max-h-[90vh] flex-col overflow-hidden sm:max-w-xl">
         <DialogHeader>
-          <DialogTitle>{isEdit ? "Edit task" : "New task"}</DialogTitle>
+          <div className="flex items-center justify-between gap-4">
+            <DialogTitle>{isEdit ? "Edit task" : "New task"}</DialogTitle>
+            {!isEdit && allTasksForCopy && allTasksForCopy.length > 0 && (
+              <CopyTaskPicker tasks={allTasksForCopy} onCopy={handleCopy} />
+            )}
+          </div>
         </DialogHeader>
         <form ref={formRef} onSubmit={handleSubmit} className="flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 space-y-5 overflow-y-auto px-1 py-1">
+            {copyWarning && (
+              <p role="alert" className="text-sm text-amber-600 dark:text-amber-400">
+                {copyWarning}
+              </p>
+            )}
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Input id="title" name="title" required defaultValue={task?.title} />
+              <Input
+                id="title"
+                name="title"
+                required
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 name="description"
-                defaultValue={task?.description ?? ""}
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
             <AssigneeField
               assigneeType={assigneeType}
-              onAssigneeTypeChange={setAssigneeType}
+              onAssigneeTypeChange={(type) => {
+                setAssigneeType(type);
+                setAssigneeId("");
+              }}
               assigneeId={assigneeId}
               onAssigneeIdChange={setAssigneeId}
               teams={teams}
