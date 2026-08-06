@@ -40,8 +40,10 @@ export function AddDimensionDialog({
     setError(undefined);
   }
 
-  function handleSubmit(formData: FormData) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(undefined);
+    const formData = new FormData(e.currentTarget);
     startTransition(async () => {
       const result = await createDimensionAction({}, formData);
       if (result.error) {
@@ -72,7 +74,7 @@ export function AddDimensionDialog({
             Give it a name and at least one allowed value. You can add more values later.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="dimension-name">Name</Label>
             <Input id="dimension-name" name="name" required placeholder="e.g. Size" />

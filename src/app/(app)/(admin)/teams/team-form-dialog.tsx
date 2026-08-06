@@ -29,8 +29,10 @@ export function TeamFormDialog({
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(formData: FormData) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(undefined);
+    const formData = new FormData(e.currentTarget);
     startTransition(async () => {
       const result = isEdit
         ? await updateTeamAction(team.id, {}, formData)
@@ -57,7 +59,7 @@ export function TeamFormDialog({
         <DialogHeader>
           <DialogTitle>{isEdit ? "Edit team" : "New team"}</DialogTitle>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="team-name">Name</Label>
             <Input id="team-name" name="name" required defaultValue={team?.name} />

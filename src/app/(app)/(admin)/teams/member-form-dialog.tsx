@@ -39,8 +39,10 @@ export function MemberFormDialog({
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(formData: FormData) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(undefined);
+    const formData = new FormData(e.currentTarget);
     startTransition(async () => {
       const result = isEdit
         ? await updateMemberAction(member.id, {}, formData)
@@ -75,7 +77,7 @@ export function MemberFormDialog({
             </DialogDescription>
           )}
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="full_name">Name</Label>
             <Input id="full_name" name="full_name" required defaultValue={member?.full_name ?? ""} />

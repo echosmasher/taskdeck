@@ -39,8 +39,10 @@ export function CompanyFormDialog({
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
 
-  function handleSubmit(formData: FormData) {
+  function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
     setError(undefined);
+    const formData = new FormData(e.currentTarget);
     startTransition(async () => {
       const result = isEdit
         ? await updateCompanyAction(company.id, {}, formData)
@@ -71,7 +73,7 @@ export function CompanyFormDialog({
             Every dimension must have a value selected before saving.
           </DialogDescription>
         </DialogHeader>
-        <form action={handleSubmit} className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-2">
             <Label htmlFor="name">Name</Label>
             <Input id="name" name="name" required defaultValue={company?.name} />
