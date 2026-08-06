@@ -16,7 +16,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 10. Create tasks, task_instances, and task_events schema with RLS
 - [x] 11. Build Tasks admin page with create/edit dialog
 - [x] 12. Add copy-previous-task, reassign, and archive actions
-- [ ] 13. Implement idempotent instance generation with scope resolution
+- [x] 13. Implement idempotent instance generation with scope resolution
 - [ ] 14. Build Dashboard shell with greeting, toggles, and grouped task rows — blocked by 13
 - [ ] 15. Add per-company checklist with complete/N-A/reopen and audit events — blocked by 14
 - [ ] 16. Add bulk complete, overdue banner, and all-tasks filters — blocked by 15
