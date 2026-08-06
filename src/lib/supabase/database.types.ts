@@ -225,6 +225,187 @@ export type Database = {
           },
         ]
       }
+      task_events: {
+        Row: {
+          actor_profile_id: string | null
+          details: Json
+          event: Database["public"]["Enums"]["task_event_type"]
+          id: string
+          occurred_at: string
+          task_id: string
+          task_instance_id: string | null
+        }
+        Insert: {
+          actor_profile_id?: string | null
+          details?: Json
+          event: Database["public"]["Enums"]["task_event_type"]
+          id?: string
+          occurred_at?: string
+          task_id: string
+          task_instance_id?: string | null
+        }
+        Update: {
+          actor_profile_id?: string | null
+          details?: Json
+          event?: Database["public"]["Enums"]["task_event_type"]
+          id?: string
+          occurred_at?: string
+          task_id?: string
+          task_instance_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_events_actor_profile_id_fkey"
+            columns: ["actor_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_events_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_events_task_instance_id_fkey"
+            columns: ["task_instance_id"]
+            isOneToOne: false
+            referencedRelation: "task_instances"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      task_instances: {
+        Row: {
+          company_id: string
+          due_date: string
+          id: string
+          na_reason: string | null
+          status: Database["public"]["Enums"]["task_instance_status"]
+          status_set_at: string | null
+          status_set_by: string | null
+          task_id: string
+        }
+        Insert: {
+          company_id: string
+          due_date: string
+          id?: string
+          na_reason?: string | null
+          status?: Database["public"]["Enums"]["task_instance_status"]
+          status_set_at?: string | null
+          status_set_by?: string | null
+          task_id: string
+        }
+        Update: {
+          company_id?: string
+          due_date?: string
+          id?: string
+          na_reason?: string | null
+          status?: Database["public"]["Enums"]["task_instance_status"]
+          status_set_at?: string | null
+          status_set_by?: string | null
+          task_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "task_instances_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_instances_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies_missing_dimension_values"
+            referencedColumns: ["company_id"]
+          },
+          {
+            foreignKeyName: "task_instances_status_set_by_fkey"
+            columns: ["status_set_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "task_instances_task_id_fkey"
+            columns: ["task_id"]
+            isOneToOne: false
+            referencedRelation: "tasks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      tasks: {
+        Row: {
+          assignee_profile_id: string | null
+          assignee_team_id: string | null
+          assignee_type: Database["public"]["Enums"]["task_assignee_type"]
+          created_at: string
+          created_by: string | null
+          deadline_rule: Json | null
+          description: string | null
+          id: string
+          is_archived: boolean
+          recurrence: Json
+          scope: Json
+          title: string
+        }
+        Insert: {
+          assignee_profile_id?: string | null
+          assignee_team_id?: string | null
+          assignee_type: Database["public"]["Enums"]["task_assignee_type"]
+          created_at?: string
+          created_by?: string | null
+          deadline_rule?: Json | null
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          recurrence: Json
+          scope?: Json
+          title: string
+        }
+        Update: {
+          assignee_profile_id?: string | null
+          assignee_team_id?: string | null
+          assignee_type?: Database["public"]["Enums"]["task_assignee_type"]
+          created_at?: string
+          created_by?: string | null
+          deadline_rule?: Json | null
+          description?: string | null
+          id?: string
+          is_archived?: boolean
+          recurrence?: Json
+          scope?: Json
+          title?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_assignee_profile_id_fkey"
+            columns: ["assignee_profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_assignee_team_id_fkey"
+            columns: ["assignee_team_id"]
+            isOneToOne: false
+            referencedRelation: "teams"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_created_by_fkey"
+            columns: ["created_by"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       teams: {
         Row: {
           created_at: string
@@ -259,12 +440,25 @@ export type Database = {
       }
     }
     Functions: {
+      can_manage_task_instance: {
+        Args: { p_task_id: string }
+        Returns: boolean
+      }
       current_profile_role: {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
     }
     Enums: {
+      task_assignee_type: "team" | "person"
+      task_event_type:
+        | "created"
+        | "completed"
+        | "marked_na"
+        | "reopened"
+        | "reassigned"
+        | "edited"
+      task_instance_status: "open" | "completed" | "na"
       user_role: "master_admin" | "admin" | "member"
     }
     CompositeTypes: {
@@ -396,6 +590,16 @@ export const Constants = {
   },
   public: {
     Enums: {
+      task_assignee_type: ["team", "person"],
+      task_event_type: [
+        "created",
+        "completed",
+        "marked_na",
+        "reopened",
+        "reassigned",
+        "edited",
+      ],
+      task_instance_status: ["open", "completed", "na"],
       user_role: ["master_admin", "admin", "member"],
     },
   },
