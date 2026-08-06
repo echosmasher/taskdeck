@@ -34,6 +34,114 @@ export type Database = {
   }
   public: {
     Tables: {
+      companies: {
+        Row: {
+          created_at: string
+          id: string
+          is_archived: boolean
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_archived?: boolean
+          name?: string
+        }
+        Relationships: []
+      }
+      company_dimension_values: {
+        Row: {
+          company_id: string
+          dimension_id: string
+          dimension_value_id: string
+        }
+        Insert: {
+          company_id: string
+          dimension_id: string
+          dimension_value_id: string
+        }
+        Update: {
+          company_id?: string
+          dimension_id?: string
+          dimension_value_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "company_dimension_values_company_id_fkey"
+            columns: ["company_id"]
+            isOneToOne: false
+            referencedRelation: "companies"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_dimension_values_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "dimensions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "company_dimension_values_dimension_value_id_fkey"
+            columns: ["dimension_value_id"]
+            isOneToOne: false
+            referencedRelation: "dimension_values"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dimension_values: {
+        Row: {
+          created_at: string
+          dimension_id: string
+          id: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          dimension_id: string
+          id?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          dimension_id?: string
+          id?: string
+          value?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dimension_values_dimension_id_fkey"
+            columns: ["dimension_id"]
+            isOneToOne: false
+            referencedRelation: "dimensions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      dimensions: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
