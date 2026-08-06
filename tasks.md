@@ -24,17 +24,25 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 18. Build History audit-trail page with filters and event timelines
 - [x] 19. Create calendar_entries schema and office calendar grid
 - [x] 20. Add calendar sort toggle and admin cell editing (built together with 19 — a grid without a working sort toggle or editing wasn't a meaningful checkpoint to stop at)
-- [ ] 21. Write idempotent seed script with realistic demo data — blocked by 13, 19
+- [ ] 20a. Create `app_settings` schema with RLS and admin Settings page — blocked by 4
+- [ ] 20b. Implement three-mode calendar edit permissions in RLS and UI — blocked by 20a, 19
+- [ ] 20c. Build `lib/absence.ts` classification helper with unit tests — blocked by 20a, 19
+- [ ] 20d. Add `assignee_override_profile_id` to task_instances; effective-assignee resolution across dashboard, History and generation — blocked by 15, 18
+- [ ] 20e. Add assignment-time absence warnings and the admin coverage view — blocked by 20c, 20d
+- [ ] 20f. Create `reassignment_requests` schema with RLS and member request flow — blocked by 20d
+- [ ] 20g. Build admin Requests page with approve/reject, badge, and audit events — blocked by 20f
+- [ ] 21. Write idempotent seed script with realistic demo data, including the absence/override/request fixtures from addendum §15.5 — blocked by 13, 19, 20a–20g
 - [ ] 22. Build demo mode landing page, banner, and reset job — blocked by 21
-- [ ] 23. Run responsive and accessibility passes (also realigns the app shell/Companies/Teams UI to the stitch_office_task_pulse/ design template — see task 23 notes below) — blocked by 16, 18, 20
-- [ ] 24. Add RLS policy tests and Playwright E2E smoke tests — blocked by 16
+- [ ] 23. Run responsive and accessibility passes — also realigns the app shell/Companies/Teams UI to the stitch_office_task_pulse/ design template (see task 23 notes below), and now also covers the Settings, Requests, and coverage views — blocked by 16, 18, 20, 20a–20g
+- [ ] 24. Add RLS policy tests and Playwright E2E smoke tests — including all three calendar edit-permission modes and members being unable to reassign directly, plus an E2E path for request → approve → override visible on the new assignee's dashboard — blocked by 16, 20b, 20d, 20g
 - [ ] 25. Set up GitHub Actions CI pipeline
-- [ ] 26. Write README with screenshots, architecture diagram, and design decisions — blocked by 22
+- [ ] 26. Write README with screenshots, architecture diagram, and design decisions — including why absence warns rather than blocks, and why coverage is modelled as an instance override — blocked by 22
 - [ ] 27. Deploy to Vercel with hosted Supabase project — blocked by 22
 
 ## Notes for picking this up in a new session
 
 - Spec clarifications beyond v1.0 are in `taskdeck-spec.md` §14 (scope AND/OR semantics, deadline_rule as override, company-creation dimension validation).
+- `taskdeck-addendum-v1.1.md` (§15, not yet appended into the main spec file) covers app_settings, configurable calendar edit permissions, absence-aware assignment with instance-level overrides, and member-initiated reassignment requests — tasks 20a–20g. It also has knock-on changes to §6 (timezone becomes `app_settings.timezone` instead of the hardcoded `APP_TIMEZONE` constant in `lib/config.ts`), §7.3, §7.6, §9, and §11 — read it before starting 20a.
 - Frontend design reference: `stitch_office_task_pulse/` (mockups + `executive_precision/DESIGN.md` style guide). The app shell built in task 4 predates this and gets realigned to it in task 23.
 - Local dev: Supabase runs on non-default ports (see `supabase/config.toml` — shifted +1000 to avoid colliding with other projects on this machine). Colima needs 4 CPU/6GB to run multiple local Supabase stacks at once.
 - Every migration must `grant ... to authenticated, service_role` explicitly — this Supabase version doesn't auto-expose new tables to service_role either.
