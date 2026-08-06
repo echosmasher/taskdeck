@@ -77,24 +77,37 @@ export type Database = {
           date: string
           id: string
           profile_id: string
+          set_at: string | null
+          set_by_profile_id: string | null
           status: Database["public"]["Enums"]["calendar_entry_status"]
         }
         Insert: {
           date: string
           id?: string
           profile_id: string
+          set_at?: string | null
+          set_by_profile_id?: string | null
           status: Database["public"]["Enums"]["calendar_entry_status"]
         }
         Update: {
           date?: string
           id?: string
           profile_id?: string
+          set_at?: string | null
+          set_by_profile_id?: string | null
           status?: Database["public"]["Enums"]["calendar_entry_status"]
         }
         Relationships: [
           {
             foreignKeyName: "calendar_entries_profile_id_fkey"
             columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "calendar_entries_set_by_profile_id_fkey"
+            columns: ["set_by_profile_id"]
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
@@ -536,6 +549,10 @@ export type Database = {
       }
     }
     Functions: {
+      can_edit_calendar_entry: {
+        Args: { target_profile_id: string }
+        Returns: boolean
+      }
       can_manage_task_instance: {
         Args: { p_task_id: string }
         Returns: boolean

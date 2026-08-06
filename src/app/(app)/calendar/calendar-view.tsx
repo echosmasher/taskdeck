@@ -8,7 +8,7 @@ import { addDays, addMonths, datesInRange, monthRange, weekRange } from "@/lib/d
 import { cn } from "@/lib/utils";
 import { CalendarCell } from "./calendar-cell";
 import { CalendarLegend } from "./calendar-legend";
-import type { CalendarMember, CalendarTeam, CalendarEntryStatus } from "./types";
+import type { CalendarEditPermission, CalendarEntriesByDate, CalendarEntry, CalendarMember, CalendarTeam } from "./types";
 
 type ViewMode = "day" | "week" | "month";
 type SortMode = "team" | "name";
@@ -45,6 +45,7 @@ function formatRangeLabel(dates: string[], viewMode: ViewMode): string {
 export function CalendarView({
   currentProfileId,
   isAdmin,
+  calendarEditPermission,
   todayISO,
   members,
   teams,
@@ -52,10 +53,11 @@ export function CalendarView({
 }: {
   currentProfileId: string;
   isAdmin: boolean;
+  calendarEditPermission: CalendarEditPermission;
   todayISO: string;
   members: CalendarMember[];
   teams: CalendarTeam[];
-  entries: { profile_id: string; date: string; status: CalendarEntryStatus }[];
+  entries: CalendarEntry[];
 }) {
   const [viewMode, setViewMode] = useState<ViewMode>("week");
   const [anchor, setAnchor] = useState(todayISO);
@@ -94,14 +96,32 @@ export function CalendarView({
   }
 
   const entriesByMember = useMemo(() => {
-    const map = new Map<string, Record<string, CalendarEntryStatus>>();
+    const map = new Map<string, CalendarEntriesByDate>();
     for (const e of entries) {
-      const existing = map.get(e.profile_id);
-      if (existing) existing[e.date] = e.status;
-      else map.set(e.profile_id, { [e.date]: e.status });
+      const existing = map.get(e.profileId);
+      if (existing) existing[e.date] = e;
+      else map.set(e.profileId, { [e.date]: e });
     }
     return map;
   }, [entries]);
+
+  function canEditRow(memberId: string): boolean {
+    if (isAdmin) return true;
+    if (calendarEditPermission === "members_all") return true;
+    if (calendarEditPermission === "members_own") return memberId === currentProfileId;
+    return false;
+  }
+
+  const editNote =
+    calendarEditPermission === "admins_only"
+      ? isAdmin
+        ? "Only admins can edit the calendar."
+        : "Only admins can edit the calendar — you have read-only access."
+      : calendarEditPermission === "members_own"
+        ? isAdmin
+          ? "Admins can edit any row; members can edit their own."
+          : "You can update your own days."
+        : "Everyone can edit any row.";
 
   const sortedMembers = useMemo(
     () => [...members].sort((a, b) => a.name.localeCompare(b.name)),
@@ -143,6 +163,7 @@ export function CalendarView({
 
   function renderMemberRow(member: CalendarMember) {
     const memberEntries = entriesByMember.get(member.id) ?? {};
+    const editable = canEditRow(member.id);
     return (
       <div
         key={member.id}
@@ -159,8 +180,8 @@ export function CalendarView({
             <CalendarCell
               profileId={member.id}
               date={date}
-              status={memberEntries[date]}
-              editable={isAdmin}
+              entry={memberEntries[date]}
+              editable={editable}
             />
           </div>
         ))}
@@ -201,6 +222,7 @@ export function CalendarView({
         </div>
       </div>
 
+      <p className="text-sm text-muted-foreground">{editNote}</p>
       <CalendarLegend />
 
       <div className="overflow-x-auto rounded-md border">

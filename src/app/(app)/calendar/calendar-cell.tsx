@@ -6,20 +6,32 @@ import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover
 import { cn } from "@/lib/utils";
 import { clearCalendarEntryAction, setCalendarEntryAction } from "./actions";
 import { CALENDAR_STATUSES } from "./calendar-status";
-import type { CalendarEntryStatus } from "./types";
+import type { CalendarEntry, CalendarEntryStatus } from "./types";
+
+function formatStamp(iso: string): string {
+  return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
+    new Date(iso),
+  );
+}
+
+function tooltipFor(entry: CalendarEntry | undefined, label: string | undefined): string | undefined {
+  if (!entry || !label) return label;
+  if (!entry.setAt) return label;
+  return `${label} — set by ${entry.setByName ?? "someone"}, ${formatStamp(entry.setAt)}`;
+}
 
 export function CalendarCell({
   profileId,
   date,
-  status,
+  entry,
   editable,
 }: {
   profileId: string;
   date: string;
-  status: CalendarEntryStatus | undefined;
+  entry: CalendarEntry | undefined;
   editable: boolean;
 }) {
-  const statusConfig = status ? CALENDAR_STATUSES.find((s) => s.value === status) : undefined;
+  const statusConfig = entry ? CALENDAR_STATUSES.find((s) => s.value === entry.status) : undefined;
   const [open, setOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
 
@@ -28,10 +40,13 @@ export function CalendarCell({
     statusConfig ? statusConfig.className : "border-transparent bg-transparent",
   );
 
+  const tooltip = tooltipFor(entry, statusConfig?.label);
+
   if (!editable) {
-    return (
-      <div className={cellClassName} title={statusConfig?.label} aria-label={statusConfig?.label} />
-    );
+    // A plain, non-interactive div: no tabindex, no button semantics, so
+    // it's not keyboard-focusable — non-editable cells must be visually
+    // inert (addendum §15.2).
+    return <div className={cellClassName} title={tooltip} aria-label={tooltip} />;
   }
 
   function handleSelect(next: CalendarEntryStatus) {
@@ -64,7 +79,8 @@ export function CalendarCell({
             type="button"
             disabled={isPending}
             className={cn(cellClassName, "cursor-pointer hover:opacity-80")}
-            aria-label={statusConfig?.label ?? "Set status"}
+            aria-label={tooltip ?? "Set status"}
+            title={tooltip}
           />
         }
       />
@@ -80,7 +96,7 @@ export function CalendarCell({
             {s.label}
           </button>
         ))}
-        {status && (
+        {entry && (
           <button
             type="button"
             onClick={handleClear}

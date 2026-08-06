@@ -1,6 +1,7 @@
-import type { Tables } from "@/lib/supabase/database.types";
+import type { Database, Tables } from "@/lib/supabase/database.types";
 
 export type CalendarEntryStatus = Tables<"calendar_entries">["status"];
+export type CalendarEditPermission = Database["public"]["Enums"]["calendar_edit_permission"];
 
 export interface CalendarMember {
   id: string;
@@ -14,5 +15,14 @@ export interface CalendarTeam {
   name: string;
 }
 
-/** date -> status, for one member. */
-export type CalendarEntriesByDate = Record<string, CalendarEntryStatus>;
+export interface CalendarEntry {
+  profileId: string;
+  date: string;
+  status: CalendarEntryStatus;
+  setByProfileId: string | null;
+  setByName: string | null;
+  setAt: string | null;
+}
+
+/** date -> entry, for one member. */
+export type CalendarEntriesByDate = Record<string, CalendarEntry>;

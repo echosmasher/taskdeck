@@ -9,9 +9,12 @@ export interface CalendarActionState {
 }
 
 /**
- * RLS (calendar_entries_write) restricts this to admin/master_admin —
- * upsert on the (profile_id, date) unique constraint handles both
- * setting a fresh day and changing an already-set one in one call.
+ * Who may write which row is entirely enforced by the
+ * calendar_entries_write RLS policy (can_edit_calendar_entry, keyed off
+ * app_settings.calendar_edit_permission) — this action doesn't need to
+ * know the current mode. Upsert on the (profile_id, date) unique
+ * constraint handles both setting a fresh day and changing an
+ * already-set one in one call.
  */
 export async function setCalendarEntryAction(
   profileId: string,

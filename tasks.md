@@ -25,7 +25,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 19. Create calendar_entries schema and office calendar grid
 - [x] 20. Add calendar sort toggle and admin cell editing (built together with 19 — a grid without a working sort toggle or editing wasn't a meaningful checkpoint to stop at)
 - [x] 20a. Create `app_settings` schema with RLS and admin Settings page
-- [ ] 20b. Implement three-mode calendar edit permissions in RLS and UI — blocked by 20a, 19
+- [x] 20b. Implement three-mode calendar edit permissions in RLS and UI
 - [ ] 20c. Build `lib/absence.ts` classification helper with unit tests — blocked by 20a, 19
 - [ ] 20d. Add `assignee_override_profile_id` to task_instances; effective-assignee resolution across dashboard, History and generation — blocked by 15, 18
 - [ ] 20e. Add assignment-time absence warnings and the admin coverage view — blocked by 20c, 20d
