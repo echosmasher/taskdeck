@@ -24,6 +24,7 @@ import { setCompanyArchivedAction } from "./actions";
 import { CompanyFormDialog } from "./company-form-dialog";
 import { DeleteCompanyDialog } from "./delete-company-dialog";
 import { ManageDimensionsDialog } from "./dimensions/manage-dimensions-dialog";
+import { ImportCompaniesDialog } from "./import-companies-dialog";
 import type { CompanyWithDimensions, DimensionWithValues } from "./types";
 
 export function CompaniesTable({
@@ -37,6 +38,7 @@ export function CompaniesTable({
 }) {
   const [search, setSearch] = useState("");
   const [createOpen, setCreateOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [manageDimensionsOpen, setManageDimensionsOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<CompanyWithDimensions | null>(null);
   const [deletingCompany, setDeletingCompany] = useState<CompanyWithDimensions | null>(null);
@@ -76,6 +78,9 @@ export function CompaniesTable({
         <div className="flex gap-2">
           <Button variant="outline" onClick={() => setManageDimensionsOpen(true)}>
             Manage dimensions
+          </Button>
+          <Button variant="outline" onClick={() => setImportOpen(true)}>
+            Import CSV
           </Button>
           <Button onClick={() => setCreateOpen(true)}>New company</Button>
         </div>
@@ -140,6 +145,13 @@ export function CompaniesTable({
       </Table>
 
       <CompanyFormDialog open={createOpen} onOpenChange={setCreateOpen} dimensions={dimensions} />
+
+      <ImportCompaniesDialog
+        open={importOpen}
+        onOpenChange={setImportOpen}
+        dimensions={dimensions}
+        companies={companies}
+      />
 
       <ManageDimensionsDialog
         open={manageDimensionsOpen}

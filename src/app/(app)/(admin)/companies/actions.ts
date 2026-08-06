@@ -129,3 +129,55 @@ export async function deleteCompanyAction(companyId: string): Promise<CompanyAct
   revalidatePath("/companies");
   return {};
 }
+
+export interface ImportCompaniesState {
+  error?: string;
+  imported?: number;
+}
+
+/**
+ * Bulk-inserts already-validated rows from the CSV import dialog (task
+ * 17) — validation itself (unknown values, duplicates, missing fields)
+ * happens client-side in csv-import.ts before this is ever called, so
+ * every row here is expected to succeed.
+ */
+export async function importCompaniesAction(
+  rows: { name: string; dimensionValues: Record<string, string> }[],
+): Promise<ImportCompaniesState> {
+  if (rows.length === 0) return { imported: 0 };
+
+  const supabase = await createClient();
+  const { data: inserted, error: insertError } = await supabase
+    .from("companies")
+    .insert(rows.map((r) => ({ name: r.name })))
+    .select("id, name");
+
+  if (insertError || !inserted) {
+    return { error: insertError?.message ?? "Failed to import companies." };
+  }
+
+  const companyIdByName = new Map(inserted.map((c) => [c.name, c.id]));
+  const cdvRows = rows.flatMap((r) => {
+    const companyId = companyIdByName.get(r.name);
+    if (!companyId) return [];
+    return Object.entries(r.dimensionValues).map(([dimensionId, dimensionValueId]) => ({
+      company_id: companyId,
+      dimension_id: dimensionId,
+      dimension_value_id: dimensionValueId,
+    }));
+  });
+
+  if (cdvRows.length > 0) {
+    const { error: cdvError } = await supabase.from("company_dimension_values").insert(cdvRows);
+    if (cdvError) {
+      await supabase
+        .from("companies")
+        .delete()
+        .in("id", [...companyIdByName.values()]);
+      return { error: cdvError.message };
+    }
+  }
+
+  revalidatePath("/companies");
+  return { imported: inserted.length };
+}
