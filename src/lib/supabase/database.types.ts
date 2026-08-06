@@ -668,6 +668,7 @@ export type Database = {
         Args: never
         Returns: Database["public"]["Enums"]["user_role"]
       }
+      reset_demo_data: { Args: never; Returns: undefined }
     }
     Enums: {
       calendar_edit_permission: "admins_only" | "members_own" | "members_all"

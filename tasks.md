@@ -31,7 +31,7 @@ Workflow: commit after each finished task; ask before pushing to GitHub
 - [x] 20e. Add assignment-time absence warnings and the admin coverage view
 - [x] 20f. Create `reassignment_requests` schema with RLS and member request flow
 - [x] 20g. Build admin Requests page with approve/reject, badge, and audit events
-- [ ] 21. Write idempotent seed script with realistic demo data, including the absence/override/request fixtures from addendum §15.5 — blocked by 13, 19, 20a–20g
+- [x] 21. Write idempotent seed script with realistic demo data, including the absence/override/request fixtures from addendum §15.5 — blocked by 13, 19, 20a–20g
 - [ ] 22. Build demo mode landing page, banner, and reset job — blocked by 21
 - [ ] 23. Run responsive and accessibility passes — also realigns the app shell/Companies/Teams UI to the stitch_office_task_pulse/ design template (see task 23 notes below), and now also covers the Settings, Requests, and coverage views — blocked by 16, 18, 20, 20a–20g
 - [ ] 24. Add RLS policy tests and Playwright E2E smoke tests — including all three calendar edit-permission modes and members being unable to reassign directly, plus an E2E path for request → approve → override visible on the new assignee's dashboard — blocked by 16, 20b, 20d, 20g
