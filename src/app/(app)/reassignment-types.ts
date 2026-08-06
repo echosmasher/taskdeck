@@ -11,6 +11,7 @@ export interface ReassignmentRequestSummary {
   taskInstanceIds: string[];
   status: ReassignmentStatus;
   reason: string;
+  suggestedAssigneeProfileId: string | null;
   suggestedAssigneeName: string | null;
   createdAt: string;
   decidedAt: string | null;

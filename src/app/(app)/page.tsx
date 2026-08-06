@@ -93,6 +93,7 @@ export default async function DashboardPage() {
     taskInstanceIds: r.task_instance_ids,
     status: r.status,
     reason: r.reason,
+    suggestedAssigneeProfileId: r.suggested_assignee_profile_id,
     suggestedAssigneeName: r.suggested_assignee_profile_id
       ? (profileNameById.get(r.suggested_assignee_profile_id) ?? null)
       : null,
@@ -217,6 +218,15 @@ export default async function DashboardPage() {
   const firstName = (profile.full_name ?? profile.email).split(" ")[0];
   const isAdmin = profile.role === "admin" || profile.role === "master_admin";
 
+  let pendingRequestsCount = 0;
+  if (isAdmin) {
+    const { count } = await supabase
+      .from("reassignment_requests")
+      .select("id", { count: "exact", head: true })
+      .eq("status", "pending");
+    pendingRequestsCount = count ?? 0;
+  }
+
   return (
     <DashboardView
       currentProfileId={profile.id}
@@ -231,6 +241,7 @@ export default async function DashboardPage() {
       dimensionOptions={dimensionOptions}
       companyDimensionValues={companyDimensionValues}
       myRequests={myRequests}
+      pendingRequestsCount={pendingRequestsCount}
     />
   );
 }

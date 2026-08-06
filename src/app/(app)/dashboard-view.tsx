@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { AlertTriangle } from "lucide-react";
+import Link from "next/link";
+import { AlertTriangle, Inbox } from "lucide-react";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
 import { type DashboardPeriod, periodRange } from "@/lib/dates";
@@ -33,6 +34,7 @@ export function DashboardView({
   dimensionOptions,
   companyDimensionValues,
   myRequests,
+  pendingRequestsCount,
 }: {
   currentProfileId: string;
   isAdmin: boolean;
@@ -46,6 +48,7 @@ export function DashboardView({
   dimensionOptions: DashboardDimensionOption[];
   companyDimensionValues: CompanyDimensionValues;
   myRequests: ReassignmentRequestSummary[];
+  pendingRequestsCount: number;
 }) {
   const [period, setPeriod] = useState<DashboardPeriod>("today");
   const [scope, setScope] = useState<DashboardScope>("mine");
@@ -134,6 +137,17 @@ export function DashboardView({
       )}
 
       {!isAdmin && <MyRequestsPanel requests={myRequests} />}
+
+      {isAdmin && pendingRequestsCount > 0 && (
+        <Link
+          href="/requests"
+          className="flex items-center gap-2 rounded-md border border-amber-300 bg-amber-50 px-3 py-2 text-sm font-medium text-amber-900 transition-colors hover:bg-amber-100 dark:border-amber-800 dark:bg-amber-950/40 dark:text-amber-200"
+        >
+          <Inbox className="h-4 w-4" />
+          {pendingRequestsCount} reassignment {pendingRequestsCount === 1 ? "request" : "requests"}{" "}
+          awaiting your decision
+        </Link>
+      )}
 
       <div className="flex flex-col gap-3">
         {visible.length === 0 && (
