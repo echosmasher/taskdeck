@@ -163,6 +163,27 @@ export type Database = {
         }
         Relationships: []
       }
+      holidays: {
+        Row: {
+          country_code: string
+          date: string
+          id: string
+          name: string
+        }
+        Insert: {
+          country_code: string
+          date: string
+          id?: string
+          name: string
+        }
+        Update: {
+          country_code?: string
+          date?: string
+          id?: string
+          name?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
