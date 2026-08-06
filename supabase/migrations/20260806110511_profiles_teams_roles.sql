@@ -26,8 +26,12 @@ create index profiles_team_id_idx on public.profiles (team_id);
 alter table public.teams enable row level security;
 alter table public.profiles enable row level security;
 
-grant select, insert, update, delete on public.teams to authenticated;
-grant select, insert, update, delete on public.profiles to authenticated;
+-- service_role also needs explicit grants under this project's Data API
+-- config (auto_expose_new_tables is unset — see supabase/config.toml).
+-- Server-only code (bootstrap, seed script, nightly reset) uses this role
+-- and bypasses RLS, but still needs the underlying SQL privilege.
+grant select, insert, update, delete on public.teams to authenticated, service_role;
+grant select, insert, update, delete on public.profiles to authenticated, service_role;
 
 -- SECURITY DEFINER so policies can read the caller's role without
 -- recursing back into profiles' own RLS policies.
