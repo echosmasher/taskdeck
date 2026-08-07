@@ -24,12 +24,14 @@ export function DashboardTaskRow({
   currentProfileId,
   isAdmin,
   assigneeOptions,
+  showAssignee = false,
 }: {
   group: DashboardTaskGroup;
   todayISO: string;
   currentProfileId: string;
   isAdmin: boolean;
   assigneeOptions: DashboardFilterOption[];
+  showAssignee?: boolean;
 }) {
   const [expanded, setExpanded] = useState(false);
   const [bulkOpen, setBulkOpen] = useState(false);
@@ -117,6 +119,7 @@ export function DashboardTaskRow({
               instance={instance}
               currentProfileId={currentProfileId}
               originalAssigneeLabel={group.originalAssigneeLabel}
+              showAssignee={showAssignee}
             />
           ))}
         </ul>
@@ -152,10 +155,12 @@ function InstanceRow({
   instance,
   currentProfileId,
   originalAssigneeLabel,
+  showAssignee,
 }: {
   instance: DashboardCompanyInstance;
   currentProfileId: string;
   originalAssigneeLabel: string;
+  showAssignee: boolean;
 }) {
   const [isPending, startTransition] = useTransition();
   const [naDialogOpen, setNaDialogOpen] = useState(false);
@@ -199,6 +204,11 @@ function InstanceRow({
         {overrideLabel && (
           <Badge variant="outline" className="text-xs">
             {overrideLabel}
+          </Badge>
+        )}
+        {!overrideLabel && showAssignee && instance.effectiveAssigneeName && (
+          <Badge variant="outline" className="text-xs">
+            {instance.effectiveAssigneeName}
           </Badge>
         )}
         {instance.pendingReassignmentRequestId && (

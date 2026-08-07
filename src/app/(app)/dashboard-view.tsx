@@ -84,6 +84,8 @@ export function DashboardView({
     });
   }, [groups, scope, period, todayISO, overdueOnly, filters, companyDimensionValues]);
 
+  const showAssigneePerInstance = scope === "all" && filters.assigneeId === null;
+
   return (
     <div className="flex flex-col gap-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -161,6 +163,7 @@ export function DashboardView({
             currentProfileId={currentProfileId}
             isAdmin={isAdmin}
             assigneeOptions={assigneeOptions}
+            showAssignee={showAssigneePerInstance}
           />
         ))}
       </div>
