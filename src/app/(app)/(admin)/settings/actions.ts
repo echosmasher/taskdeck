@@ -2,6 +2,9 @@
 
 import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
+import { getCurrentProfile } from "@/lib/auth/get-current-profile";
+import { isDemoMode } from "@/lib/demo/is-demo-mode";
+import { seedDemoData } from "@/lib/demo/seed-demo-data";
 import type { Database } from "@/lib/supabase/database.types";
 
 export interface SettingsActionState {
@@ -56,5 +59,33 @@ export async function updateAppSettingsAction(
   if (error) return { error: error.message };
 
   revalidatePath("/settings");
+  return {};
+}
+
+export interface ResetDemoDataState {
+  error?: string;
+}
+
+/**
+ * Manual counterpart to the nightly /api/reset-demo cron (task 22) —
+ * wipes and rebuilds the demo dataset on demand. Gated on DEMO_MODE in
+ * addition to the admin-role check the settings-form component
+ * already relies on being hidden behind, since this bypasses RLS via
+ * the service-role client and would be catastrophic against a real
+ * dataset.
+ */
+export async function resetDemoDataAction(): Promise<ResetDemoDataState> {
+  if (!isDemoMode()) {
+    return { error: "Demo mode is not enabled on this deployment." };
+  }
+
+  const profile = await getCurrentProfile();
+  if (!profile || (profile.role !== "admin" && profile.role !== "master_admin")) {
+    return { error: "Unauthorized." };
+  }
+
+  await seedDemoData();
+
+  revalidatePath("/", "layout");
   return {};
 }

@@ -1,5 +1,7 @@
 import { getAppSettings } from "@/lib/app-settings";
+import { isDemoMode } from "@/lib/demo/is-demo-mode";
 import { SettingsForm } from "./settings-form";
+import { ResetDemoSection } from "./reset-demo-section";
 
 export default async function SettingsPage() {
   const settings = await getAppSettings();
@@ -20,6 +22,7 @@ export default async function SettingsPage() {
         server-normalized, saved value.
       */}
       <SettingsForm key={settings.updated_at} settings={settings} />
+      {isDemoMode() && <ResetDemoSection />}
     </div>
   );
 }

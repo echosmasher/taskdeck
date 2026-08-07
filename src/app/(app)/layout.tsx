@@ -2,6 +2,7 @@ import type { ReactNode } from "react";
 import { requireProfile } from "@/lib/auth/require-profile";
 import { createClient } from "@/lib/supabase/server";
 import { AppShell } from "@/components/app-shell/app-shell";
+import { isDemoMode } from "@/lib/demo/is-demo-mode";
 
 export default async function AppLayout({ children }: { children: ReactNode }) {
   const profile = await requireProfile();
@@ -18,7 +19,7 @@ export default async function AppLayout({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AppShell profile={profile} pendingRequestsCount={pendingRequestsCount}>
+    <AppShell profile={profile} pendingRequestsCount={pendingRequestsCount} demoMode={isDemoMode()}>
       {children}
     </AppShell>
   );

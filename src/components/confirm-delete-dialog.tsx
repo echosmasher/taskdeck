@@ -19,6 +19,9 @@ export function ConfirmDeleteDialog({
   description,
   onConfirm,
   successMessage,
+  confirmLabel = "Delete",
+  pendingLabel = "Deleting…",
+  variant = "destructive",
 }: {
   open: boolean;
   onOpenChange: (open: boolean) => void;
@@ -26,6 +29,9 @@ export function ConfirmDeleteDialog({
   description: string;
   onConfirm: () => Promise<{ error?: string } | void>;
   successMessage: string;
+  confirmLabel?: string;
+  pendingLabel?: string;
+  variant?: "destructive" | "default";
 }) {
   const [error, setError] = useState<string>();
   const [isPending, startTransition] = useTransition();
@@ -65,8 +71,8 @@ export function ConfirmDeleteDialog({
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button type="button" variant="destructive" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Deleting…" : "Delete"}
+          <Button type="button" variant={variant} disabled={isPending} onClick={handleDelete}>
+            {isPending ? pendingLabel : confirmLabel}
           </Button>
         </DialogFooter>
       </DialogContent>

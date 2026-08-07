@@ -1,4 +1,4 @@
-import type { DeadlineRule, Recurrence } from "../src/lib/tasks/recurrence-types";
+import type { DeadlineRule, Recurrence } from "@/lib/tasks/recurrence-types";
 
 export interface SeedPerson {
   email: string;

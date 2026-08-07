@@ -1,6 +1,10 @@
 {
   "crons": [
     {
+      "path": "/api/reset-demo",
+      "schedule": "0 2 * * *"
+    },
+    {
       "path": "/api/generate-instances",
       "schedule": "0 3 * * *"
     }
