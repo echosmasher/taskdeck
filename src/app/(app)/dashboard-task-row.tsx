@@ -43,6 +43,8 @@ export function DashboardTaskRow({
 
   return (
     <div
+      data-testid="task-row"
+      data-task-title={group.title}
       className={cn(
         "rounded-lg border bg-card",
         allResolved && "border-l-4 border-l-green-500",

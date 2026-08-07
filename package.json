@@ -8,6 +8,8 @@
     "start": "next start",
     "lint": "eslint",
     "test": "vitest run",
+    "test:rls": "node --env-file=.env.local ./node_modules/vitest/vitest.mjs run --config vitest.rls.config.mts",
+    "test:e2e": "node --env-file=.env.local ./node_modules/@playwright/test/cli.js test",
     "db:types": "supabase gen types typescript --local > src/lib/supabase/database.types.ts",
     "seed": "tsx --env-file=.env.local scripts/seed.ts"
   },
