@@ -16,13 +16,13 @@ jobs:
     name: Lint, typecheck, unit tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: pnpm/action-setup@v4
+      - uses: pnpm/action-setup@v6
         with:
           package_json_file: package.json
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: pnpm
@@ -32,6 +32,13 @@ jobs:
 
       - name: Lint
         run: pnpm lint
+
+      # tsc needs .next/types' ambient route types (e.g. LayoutProps<"/">,
+      # see src/app/layout.tsx) which only exist after next dev/build has
+      # run at least once — `next typegen` generates just those, without
+      # a full build.
+      - name: Generate Next.js route types
+        run: pnpm exec next typegen
 
       - name: Typecheck
         run: pnpm exec tsc --noEmit
