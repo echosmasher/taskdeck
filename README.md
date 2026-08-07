@@ -4,7 +4,7 @@
 
 TaskDeck is a recurring-task tracker built for finance shared-service teams — the kind of department that runs the same checklist ("reconcile bank accounts," "VAT return review") across a portfolio of client companies, every week or month, and needs to prove it happened: who completed which company, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail — not the checkbox — as the actual product.
 
-**Live demo:** _add the Vercel URL here after deploying (task 27)_ — "Explore as Admin" or "Explore as Member," no signup, real (reset-nightly) data.
+**Live demo:** [taskdeck-mocha.vercel.app](https://taskdeck-mocha.vercel.app) — "Explore as Admin" or "Explore as Member," no signup, real (reset-nightly) data.
 
 ## Screenshots
 
