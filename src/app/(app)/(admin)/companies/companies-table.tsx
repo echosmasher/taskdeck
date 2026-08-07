@@ -5,6 +5,7 @@ import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -68,14 +69,15 @@ export function CompaniesTable({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <Input
           placeholder="Search companies…"
+          aria-label="Search companies"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="max-w-xs"
         />
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={() => setManageDimensionsOpen(true)}>
             Manage dimensions
           </Button>
@@ -86,63 +88,65 @@ export function CompaniesTable({
         </div>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Name</TableHead>
-            {dimensions.map((d) => (
-              <TableHead key={d.id}>{d.name}</TableHead>
-            ))}
-            <TableHead>Status</TableHead>
-            <TableHead className="w-10" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filtered.length === 0 && (
+      <Card className="gap-0 py-0">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={dimensions.length + 3} className="text-center text-muted-foreground">
-                No companies found.
-              </TableCell>
-            </TableRow>
-          )}
-          {filtered.map((company) => (
-            <TableRow key={company.id}>
-              <TableCell className="font-medium">{company.name}</TableCell>
+              <TableHead>Name</TableHead>
               {dimensions.map((d) => (
-                <TableCell key={d.id}>{valueLabel(company, d)}</TableCell>
+                <TableHead key={d.id}>{d.name}</TableHead>
               ))}
-              <TableCell>
-                {company.is_archived ? (
-                  <Badge variant="outline">Archived</Badge>
-                ) : (
-                  <Badge variant="secondary">Active</Badge>
-                )}
-              </TableCell>
-              <TableCell>
-                <DropdownMenu>
-                  <DropdownMenuTrigger
-                    render={<Button variant="ghost" size="icon" aria-label={`Actions for ${company.name}`} />}
-                  >
-                    <MoreHorizontal className="h-4 w-4" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => setEditingCompany(company)}>Edit</DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => toggleArchived(company)}>
-                      {company.is_archived ? "Unarchive" : "Archive"}
-                    </DropdownMenuItem>
-                    <DropdownMenuItem
-                      variant="destructive"
-                      onClick={() => setDeletingCompany(company)}
-                    >
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </TableCell>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-10" />
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={dimensions.length + 3} className="text-center text-muted-foreground">
+                  No companies found.
+                </TableCell>
+              </TableRow>
+            )}
+            {filtered.map((company) => (
+              <TableRow key={company.id}>
+                <TableCell className="font-medium">{company.name}</TableCell>
+                {dimensions.map((d) => (
+                  <TableCell key={d.id}>{valueLabel(company, d)}</TableCell>
+                ))}
+                <TableCell>
+                  {company.is_archived ? (
+                    <Badge variant="outline">Archived</Badge>
+                  ) : (
+                    <Badge variant="secondary">Active</Badge>
+                  )}
+                </TableCell>
+                <TableCell>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger
+                      render={<Button variant="ghost" size="icon" aria-label={`Actions for ${company.name}`} />}
+                    >
+                      <MoreHorizontal className="h-4 w-4" />
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => setEditingCompany(company)}>Edit</DropdownMenuItem>
+                      <DropdownMenuItem onClick={() => toggleArchived(company)}>
+                        {company.is_archived ? "Unarchive" : "Archive"}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        variant="destructive"
+                        onClick={() => setDeletingCompany(company)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </Card>
 
       <CompanyFormDialog open={createOpen} onOpenChange={setCreateOpen} dimensions={dimensions} />
 

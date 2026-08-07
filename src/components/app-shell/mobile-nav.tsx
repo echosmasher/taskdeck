@@ -30,18 +30,22 @@ export function MobileNav({
         <Menu className="h-4 w-4" />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start">
-        {items.map((item) => (
-          <DropdownMenuItem key={item.href} render={<Link href={item.href} />}>
-            <span className="flex flex-1 items-center justify-between">
-              {item.label}
-              {item.href === "/requests" && pendingRequestsCount > 0 && (
-                <Badge variant="destructive" className="h-5 min-w-5 justify-center px-1">
-                  {pendingRequestsCount}
-                </Badge>
-              )}
-            </span>
-          </DropdownMenuItem>
-        ))}
+        {items.map((item) => {
+          const Icon = item.icon;
+          return (
+            <DropdownMenuItem key={item.href} render={<Link href={item.href} />}>
+              <span className="flex flex-1 items-center gap-2">
+                <Icon className="h-4 w-4 shrink-0 text-muted-foreground" />
+                <span className="flex-1">{item.label}</span>
+                {item.href === "/requests" && pendingRequestsCount > 0 && (
+                  <Badge variant="destructive" className="h-5 min-w-5 justify-center px-1">
+                    {pendingRequestsCount}
+                  </Badge>
+                )}
+              </span>
+            </DropdownMenuItem>
+          );
+        })}
       </DropdownMenuContent>
     </DropdownMenu>
   );

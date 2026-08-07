@@ -31,6 +31,7 @@ export function AddValueInline({ dimensionId }: { dimensionId: string }) {
         value={value}
         onChange={(e) => setValue(e.target.value)}
         placeholder="Add value…"
+        aria-label="New dimension value"
         className="h-7 w-32"
       />
       <Button type="submit" size="sm" variant="outline" disabled={isPending}>

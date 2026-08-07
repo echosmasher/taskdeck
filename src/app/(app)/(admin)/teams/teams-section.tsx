@@ -5,6 +5,7 @@ import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import {
   DropdownMenu,
@@ -43,11 +44,12 @@ export function TeamsSection({ teams }: { teams: TeamWithCount[] }) {
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-lg font-semibold">Teams</h2>
         <Button onClick={() => setCreateOpen(true)}>New team</Button>
       </div>
 
+      <Card className="gap-0 py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -103,6 +105,7 @@ export function TeamsSection({ teams }: { teams: TeamWithCount[] }) {
           ))}
         </TableBody>
       </Table>
+      </Card>
 
       <TeamFormDialog open={createOpen} onOpenChange={setCreateOpen} />
 

@@ -3,6 +3,7 @@
 import { useMemo, useState, useTransition } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import {
@@ -101,6 +102,7 @@ export function CoverageTable({
           </Select>
           <Input
             placeholder="Reason (optional)"
+            aria-label="Coverage reason (optional)"
             value={reason}
             onChange={(e) => setReason(e.target.value)}
             className="w-56"
@@ -111,6 +113,7 @@ export function CoverageTable({
         </div>
       )}
 
+      <Card className="gap-0 py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -156,6 +159,7 @@ export function CoverageTable({
           ))}
         </TableBody>
       </Table>
+      </Card>
     </div>
   );
 }

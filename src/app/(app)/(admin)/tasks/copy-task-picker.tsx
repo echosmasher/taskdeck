@@ -45,6 +45,7 @@ export function CopyTaskPicker({
           <Input
             autoFocus
             placeholder="Search tasks…"
+            aria-label="Search tasks to copy from"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />

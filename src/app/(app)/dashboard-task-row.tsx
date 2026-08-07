@@ -50,11 +50,11 @@ export function DashboardTaskRow({
         !allResolved && !isOverdue && "border-l-4 border-l-transparent",
       )}
     >
-      <div className="flex items-center gap-3 p-4">
+      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
         <button
           type="button"
           onClick={() => setExpanded((e) => !e)}
-          className="flex min-w-0 flex-1 items-center gap-3 text-left"
+          className="flex min-w-0 items-center gap-3 text-left sm:flex-1"
           aria-expanded={expanded}
         >
           {expanded ? (
@@ -80,27 +80,29 @@ export function DashboardTaskRow({
           </div>
         </button>
 
-        {!isAdmin && !group.pendingTaskReassignmentRequestId && (
-          <Button size="sm" variant="ghost" onClick={() => setRequestOpen(true)}>
-            Request reassignment
-          </Button>
-        )}
+        <div className="flex flex-wrap items-center gap-3 sm:shrink-0 sm:justify-end">
+          {!isAdmin && !group.pendingTaskReassignmentRequestId && (
+            <Button size="sm" variant="ghost" onClick={() => setRequestOpen(true)}>
+              Request reassignment
+            </Button>
+          )}
 
-        {!allResolved && total > 0 && (
-          <Button size="sm" variant="outline" onClick={() => setBulkOpen(true)}>
-            Complete remaining
-          </Button>
-        )}
+          {!allResolved && total > 0 && (
+            <Button size="sm" variant="outline" onClick={() => setBulkOpen(true)}>
+              Complete remaining
+            </Button>
+          )}
 
-        <div className="flex w-36 shrink-0 flex-col items-end gap-1.5">
-          <span className="text-sm text-muted-foreground">
-            {resolved}/{total} companies
-          </span>
-          <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-            <div
-              className={cn("h-full rounded-full", allResolved ? "bg-green-500" : "bg-primary")}
-              style={{ width: `${total > 0 ? (resolved / total) * 100 : 0}%` }}
-            />
+          <div className="flex w-full shrink-0 flex-col items-end gap-1.5 sm:w-36">
+            <span className="text-sm text-muted-foreground">
+              {resolved}/{total} companies
+            </span>
+            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
+              <div
+                className={cn("h-full rounded-full", allResolved ? "bg-green-500" : "bg-primary")}
+                style={{ width: `${total > 0 ? (resolved / total) * 100 : 0}%` }}
+              />
+            </div>
           </div>
         </div>
       </div>

@@ -29,6 +29,7 @@ export function DimensionValueRow({ id, value }: { id: string; value: string }) 
         <Input
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
+          aria-label={`Rename ${value}`}
           className="h-7 w-32"
           autoFocus
         />

@@ -33,7 +33,7 @@ export const TEAMS = ["A/R", "A/P", "R2R 1", "R2R 2"];
 
 export const DIMENSIONS: { name: string; values: string[] }[] = [
   { name: "Country", values: ["Norway", "Sweden", "Denmark"] },
-  { name: "Brand", values: ["Comfort", "Clarion"] },
+  { name: "Brand", values: ["Nordvik", "Havstad"] },
   { name: "Size", values: ["Small", "Medium", "Large"] },
 ];
 
@@ -48,7 +48,7 @@ const NO_NAMES = ["Fjordvik AS", "Nordlys Handel AS", "Bergtun Logistikk AS", "T
 const SE_NAMES = ["Skogby Konsult AB", "Nordkust Handel AB", "Västerås Logistik AB", "Solros Gruppen AB"];
 const DK_NAMES = ["Havnegade ApS", "Vesterled Handel ApS", "Bakkely Logistik ApS", "Odense Nord ApS"];
 
-const BRANDS = ["Comfort", "Clarion"];
+const BRANDS = ["Nordvik", "Havstad"];
 const SIZES = ["Small", "Medium", "Large"];
 
 function companiesFor(names: string[], country: string): SeedCompany[] {
@@ -92,7 +92,7 @@ export const TASKS: SeedTask[] = [
   { title: "Credit control follow-up", assignee: { type: "team", team: "A/R" }, scope: [], recurrence: { type: "weekly", weekday: 4 }, deadlineRule: null },
   { title: "Vendor onboarding check", assignee: { type: "team", team: "A/P" }, scope: [], recurrence: { type: "monthly_fixed", dayOfMonth: 1 }, deadlineRule: null },
   { title: "Expense report audit", assignee: { type: "person", email: "kasper@taskdeck.local" }, scope: [], recurrence: { type: "weekly", weekday: 1 }, deadlineRule: null },
-  { title: "Intercompany reconciliation", assignee: { type: "team", team: "R2R 1" }, scope: [{ dimension: "Brand", value: "Comfort" }], recurrence: { type: "monthly_nth_working_day", n: 3, countryCode: NO }, deadlineRule: null },
+  { title: "Intercompany reconciliation", assignee: { type: "team", team: "R2R 1" }, scope: [{ dimension: "Brand", value: "Nordvik" }], recurrence: { type: "monthly_nth_working_day", n: 3, countryCode: NO }, deadlineRule: null },
   { title: "Fixed asset register update", assignee: { type: "team", team: "R2R 2" }, scope: [], recurrence: { type: "monthly_fixed", dayOfMonth: 15 }, deadlineRule: null },
   { title: "Cash flow forecast", assignee: { type: "person", email: "ingrid@taskdeck.local" }, scope: [], recurrence: { type: "weekly", weekday: 3 }, deadlineRule: null },
   { title: "Denmark VAT filing", assignee: { type: "team", team: "R2R 2" }, scope: [{ dimension: "Country", value: "Denmark" }], recurrence: { type: "monthly_nth_working_day", n: -1, countryCode: "DK" }, deadlineRule: null },

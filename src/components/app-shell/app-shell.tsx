@@ -19,8 +19,12 @@ export function AppShell({
 
   return (
     <div className="flex min-h-screen">
-      <aside className="hidden w-60 shrink-0 border-r bg-sidebar md:block">
-        <div className="border-b p-4 text-lg font-semibold">TaskDeck</div>
+      {/*
+        DESIGN.md's three-tier breakpoints: full 260px sidebar at desktop
+        (xl, 1280px+), icon-only rail at tablet (md–xl, 768–1279px), and
+        the MobileNav dropdown below md instead of this aside entirely.
+      */}
+      <aside className="hidden w-16 shrink-0 border-r bg-sidebar text-sidebar-foreground md:block xl:w-60">
         <Sidebar isAdmin={isAdmin} pendingRequestsCount={pendingRequestsCount} />
       </aside>
       <div className="flex min-w-0 flex-1 flex-col">

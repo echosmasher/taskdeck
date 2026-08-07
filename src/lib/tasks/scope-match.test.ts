@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { companyMatchesScope } from "./scope-match";
 
-// Dimensions: Country (dim-country) has values NO/SE; Brand (dim-brand) has values Comfort/Clarion.
+// Dimensions: Country (dim-country) has values NO/SE; Brand (dim-brand) has values Nordvik/Havstad.
 const dimValueToDimension = new Map([
   ["val-no", "dim-country"],
   ["val-se", "dim-country"],
-  ["val-comfort", "dim-brand"],
-  ["val-clarion", "dim-brand"],
+  ["val-nordvik", "dim-brand"],
+  ["val-havstad", "dim-brand"],
 ]);
 
 describe("companyMatchesScope", () => {
@@ -34,14 +34,14 @@ describe("companyMatchesScope", () => {
   });
 
   it("is AND across dimensions: must match country AND brand", () => {
-    const scope = ["val-no", "val-comfort"];
+    const scope = ["val-no", "val-nordvik"];
     const matches = new Map([
       ["dim-country", "val-no"],
-      ["dim-brand", "val-comfort"],
+      ["dim-brand", "val-nordvik"],
     ]);
     const rightCountryWrongBrand = new Map([
       ["dim-country", "val-no"],
-      ["dim-brand", "val-clarion"],
+      ["dim-brand", "val-havstad"],
     ]);
     expect(companyMatchesScope(scope, matches, dimValueToDimension)).toBe(true);
     expect(companyMatchesScope(scope, rightCountryWrongBrand, dimValueToDimension)).toBe(false);
@@ -49,13 +49,13 @@ describe("companyMatchesScope", () => {
 
   it("rejects a company missing a value for a scoped dimension, rather than treating it as a wildcard", () => {
     const scope = ["val-no"];
-    const noCountryValue = new Map([["dim-brand", "val-comfort"]]);
+    const noCountryValue = new Map([["dim-brand", "val-nordvik"]]);
     expect(companyMatchesScope(scope, noCountryValue, dimValueToDimension)).toBe(false);
   });
 
   it("ignores a stale/unknown dimension value id in scope without breaking other dimensions", () => {
-    const scope = ["val-does-not-exist", "val-comfort"];
-    const company = new Map([["dim-brand", "val-comfort"]]);
+    const scope = ["val-does-not-exist", "val-nordvik"];
+    const company = new Map([["dim-brand", "val-nordvik"]]);
     expect(companyMatchesScope(scope, company, dimValueToDimension)).toBe(true);
   });
 });

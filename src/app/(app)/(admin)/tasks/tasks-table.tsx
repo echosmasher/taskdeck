@@ -5,6 +5,7 @@ import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -84,10 +85,11 @@ export function TasksTable({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
-        <div className="flex items-center gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex flex-wrap items-center gap-3">
           <Input
             placeholder="Search tasks…"
+            aria-label="Search tasks"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="max-w-xs"
@@ -103,72 +105,74 @@ export function TasksTable({
         <Button onClick={() => setCreateOpen(true)}>New task</Button>
       </div>
 
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>Task</TableHead>
-            <TableHead>Assignee</TableHead>
-            <TableHead>Scope</TableHead>
-            <TableHead>Recurrence</TableHead>
-            <TableHead>Status</TableHead>
-            <TableHead className="w-10" />
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {filtered.length === 0 && (
+      <Card className="gap-0 py-0">
+        <Table>
+          <TableHeader>
             <TableRow>
-              <TableCell colSpan={6} className="text-center text-muted-foreground">
-                No tasks found.
-              </TableCell>
+              <TableHead>Task</TableHead>
+              <TableHead>Assignee</TableHead>
+              <TableHead>Scope</TableHead>
+              <TableHead>Recurrence</TableHead>
+              <TableHead>Status</TableHead>
+              <TableHead className="w-10" />
             </TableRow>
-          )}
-          {filtered.map((task) => {
-            const deadlineLabel = describeDeadlineRule(task.deadline_rule);
-            return (
-              <TableRow key={task.id}>
-                <TableCell>
-                  <p className="font-medium">{task.title}</p>
-                  {task.description && (
-                    <p className="max-w-xs truncate text-xs text-muted-foreground">
-                      {task.description}
-                    </p>
-                  )}
-                </TableCell>
-                <TableCell>{task.assigneeLabel}</TableCell>
-                <TableCell className="max-w-48 truncate">{scopeLabel(task)}</TableCell>
-                <TableCell>
-                  <p>{describeRecurrence(task.recurrence)}</p>
-                  {deadlineLabel && (
-                    <p className="text-xs text-muted-foreground">{deadlineLabel}</p>
-                  )}
-                </TableCell>
-                <TableCell>
-                  {task.is_archived ? (
-                    <Badge variant="outline">Archived</Badge>
-                  ) : (
-                    <Badge variant="secondary">Active</Badge>
-                  )}
-                </TableCell>
-                <TableCell>
-                  <DropdownMenu>
-                    <DropdownMenuTrigger
-                      render={<Button variant="ghost" size="icon" aria-label={`Actions for ${task.title}`} />}
-                    >
-                      <MoreHorizontal className="h-4 w-4" />
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => setEditingTask(task)}>Edit</DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => toggleArchived(task)}>
-                        {task.is_archived ? "Unarchive" : "Archive"}
-                      </DropdownMenuItem>
-                    </DropdownMenuContent>
-                  </DropdownMenu>
+          </TableHeader>
+          <TableBody>
+            {filtered.length === 0 && (
+              <TableRow>
+                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                  No tasks found.
                 </TableCell>
               </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
+            )}
+            {filtered.map((task) => {
+              const deadlineLabel = describeDeadlineRule(task.deadline_rule);
+              return (
+                <TableRow key={task.id}>
+                  <TableCell>
+                    <p className="font-medium">{task.title}</p>
+                    {task.description && (
+                      <p className="max-w-xs truncate text-xs text-muted-foreground">
+                        {task.description}
+                      </p>
+                    )}
+                  </TableCell>
+                  <TableCell>{task.assigneeLabel}</TableCell>
+                  <TableCell className="max-w-48 truncate">{scopeLabel(task)}</TableCell>
+                  <TableCell>
+                    <p>{describeRecurrence(task.recurrence)}</p>
+                    {deadlineLabel && (
+                      <p className="text-xs text-muted-foreground">{deadlineLabel}</p>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    {task.is_archived ? (
+                      <Badge variant="outline">Archived</Badge>
+                    ) : (
+                      <Badge variant="secondary">Active</Badge>
+                    )}
+                  </TableCell>
+                  <TableCell>
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={<Button variant="ghost" size="icon" aria-label={`Actions for ${task.title}`} />}
+                      >
+                        <MoreHorizontal className="h-4 w-4" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => setEditingTask(task)}>Edit</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => toggleArchived(task)}>
+                          {task.is_archived ? "Unarchive" : "Archive"}
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
+      </Card>
 
       <TaskFormDialog
         open={createOpen}

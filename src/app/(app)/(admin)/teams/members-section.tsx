@@ -5,6 +5,7 @@ import { MoreHorizontal } from "lucide-react";
 import { toast } from "sonner";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import { ConfirmDeleteDialog } from "@/components/confirm-delete-dialog";
 import {
   DropdownMenu,
@@ -79,11 +80,12 @@ export function MembersSection({
 
   return (
     <div className="space-y-4">
-      <div className="flex items-center justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h2 className="text-lg font-semibold">Members</h2>
           <Input
             placeholder="Search members…"
+            aria-label="Search members"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="mt-2 max-w-xs"
@@ -92,6 +94,7 @@ export function MembersSection({
         <Button onClick={() => setCreateOpen(true)}>New member</Button>
       </div>
 
+      <Card className="gap-0 py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -166,6 +169,7 @@ export function MembersSection({
           ))}
         </TableBody>
       </Table>
+      </Card>
 
       <MemberFormDialog open={createOpen} onOpenChange={setCreateOpen} teams={teams} />
 

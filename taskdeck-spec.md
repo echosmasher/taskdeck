@@ -41,7 +41,7 @@ Implement as Supabase migrations (SQL files in the repo). Suggested tables — a
 - **teams** — `id`, `name`, `is_archived`. Any number of teams. An empty team (no members) triggers a UI warning but is allowed
 - **companies** — `id`, `name`, `is_archived`. Country and Brand are NOT columns — they are seeded dimensions (next bullet), so all dimensions work identically
 - **dimensions** — `id`, `name` (e.g. Country, Brand, Size). Country and Brand are seeded by default; admins can add more
-- **dimension_values** — `id`, `dimension_id`, `value` (e.g. Norway, Sweden; Comfort, Clarion; Small, Medium, Large)
+- **dimension_values** — `id`, `dimension_id`, `value` (e.g. Norway, Sweden; Nordvik, Havstad; Small, Medium, Large)
 - **company_dimension_values** — `company_id`, `dimension_value_id`. One value per company per dimension
 - **tasks** — the task definition: `id`, `title`, `description`, `assignee_type ('team' | 'person')`, `assignee_team_id` / `assignee_profile_id` (exactly one set, enforce with a CHECK constraint), `scope` (jsonb array of dimension_value ids the task applies to; empty = applies generally), `recurrence` (see §6), `deadline_rule` (see §6), `is_archived`, `created_by`, `created_at`
 - **task_instances** — one row per due occurrence of a task **per company**: `id`, `task_id`, `company_id`, `due_date`, `status ('open' | 'completed' | 'na')`, `status_set_by`, `status_set_at`, `na_reason (nullable)`. Unique on `(task_id, company_id, due_date)`
@@ -53,7 +53,7 @@ Implement as Supabase migrations (SQL files in the repo). Suggested tables — a
 
 ## 5. Task model (decided)
 
-A task definition **fans out into one instance per company in scope**, and each company's instance must be checked off individually — this is the audit evidence. Example: "Reconcile bank accounts — Brand: Comfort" with 8 Comfort companies produces 8 checkboxes per occurrence, each independently completed and stamped. An employee typically works through the same task for a portfolio of 5–10 companies.
+A task definition **fans out into one instance per company in scope**, and each company's instance must be checked off individually — this is the audit evidence. Example: "Reconcile bank accounts — Brand: Nordvik" with 8 Nordvik companies produces 8 checkboxes per occurrence, each independently completed and stamped. An employee typically works through the same task for a portfolio of 5–10 companies.
 
 - **Scope resolution:** the `scope` field (dimension values) selects the matching companies; empty scope = all active companies. When a new company is created (or its dimension values change) and it matches a task's scope, it is included in **future** instance generation; existing instances are untouched.
 - Tasks are assigned to **either a team or a person** (never both, never neither). Assignment applies to the whole task — all its company instances land with the same team/person.
@@ -90,7 +90,7 @@ Sidebar navigation. Pages marked (admin) are hidden from members and protected s
 - Period toggle: **Today / This week / This month** (due-date based).
 - Scope toggle: **My tasks** (default) / **All tasks**. All-tasks view gets filters for team, assignee, and every dimension (Country, Brand, custom).
 - Overdue banner when applicable: **"You have {x} overdue tasks"** — clicking it filters to overdue items. Overdue rows are visually distinct.
-- **Rows are grouped by task occurrence**: a task row shows title, chips (Group – {team} for team tasks; scope chips like `Norway`, `Comfort`), due date, and a progress indicator, e.g. **"5/8 companies"** with a matching progress bar. The row is green only when all its company instances are completed/N-A.
+- **Rows are grouped by task occurrence**: a task row shows title, chips (Group – {team} for team tasks; scope chips like `Norway`, `Nordvik`), due date, and a progress indicator, e.g. **"5/8 companies"** with a matching progress bar. The row is green only when all its company instances are completed/N-A.
 - Expanding a task row reveals the **per-company checklist** — one line per company instance, each with its own status and actions:
   - **Complete** → line turns green, stamped "{name}, {date} {time}".
   - **Mark N/A** → line turns grey, same stamp, optional reason captured in a small dialog.
@@ -189,6 +189,6 @@ Each step should end in a working, committed, deployable state.
 
 Resolved during implementation kickoff (2026-08-06):
 
-- **Scope resolution is AND-across-dimensions, OR-within-dimension.** `scope = [Norway, Sweden, Comfort]` matches companies that are (Norway OR Sweden) AND Comfort. This is the only reading consistent with §4's one-value-per-company-per-dimension constraint — pure AND across raw values would make any multi-value-same-dimension scope match nothing.
+- **Scope resolution is AND-across-dimensions, OR-within-dimension.** `scope = [Norway, Sweden, Nordvik]` matches companies that are (Norway OR Sweden) AND Nordvik. This is the only reading consistent with §4's one-value-per-company-per-dimension constraint — pure AND across raw values would make any multi-value-same-dimension scope match nothing.
 - **`deadline_rule` is a nullable override, not a parallel spec.** For the large majority of tasks, the due date *is* the recurrence occurrence date (e.g. "25th of each month" is both when it recurs and when it's due). `deadline_rule` only needs to be set when the deadline differs from the occurrence date — e.g. an offset of N working/calendar days after generation. Leave it null and the instance's `due_date` equals the occurrence date.
 - **All dimensions are required when creating a new company.** A company cannot be saved unless every currently-defined dimension has a value selected. The §7.4 "fill later" flow is narrower than it first reads: it applies only to the guided **backfill** prompted when an admin adds a *new* dimension after companies already exist — not to ordinary company creation, which is always fully validated.

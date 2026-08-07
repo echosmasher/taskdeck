@@ -3,6 +3,7 @@
 import { useMemo, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 import {
   Table,
   TableBody,
@@ -54,6 +55,7 @@ export function RequestsTable({
         </TabsList>
       </Tabs>
 
+      <Card className="gap-0 py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -122,6 +124,7 @@ export function RequestsTable({
           ))}
         </TableBody>
       </Table>
+      </Card>
 
       {approving && (
         <ApproveRequestDialog

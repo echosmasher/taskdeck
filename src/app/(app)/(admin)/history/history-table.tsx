@@ -3,6 +3,7 @@
 import { Fragment, useMemo, useState } from "react";
 import { ChevronDown, ChevronRight, ChevronsUpDown } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
   Select,
@@ -165,6 +166,7 @@ export function HistoryTable({
         </Select>
       </div>
 
+      <Card className="gap-0 py-0">
       <Table>
         <TableHeader>
           <TableRow>
@@ -282,6 +284,7 @@ export function HistoryTable({
           })}
         </TableBody>
       </Table>
+      </Card>
     </div>
   );
 }
