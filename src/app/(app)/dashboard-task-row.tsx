@@ -206,9 +206,9 @@ function InstanceRow({
             {overrideLabel}
           </Badge>
         )}
-        {!overrideLabel && showAssignee && instance.effectiveAssigneeName && (
+        {!overrideLabel && showAssignee && (instance.effectiveAssigneeName ?? originalAssigneeLabel) && (
           <Badge variant="outline" className="text-xs">
-            {instance.effectiveAssigneeName}
+            {instance.effectiveAssigneeName ?? originalAssigneeLabel}
           </Badge>
         )}
         {instance.pendingReassignmentRequestId && (
