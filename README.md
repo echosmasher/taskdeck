@@ -2,7 +2,9 @@
 
 [![CI](https://github.com/echosmasher/taskdeck/actions/workflows/ci.yml/badge.svg)](https://github.com/echosmasher/taskdeck/actions/workflows/ci.yml)
 
-TaskDeck is a recurring-task tracker built for finance shared-service teams — the kind of department that runs the same checklist ("reconcile bank accounts," "VAT return review") across a portfolio of client companies, every week or month, and needs to prove it happened: who completed which company, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail — not the checkbox — as the actual product.
+TaskDeck is a recurring-task tracker for any office team that runs the same checklist across a portfolio of companies, clients, branches, or accounts — every week or month — and needs to prove it happened: who completed which one, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail — not the checkbox — as the actual product.
+
+It grew out of a finance shared-service use case (bank reconciliations, VAT return reviews across a client portfolio), but the model is domain-agnostic: any workspace where recurring tasks get assigned to a team or person and checked off per entity — HR compliance across office locations, account management across client accounts, IT across sites — fits the same shape.
 
 **Live demo:** [taskdeck-mocha.vercel.app](https://taskdeck-mocha.vercel.app) — "Explore as Admin" or "Explore as Member," no signup, real (reset-nightly) data.
 
@@ -63,7 +65,7 @@ Every table has Row Level Security enabled; the Next.js server never uses a priv
 | Table | Purpose |
 |---|---|
 | `profiles`, `teams` | Users (extending `auth.users`) and departments; `role` is `master_admin` \| `admin` \| `member` |
-| `companies`, `dimensions`, `dimension_values`, `company_dimension_values` | The client portfolio, scoped by admin-defined dimensions (Country, Brand, Size, …) — a company's dimension values are rows, not columns, so every dimension behaves identically |
+| `companies`, `dimensions`, `dimension_values`, `company_dimension_values` | The portfolio of companies/entities tasks are tracked against, scoped by admin-defined dimensions (Country, Brand, Size, …) — a company's dimension values are rows, not columns, so every dimension behaves identically |
 | `tasks` | Task definitions: assignee (team **or** person), scope (which dimension values it applies to), recurrence, deadline rule |
 | `task_instances` | One row per `(task, company, due_date)` — the thing that actually gets checked off. Carries `status`, who set it and when, and an optional `assignee_override_profile_id` for coverage |
 | `task_events` | Append-only audit log — every created/completed/reopened/reassigned/override event, per instance |
@@ -105,9 +107,9 @@ CI (`.github/workflows/ci.yml`) runs lint, typecheck, and `pnpm test` on every p
 
 ## Design decisions
 
-**Per-company instances, not one checkbox per task.** "Reconcile bank accounts" for a portfolio of 8 companies isn't one unit of work — it's 8, each completed by a possibly different person on a possibly different day. The instance (not the task) is the audit unit, because the instance is what the audit evidence is actually about.
+**Per-company instances, not one checkbox per task.** "Reconcile bank accounts" (or "renew the site's fire safety cert," or any other recurring per-entity job) for a portfolio of 8 companies isn't one unit of work — it's 8, each completed by a possibly different person on a possibly different day. The instance (not the task) is the audit unit, because the instance is what the audit evidence is actually about.
 
-**Working-day deadlines, including negative N.** Finance close checklists are defined in business-day terms — "2nd working day," "last working day of the month" — not calendar dates. Supporting `-1` for "last working day" (and any `-N`) is what makes the recurrence engine actually fit a real close calendar instead of being a generic scheduler with a working-day flag bolted on.
+**Working-day deadlines, including negative N.** Recurring office checklists are often defined in business-day terms — "2nd working day," "last working day of the month" — not calendar dates, whether that's a finance close, a payroll cutoff, or a compliance review. Supporting `-1` for "last working day" (and any `-N`) is what makes the recurrence engine actually fit a real business calendar instead of being a generic scheduler with a working-day flag bolted on.
 
 **Archive, never hard-delete.** The audit trail is the point of the product; hard-deleting a company or team would erase the record of who did what and when. Hard delete only exists for records with zero task history — nothing that ever mattered can quietly disappear.
 
