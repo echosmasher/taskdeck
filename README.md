@@ -2,7 +2,7 @@
 
 [![CI](https://github.com/echosmasher/taskdeck/actions/workflows/ci.yml/badge.svg)](https://github.com/echosmasher/taskdeck/actions/workflows/ci.yml)
 
-TaskDeck is a recurring-task tracker for any office team that runs the same checklist across a portfolio of companies, clients, branches, or accounts — every week or month — and needs to prove it happened: who completed which one, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail — not the checkbox — as the actual product.
+TaskDeck is a recurring-task tracker for any office team that runs the same checklist across a portfolio of companies, clients, branches, or accounts every week or month, and needs to prove it happened: who completed which one, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail, not the checkbox, as the actual product.
 
 It grew out of a finance shared-service use case (bank reconciliations, VAT return reviews across a client portfolio), but the model is domain-agnostic: any workspace where recurring tasks get assigned to a team or person and checked off per entity — HR compliance across office locations, account management across client accounts, IT across sites — fits the same shape.
 
