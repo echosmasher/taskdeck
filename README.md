@@ -4,7 +4,7 @@
 
 TaskDeck is a recurring-task tracker for any office team that runs the same checklist across a portfolio of companies, clients, branches, or accounts every week or month, and needs to prove it happened: who completed which one, and when. It fans a single task definition out into one independently-stamped checkbox per company, understands working-day deadlines ("2nd working day," "last working day of the month"), and treats the audit trail, not the checkbox, as the actual product.
 
-It grew out of a finance shared-service use case (bank reconciliations, VAT return reviews across a client portfolio), but the model is domain-agnostic: any workspace where recurring tasks get assigned to a team or person and checked off per entity — HR compliance across office locations, account management across client accounts, IT across sites — fits the same shape.
+It grew out of a finance shared-service use case (bank reconciliations, VAT return reviews across a client portfolio), but the model is domain-agnostic: any workspace where recurring tasks get assigned to a team or person and checked off per entity: HR compliance across office locations, account management across client accounts, IT across sites — fits the same shape.
 
 **Live demo:** [taskdeck-mocha.vercel.app](https://taskdeck-mocha.vercel.app) — "Explore as Admin" or "Explore as Member," no signup, real (reset-nightly) data.
 
@@ -109,15 +109,15 @@ CI (`.github/workflows/ci.yml`) runs lint, typecheck, and `pnpm test` on every p
 
 **Per-company instances, not one checkbox per task.** "Reconcile bank accounts" (or "renew the site's fire safety cert," or any other recurring per-entity job) for a portfolio of 8 companies isn't one unit of work — it's 8, each completed by a possibly different person on a possibly different day. The instance (not the task) is the audit unit, because the instance is what the audit evidence is actually about.
 
-**Working-day deadlines, including negative N.** Recurring office checklists are often defined in business-day terms — "2nd working day," "last working day of the month" — not calendar dates, whether that's a finance close, a payroll cutoff, or a compliance review. Supporting `-1` for "last working day" (and any `-N`) is what makes the recurrence engine actually fit a real business calendar instead of being a generic scheduler with a working-day flag bolted on.
+**Working-day deadlines, including negative N.** Recurring office checklists are often defined in business-day terms, e.g. "2nd working day," "last working day of the month", not calendar dates, whether that's a finance close, a payroll cutoff, or a compliance review. Supporting `-1` for "last working day" (and any `-N`) is what makes the recurrence engine actually fit a real business calendar instead of being a generic scheduler with a working-day flag bolted on.
 
 **Archive, never hard-delete.** The audit trail is the point of the product; hard-deleting a company or team would erase the record of who did what and when. Hard delete only exists for records with zero task history — nothing that ever mattered can quietly disappear.
 
-**Absence warns, it never blocks.** Assignment lives on the task definition and is indefinite; absence lives on calendar days and is time-bounded. A hard validation rule coupling the two fails exactly when it matters most — someone calling in sick with instances due that same day, and the checklist that day is precisely when it can't afford to be unusable. Instead: warn at assignment time, and handle the actual gap with per-occurrence coverage.
+**Absence warns, it never blocks.** Assignment lives on the task definition and is indefinite; absence lives on calendar days and is time-bounded. A hard validation rule coupling the two fails exactly when it matters most: someone calling in sick with instances due that same day, and the checklist that day is precisely when it can't afford to be unusable. Instead: warn at assignment time, and handle the actual gap with per-occurrence coverage.
 
-**Coverage is an instance-level override, not a task reassignment.** An `assignee_override_profile_id` on `task_instances` applies to one `(task, company, due_date)` — an admin can cover a single month, or a subset of companies, without touching the recurring task definition. When the absence ends, future instances revert automatically; there's nothing to clean up and no history is lost the way a temporary reassign-and-reassign-back would lose it.
+**Coverage is an instance-level override, not a task reassignment.** An `assignee_override_profile_id` on `task_instances` applies to one `(task, company, due_date)`. An admin can cover a single month, or a subset of companies, without touching the recurring task definition. When the absence ends, future instances revert automatically; there's nothing to clean up and no history is lost the way a temporary reassign-and-reassign-back would lose it.
 
-**Members can only ever request a reassignment, never make it.** `tasks_write` and the coverage-override trigger are both admin-only at the database level — not just hidden in the UI — so "members can't reassign directly" is a guarantee the RLS test suite actually checks, not a convention the frontend happens to follow today.
+**Members can only ever request a reassignment, never make it.** `tasks_write` and the coverage-override trigger are both admin-only at the database level, not just hidden in the UI - so "members can't reassign directly" is a guarantee the RLS test suite actually checks, not a convention the frontend happens to follow today.
 
 ## Roadmap (explicitly out of scope for v1)
 
