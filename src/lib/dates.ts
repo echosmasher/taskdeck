@@ -170,3 +170,13 @@ export function isOverdueInstance(
 ): boolean {
   return instance.status === "open" && isOverdue(instance.dueDate, todayISO);
 }
+
+/** "Thursday 15 October 2026", for tooltips next to relative due labels. */
+export function formatLongDate(iso: string): string {
+  return new Intl.DateTimeFormat("en-GB", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(fromISODate(iso));
+}

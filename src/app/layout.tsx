@@ -1,18 +1,18 @@
 import type { Metadata } from "next";
-import { Inter, Geist_Mono } from "next/font/google";
+import { Hanken_Grotesk, JetBrains_Mono } from "next/font/google";
 import { Toaster } from "@/components/ui/sonner";
 import "./globals.css";
 
-// Named "--font-sans" directly (design template mandates Inter
-// exclusively) — globals.css's `@theme inline` block reads --font-sans,
-// which previously pointed at itself since nothing defined it.
-const inter = Inter({
+// Hanken Grotesk carries the UI; JetBrains Mono is reserved for data that
+// is actually measured or stamped (initials, dates, counts). globals.css's
+// `@theme inline` block reads these variables.
+const hanken = Hanken_Grotesk({
   variable: "--font-sans",
   subsets: ["latin"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const dataMono = JetBrains_Mono({
+  variable: "--font-data",
   subsets: ["latin"],
 });
 
@@ -25,7 +25,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${hanken.variable} ${dataMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
         {children}

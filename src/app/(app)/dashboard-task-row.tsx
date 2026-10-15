@@ -1,118 +1,104 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState } from "react";
 import { ChevronDown, ChevronRight } from "lucide-react";
-import { toast } from "sonner";
-import { Badge } from "@/components/ui/badge";
+import { TickMark } from "@/components/tick-mark";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { completeInstanceAction, reopenInstanceAction } from "./actions";
-import { CompleteRemainingDialog } from "./complete-remaining-dialog";
-import type { DashboardCompanyInstance, DashboardFilterOption, DashboardTaskGroup } from "./dashboard-types";
-import { NaReasonDialog } from "./na-reason-dialog";
-import { RequestReassignmentDialog } from "./request-reassignment-dialog";
+import type { DashboardCompanyInstance, DashboardTaskGroup } from "./dashboard-types";
+import { useInstanceActions } from "./instance-actions";
+import {
+  DueLabel,
+  groupProgress,
+  RowMenu,
+  StampStrip,
+  StatusMark,
+  stampText,
+  stampTitle,
+} from "./workpaper-parts";
 
-function formatStamp(iso: string): string {
-  return new Intl.DateTimeFormat(undefined, { dateStyle: "medium", timeStyle: "short" }).format(
-    new Date(iso),
-  );
-}
-
+/**
+ * Task-first view: one row per task, companies listed beneath it. This is
+ * the default on narrow screens and the alternate to the workpaper grid
+ * on wide ones.
+ */
 export function DashboardTaskRow({
   group,
   todayISO,
   currentProfileId,
   isAdmin,
-  assigneeOptions,
   showAssignee = false,
+  onBulk,
+  onRequest,
+  onNa,
 }: {
   group: DashboardTaskGroup;
   todayISO: string;
   currentProfileId: string;
   isAdmin: boolean;
-  assigneeOptions: DashboardFilterOption[];
   showAssignee?: boolean;
+  onBulk: (group: DashboardTaskGroup) => void;
+  onRequest: (group: DashboardTaskGroup) => void;
+  onNa: (instance: DashboardCompanyInstance) => void;
 }) {
   const [expanded, setExpanded] = useState(false);
-  const [bulkOpen, setBulkOpen] = useState(false);
-  const [requestOpen, setRequestOpen] = useState(false);
-
-  const total = group.instances.length;
-  const resolved = group.instances.filter((i) => i.status !== "open").length;
-  const allResolved = total > 0 && resolved === total;
-  const isOverdue = group.dueDate < todayISO && !allResolved;
-  const openInstances = group.instances.filter((i) => i.status === "open");
+  const { total, resolved, open, allResolved } = groupProgress(group);
 
   return (
-    <div
-      data-testid="task-row"
-      data-task-title={group.title}
-      className={cn(
-        "rounded-lg border bg-card",
-        allResolved && "border-l-4 border-l-green-500",
-        isOverdue && "border-l-4 border-l-destructive",
-        !allResolved && !isOverdue && "border-l-4 border-l-transparent",
-      )}
-    >
-      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center">
+    <div data-testid="task-row" data-task-title={group.title} className="rounded-md border bg-card">
+      <div className="flex flex-col gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
         <button
           type="button"
           onClick={() => setExpanded((e) => !e)}
-          className="flex min-w-0 items-center gap-3 text-left sm:flex-1"
+          className="flex min-h-11 min-w-0 flex-1 items-start gap-2 rounded-sm text-left outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-expanded={expanded}
         >
           {expanded ? (
-            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <ChevronDown className="mt-1 size-4 shrink-0 text-muted-foreground" aria-hidden />
           ) : (
-            <ChevronRight className="h-4 w-4 shrink-0 text-muted-foreground" />
+            <ChevronRight className="mt-1 size-4 shrink-0 text-muted-foreground" aria-hidden />
           )}
-          <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
+          <span className="min-w-0 flex-1">
+            <span className="flex flex-wrap items-center gap-x-2 gap-y-0.5">
               <span className="font-medium">{group.title}</span>
-              {group.assigneeChip && <Badge variant="secondary">{group.assigneeChip}</Badge>}
-              {group.scopeChips.map((chip) => (
-                <Badge key={chip} variant="outline">
-                  {chip}
-                </Badge>
-              ))}
-              {isOverdue && <Badge variant="destructive">Overdue</Badge>}
-              {group.pendingTaskReassignmentRequestId && (
-                <Badge variant="outline">Reassignment requested</Badge>
+              {group.assigneeChip && (
+                <span className="rounded-sm bg-secondary px-1.5 text-xs text-secondary-foreground">
+                  {group.assigneeChip}
+                </span>
               )}
-            </div>
-            <p className="mt-1 text-xs text-muted-foreground">Due {group.dueDate}</p>
-          </div>
+              {group.scopeChips.map((chip) => (
+                <span key={chip} className="rounded-sm border px-1.5 text-xs text-muted-foreground">
+                  {chip}
+                </span>
+              ))}
+            </span>
+            <span className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1">
+              <DueLabel group={group} todayISO={todayISO} />
+              <StampStrip group={group} />
+              <span data-tabular className="font-mono text-xs text-muted-foreground">
+                {resolved}/{total} stamped
+              </span>
+            </span>
+          </span>
         </button>
 
-        <div className="flex flex-wrap items-center gap-3 sm:shrink-0 sm:justify-end">
-          {!isAdmin && !group.pendingTaskReassignmentRequestId && (
-            <Button size="sm" variant="ghost" onClick={() => setRequestOpen(true)}>
-              Request reassignment
-            </Button>
-          )}
-
-          {!allResolved && total > 0 && (
-            <Button size="sm" variant="outline" onClick={() => setBulkOpen(true)}>
-              Complete remaining
-            </Button>
-          )}
-
-          <div className="flex w-full shrink-0 flex-col items-end gap-1.5 sm:w-36">
-            <span className="text-sm text-muted-foreground">
-              {resolved}/{total} companies
+        <div className="flex items-center gap-1.5 sm:shrink-0">
+          {allResolved ? (
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-tick">
+              <TickMark className="size-3.5" strokeWidth={3} />
+              All stamped
             </span>
-            <div className="h-1.5 w-full overflow-hidden rounded-full bg-muted">
-              <div
-                className={cn("h-full rounded-full", allResolved ? "bg-green-500" : "bg-primary")}
-                style={{ width: `${total > 0 ? (resolved / total) * 100 : 0}%` }}
-              />
-            </div>
-          </div>
+          ) : (
+            <Button className="h-11 flex-1 sm:h-8 sm:flex-none" onClick={() => onBulk(group)}>
+              Complete remaining ({open})
+            </Button>
+          )}
+          <RowMenu group={group} isAdmin={isAdmin} onRequest={onRequest} />
         </div>
       </div>
 
       {expanded && (
-        <ul className="divide-y border-t px-4">
+        <ul className="divide-y border-t px-3 sm:px-4">
           {group.instances.map((instance) => (
             <InstanceRow
               key={instance.instanceId}
@@ -120,33 +106,11 @@ export function DashboardTaskRow({
               currentProfileId={currentProfileId}
               originalAssigneeLabel={group.originalAssigneeLabel}
               showAssignee={showAssignee}
+              onNa={onNa}
             />
           ))}
         </ul>
       )}
-
-      <CompleteRemainingDialog
-        open={bulkOpen}
-        onOpenChange={setBulkOpen}
-        taskTitle={group.title}
-        openInstances={openInstances.map((i) => ({
-          instanceId: i.instanceId,
-          companyName: i.companyName,
-        }))}
-      />
-
-      <RequestReassignmentDialog
-        open={requestOpen}
-        onOpenChange={setRequestOpen}
-        taskId={group.taskId}
-        taskTitle={group.title}
-        instances={group.instances.map((i) => ({
-          instanceId: i.instanceId,
-          companyName: i.companyName,
-          isMine: i.isMine,
-        }))}
-        assigneeOptions={assigneeOptions}
-      />
     </div>
   );
 }
@@ -156,111 +120,66 @@ function InstanceRow({
   currentProfileId,
   originalAssigneeLabel,
   showAssignee,
+  onNa,
 }: {
   instance: DashboardCompanyInstance;
   currentProfileId: string;
   originalAssigneeLabel: string;
   showAssignee: boolean;
+  onNa: (instance: DashboardCompanyInstance) => void;
 }) {
-  const [isPending, startTransition] = useTransition();
-  const [naDialogOpen, setNaDialogOpen] = useState(false);
-
-  function handleComplete() {
-    startTransition(async () => {
-      const result = await completeInstanceAction(instance.instanceId);
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-      toast.success(`${instance.companyName} marked complete`);
-    });
-  }
-
-  function handleReopen() {
-    startTransition(async () => {
-      const result = await reopenInstanceAction(instance.instanceId);
-      if (result.error) {
-        toast.error(result.error);
-        return;
-      }
-      toast.success(`${instance.companyName} reopened`);
-    });
-  }
-
-  const stamp =
-    instance.statusSetAt &&
-    `${instance.statusSetByName ?? "Someone"}, ${formatStamp(instance.statusSetAt)}`;
+  const { isPending, complete, reopen } = useInstanceActions(instance);
 
   const overrideLabel = instance.isOverride
     ? instance.effectiveAssigneeProfileId === currentProfileId
       ? `Covering for ${originalAssigneeLabel}`
       : `Covered by ${instance.effectiveAssigneeName ?? "someone"}`
     : null;
+  const assigneeLabel = !overrideLabel && showAssignee
+    ? (instance.effectiveAssigneeName ?? originalAssigneeLabel)
+    : null;
 
   return (
-    <li className="flex flex-wrap items-center justify-between gap-3 py-2 text-sm">
-      <div className="flex items-center gap-2">
-        <span>{instance.companyName}</span>
-        {overrideLabel && (
-          <Badge variant="outline" className="text-xs">
-            {overrideLabel}
-          </Badge>
-        )}
-        {!overrideLabel && showAssignee && (instance.effectiveAssigneeName ?? originalAssigneeLabel) && (
-          <Badge variant="outline" className="text-xs">
-            {instance.effectiveAssigneeName ?? originalAssigneeLabel}
-          </Badge>
-        )}
-        {instance.pendingReassignmentRequestId && (
-          <Badge variant="outline" className="text-xs">
-            Reassignment requested
-          </Badge>
-        )}
+    <li className="flex flex-wrap items-center justify-between gap-x-3 gap-y-2 py-2 text-sm">
+      <div className="flex min-w-0 items-center gap-2.5">
+        <StatusMark status={instance.status} />
+        <span className="font-medium">{instance.companyName}</span>
+        {[overrideLabel, assigneeLabel, instance.pendingReassignmentRequestId && "Reassignment requested"]
+          .filter(Boolean)
+          .map((text) => (
+            <span key={text} className="rounded-sm border px-1.5 text-xs text-muted-foreground">
+              {text}
+            </span>
+          ))}
       </div>
 
-      {instance.status === "open" && (
-        <div className="flex items-center gap-2">
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={isPending}
-            onClick={() => setNaDialogOpen(true)}
-          >
+      {instance.status === "open" ? (
+        <div className="ml-auto flex items-center gap-2">
+          <Button size="sm" variant="outline" className="h-11 sm:h-7" disabled={isPending} onClick={() => onNa(instance)}>
             N/A
           </Button>
-          <Button size="sm" disabled={isPending} onClick={handleComplete}>
+          <Button size="sm" className="h-11 sm:h-7" disabled={isPending} onClick={complete}>
             Complete
           </Button>
         </div>
-      )}
-
-      {instance.status === "completed" && (
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-green-600">Completed{stamp ? ` — ${stamp}` : ""}</span>
-          <Button size="sm" variant="ghost" disabled={isPending} onClick={handleReopen}>
-            Reopen
-          </Button>
-        </div>
-      )}
-
-      {instance.status === "na" && (
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-muted-foreground">
-            N/A{stamp ? ` — ${stamp}` : ""}
-            {instance.naReason ? ` (${instance.naReason})` : ""}
+      ) : (
+        <div className="ml-auto flex items-center gap-2">
+          <span
+            data-tabular
+            title={stampTitle(instance)}
+            className={cn(
+              "font-mono text-xs",
+              instance.status === "completed" ? "text-tick" : "text-foreground/80",
+            )}
+          >
+            {instance.status === "completed" ? "Stamped" : "N/A"} {stampText(instance)}
+            {instance.naReason ? ` · ${instance.naReason}` : ""}
           </span>
-          <Button size="sm" variant="ghost" disabled={isPending} onClick={handleReopen}>
+          <Button size="sm" variant="ghost" className="h-11 sm:h-7" disabled={isPending} onClick={reopen}>
             Reopen
           </Button>
         </div>
       )}
-
-      <NaReasonDialog
-        open={naDialogOpen}
-        onOpenChange={setNaDialogOpen}
-        instanceId={instance.instanceId}
-        companyName={instance.companyName}
-      />
     </li>
   );
 }

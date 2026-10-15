@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>TaskDeck - Dashboard (canon)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;width:1440px;height:900px;overflow:hidden;background:#F8FAFC;color:#111827;font:14px/20px Inter,system-ui,sans-serif;display:flex;-webkit-font-smoothing:antialiased}
+.side{width:240px;height:900px;background:#fff;border-right:1px solid #E5E7EB;padding:20px 16px;flex:none}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:18px;letter-spacing:-.01em;padding:4px 8px 24px}
+.logo{width:28px;height:28px;border-radius:8px;background:#2563EB;display:grid;place-items:center}
+.logo i{display:block;width:12px;height:12px;border:2px solid #fff;border-radius:3px}
+.nav a{display:flex;align-items:center;gap:12px;height:40px;padding:0 12px;border-radius:8px;color:#4B5563;font-weight:500;margin-bottom:4px}
+.nav a.on{background:#EFF6FF;color:#2563EB}
+.nav .ic{width:16px;height:16px;border:2px solid currentColor;border-radius:4px}
+.nav .ic.c{border-top-width:5px}
+.col{flex:1;min-width:0;display:flex;flex-direction:column}
+.top{height:64px;background:#fff;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;justify-content:flex-end;gap:16px;padding:0 32px;flex:none}
+.who{display:flex;align-items:center;gap:10px;font-weight:500}
+.who span{color:#4B5563;font-weight:400}
+.av{width:32px;height:32px;border-radius:50%;background:#DBEAFE;color:#2563EB;font-weight:600;font-size:12px;display:grid;place-items:center}
+.btn{height:32px;padding:0 12px;border-radius:8px;border:1px solid #E5E7EB;background:#fff;color:#111827;font:500 13px Inter,sans-serif;display:inline-flex;align-items:center;justify-content:center;white-space:nowrap}
+.main{padding:28px 32px 0;flex:1;overflow:hidden}
+h1{margin:0;font-size:24px;line-height:32px;font-weight:700;letter-spacing:-.02em}
+.sub{color:#4B5563;margin-top:2px}.sub b{color:#DC2626;font-weight:600}
+.bar{display:flex;align-items:center;justify-content:space-between;margin:20px 0 14px}
+.seg{display:inline-flex;background:#EEF2F6;border-radius:8px;padding:3px;gap:2px}
+.seg a{height:30px;padding:0 14px;display:flex;align-items:center;border-radius:6px;color:#4B5563;font-weight:500;font-size:13px}
+.seg a.on{background:#fff;color:#111827;box-shadow:0 1px 2px rgba(17,24,39,.08),0 0 0 1px #E5E7EB}
+.filters{display:flex;gap:8px;margin-bottom:16px}
+.inp{height:36px;background:#fff;border:1px solid #E5E7EB;border-radius:8px;display:flex;align-items:center;padding:0 12px;color:#4B5563;gap:8px}
+.inp.s{width:320px}.inp.d{width:160px;justify-content:space-between}
+.inp .mg{width:12px;height:12px;border:2px solid #9CA3AF;border-radius:50%}
+.cv{width:6px;height:6px;border-right:2px solid #6B7280;border-bottom:2px solid #6B7280;transform:rotate(45deg);margin-top:-3px}
+.list{display:flex;flex-direction:column;gap:8px}
+.card{background:#fff;border:1px solid #E5E7EB;border-radius:8px;box-shadow:0 1px 2px rgba(17,24,39,.04)}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 128px 112px 220px 168px 32px;align-items:center;column-gap:20px;height:64px;padding:0 16px 0 20px}
+.t{font-weight:600;font-size:14px;display:flex;align-items:center;gap:10px;min-width:0}
+.t .dot{width:8px;height:8px;border-radius:50%;background:#DC2626;flex:none}
+.t .dot.n{background:transparent;border:1.5px solid #D1D5DB}
+.chip{display:inline-flex;align-items:center;height:24px;padding:0 10px;border-radius:6px;background:#F3F4F6;color:#374151;font-size:12px;font-weight:500;justify-self:start;white-space:nowrap}
+.due{color:#4B5563;font-size:13px}.due.od{color:#DC2626;font-weight:500}
+.prog{display:flex;flex-direction:column;gap:6px}
+.prog small{font-size:12px;color:#4B5563;line-height:16px}
+.track{height:6px;border-radius:3px;background:#E5E7EB;overflow:hidden}
+.track i{display:block;height:100%;background:#2563EB;border-radius:3px}
+.out{border-color:#2563EB;color:#2563EB;background:#fff}
+.chev{width:32px;height:32px;display:grid;place-items:center;border-radius:6px}
+.chev i{width:7px;height:7px;border-right:2px solid #6B7280;border-bottom:2px solid #6B7280;transform:rotate(-45deg)}
+.chev.o i{transform:rotate(45deg);margin-top:-3px}
+.open{border-color:#BFDBFE}
+.sub-rows{border-top:1px solid #E5E7EB;background:#F8FAFC;border-radius:0 0 8px 8px;padding:4px 16px 8px 52px}
+.cr{display:grid;grid-template-columns:minmax(0,1fr) 128px 112px 220px 168px 32px;column-gap:20px;align-items:center;height:48px;padding-left:0;border-bottom:1px solid #E5E7EB;margin-right:0}
+.cr:last-child{border-bottom:0}
+.cr .nm{font-weight:500}
+.cr .st{color:#4B5563;font-size:13px}
+.acts{display:flex;gap:8px;grid-column:4 / 6;justify-content:flex-end}
+.acts .btn{height:30px;width:80px}
+.acts .go{background:#2563EB;border-color:#2563EB;color:#fff}
+</style></head><body>
+<aside class="side">
+  <div class="brand"><div class="logo"><i></i></div>TaskDeck</div>
+  <nav class="nav"><a class="on"><span class="ic"></span>Dashboard</a><a><span class="ic c"></span>Office calendar</a></nav>
+</aside>
+<div class="col">
+  <header class="top">
+    <div class="who"><div class="av">OL</div>Oskar Lund <span>· Member</span></div>
+    <a class="btn">Sign out</a>
+  </header>
+  <main class="main">
+    <h1>Dashboard</h1>
+    <div class="sub">5 tasks due today · <b>17 overdue</b></div>
+    <div class="bar">
+      <div class="seg"><a class="on">My tasks</a><a>All tasks</a></div>
+      <div class="seg"><a class="on">Today</a><a>This week</a><a>This month</a></div>
+    </div>
+    <div class="filters">
+      <div class="inp s"><span class="mg"></span>Search tasks</div>
+      <div class="inp d">All teams<span class="cv"></span></div>
+      <div class="inp d">All companies<span class="cv"></span></div>
+      <div class="inp d">Any status<span class="cv"></span></div>
+    </div>
+    <div class="list">
+      <div class="card open">
+        <div class="row">
+          <div class="t"><span class="dot"></span>Credit control follow-up</div>
+          <span class="chip">Group – A/R</span><span class="due od">Overdue · 12 Oct</span>
+          <div class="prog"><small>4/12 companies</small><div class="track"><i style="width:33%"></i></div></div>
+          <a class="btn out">Complete remaining</a><a class="chev o"><i></i></a>
+        </div>
+        <div class="sub-rows">
+          <div class="cr"><span class="nm">Bergtun</span><span></span><span class="st">Open</span><div class="acts"><a class="btn">N/A</a><a class="btn go">Complete</a></div></div>
+          <div class="cr"><span class="nm">Nordvik Oslo</span><span></span><span class="st">Open</span><div class="acts"><a class="btn">N/A</a><a class="btn go">Complete</a></div></div>
+          <div class="cr"><span class="nm">Nordvik Bergen</span><span></span><span class="st">Open</span><div class="acts"><a class="btn">N/A</a><a class="btn go">Complete</a></div></div>
+        </div>
+      </div>
+      <div class="card"><div class="row">
+        <div class="t"><span class="dot"></span>Reconcile bank accounts</div>
+        <span class="chip">Group – A/R</span><span class="due od">Overdue · 9 Oct</span>
+        <div class="prog"><small>4/12 companies</small><div class="track"><i style="width:33%"></i></div></div>
+        <a class="btn out">Complete remaining</a><a class="chev"><i></i></a></div></div>
+      <div class="card"><div class="row">
+        <div class="t"><span class="dot n"></span>Aged receivables review</div>
+        <span class="chip">Group – A/R</span><span class="due">Today</span>
+        <div class="prog"><small>4/12 companies</small><div class="track"><i style="width:33%"></i></div></div>
+        <a class="btn out">Complete remaining</a><a class="chev"><i></i></a></div></div>
+      <div class="card"><div class="row">
+        <div class="t"><span class="dot n"></span>Bank fee review</div>
+        <span class="chip">Group – A/R</span><span class="due">Today</span>
+        <div class="prog"><small>4/12 companies</small><div class="track"><i style="width:33%"></i></div></div>
+        <a class="btn out">Complete remaining</a><a class="chev"><i></i></a></div></div>
+      <div class="card"><div class="row">
+        <div class="t"><span class="dot n"></span>Customer statements</div>
+        <span class="chip">Group – A/R</span><span class="due">Today</span>
+        <div class="prog"><small>4/12 companies</small><div class="track"><i style="width:33%"></i></div></div>
+        <a class="btn out">Complete remaining</a><a class="chev"><i></i></a></div></div>
+    </div>
+  </main>
+</div>
+</body></html>

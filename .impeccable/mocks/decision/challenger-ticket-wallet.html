@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TaskDeck – Ticket Wallet</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Archivo+Narrow:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--navy:#0F2A5C;--red:#D7263D;--paper:#FBFBF8;--carbon:#5B3E9A;--hair:#D5D8E0;--mute:#5d6882}
+*{box-sizing:border-box}
+body{margin:0;width:1440px;height:900px;overflow:hidden;display:flex;font:14px/1.3 Archivo,sans-serif;background:#EEF0F4;color:var(--navy)}
+.rail{width:220px;background:var(--navy);color:#fff;padding:22px 0;flex:none}
+.logo{font:700 22px "Archivo Narrow";letter-spacing:.02em;padding:0 24px 26px;display:flex;align-items:center;gap:8px}
+.logo:before{content:"";width:10px;height:10px;background:var(--red);transform:rotate(45deg)}
+.rail a{display:block;padding:10px 24px;color:#b9c4de;font-weight:500}
+.rail a.on{color:#fff;background:rgba(255,255,255,.1);box-shadow:inset 3px 0 var(--red)}
+.col{flex:1;display:flex;flex-direction:column;min-width:0}
+.top{height:52px;background:var(--paper);border-bottom:1px solid var(--hair);display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:0 28px}
+.top span{color:var(--mute)}.top b{font-weight:600}
+.top button{font:500 13px Archivo;background:none;border:1px solid var(--hair);padding:6px 12px;color:var(--navy);border-radius:3px}
+main{padding:18px 28px 0;flex:1;min-height:0}
+.hd{display:flex;align-items:flex-end;justify-content:space-between}
+h1{font:700 30px/1 "Archivo Narrow";margin:0 0 8px}
+.sum{display:flex;gap:16px;align-items:center;color:var(--mute)}
+.sum b{color:var(--navy);font-weight:600}
+.sum .od{font:600 13px Archivo;color:var(--red);background:#fff;border:1px solid var(--red);padding:4px 10px;border-radius:3px}
+.tabs{display:flex;gap:22px;align-items:center}
+.seg{display:flex;border:1px solid var(--hair);border-radius:3px;background:var(--paper);overflow:hidden}
+.seg span{padding:7px 14px;font-weight:500;color:var(--mute)}
+.seg .on{background:var(--navy);color:#fff}
+.list{margin-top:14px;display:flex;flex-direction:column;gap:9px}
+.book{background:var(--paper);border:1px solid var(--hair);border-radius:4px;box-shadow:0 1px 0 rgba(15,42,92,.08)}
+.head{display:flex;align-items:center;gap:12px;padding:0 12px 0 0;height:32px;border-bottom:1px solid var(--hair)}
+.title{height:100%;display:flex;align-items:center;padding:0 16px;background:var(--navy);color:#fff;font:600 16px "Archivo Narrow";letter-spacing:.01em;border-radius:3px 12px 0 0;min-width:250px}
+.book.late .title{box-shadow:inset 0 -3px var(--red)}
+.chip{font:600 12px "Archivo Narrow";border:1px solid var(--navy);padding:2px 8px;border-radius:2px;letter-spacing:.03em}
+.due{color:var(--mute);font-size:13px}.late .due{color:var(--red);font-weight:600}
+.head button{margin-left:auto;font:600 12px Archivo;background:var(--red);color:#fff;border:0;padding:6px 12px;border-radius:3px}
+.legs{display:grid;grid-template-columns:repeat(6,1fr)}
+.leg{position:relative;height:76px;padding:8px 12px 0;border-left:2px dashed #bcc3d3}
+.leg:first-child{border-left:0}
+.leg:before,.leg:after{content:"";position:absolute;left:-7px;width:12px;height:12px;border-radius:50%;background:#EEF0F4;border:1px solid var(--hair)}
+.leg:first-child:before,.leg:first-child:after{display:none}
+.leg:before{top:-7px;clip-path:inset(50% 0 0 0)}.leg:after{bottom:-7px;clip-path:inset(0 0 50% 0)}
+.leg b{font:600 11px "Archivo Narrow";text-transform:uppercase;letter-spacing:.08em;color:var(--mute);display:block}
+.f{display:block;margin-top:10px;height:30px;border-bottom:1px solid var(--navy);font:700 19px "Archivo Narrow";color:var(--carbon);letter-spacing:.03em;position:relative;font-style:normal}
+.f small{position:absolute;right:0;bottom:3px;width:16px;height:16px;border-radius:50%;background:var(--carbon);color:#fff;font:700 10px/16px Archivo;text-align:center}
+.open .f{border-bottom:1px dashed #9aa5bd}
+.open em,.done em{display:block;font:500 10px Archivo;color:#8a93a8;margin-top:3px;font-style:normal}
+.na .f{border-bottom:0}
+.stamp{position:absolute;left:4px;top:-4px;transform:rotate(-7deg);font:700 20px "Archivo Narrow";letter-spacing:.14em;color:var(--red);border:2.5px solid var(--red);padding:0 9px;border-radius:3px;opacity:.88;background:rgba(215,38,61,.04)}
+.na{background:repeating-linear-gradient(135deg,transparent 0 9px,rgba(215,38,61,.035) 9px 10px)}
+</style></head><body>
+<nav class="rail"><div class="logo">TaskDeck</div><a class="on">Dashboard</a><a>Office calendar</a></nav>
+<div class="col">
+<header class="top"><span>Oskar Lund · <b>Member</b></span><button>Sign out</button></header>
+<main>
+<div class="hd"><div><h1>Today, Thu 15 Oct</h1>
+<div class="sum"><span><b>5</b> due today</span><button class="od">17 overdue</button><span><b>12</b> this week</span></div></div>
+<div class="tabs"><div class="seg"><span class="on">My tasks</span><span>All tasks</span></div><div class="seg"><span class="on">Today</span><span>This week</span><span>This month</span></div></div></div>
+<div class="list">
+
+<section class="book late"><div class="head"><div class="title">Credit control follow-up</div><span class="chip">Group – A/R</span><span class="due">Overdue · due Tue 13 Oct</span><button>Complete remaining</button></div>
+<div class="legs">
+<div class="leg done"><b>Bergtun</b><i class="f">OL 09:14<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Oslo</b><i class="f">OL 09:21<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg open"><b>Nordvik Bergen</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg done"><b>Havstad</b><i class="f">OL 09:32<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg open"><b>Solvik</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg open"><b>Kystlinje</b><i class="f"></i><em>Initials · time</em></div>
+</div></section>
+
+<section class="book late"><div class="head"><div class="title">Reconcile bank accounts</div><span class="chip">Group – Finance</span><span class="due">Overdue · due Mon 12 Oct</span><button>Complete remaining</button></div>
+<div class="legs">
+<div class="leg done"><b>Bergtun</b><i class="f">OL 08:47<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Oslo</b><i class="f">OL 08:55<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Bergen</b><i class="f">OL 09:02<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg open"><b>Havstad</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg na"><b>Solvik</b><i class="f"><span class="stamp">N/A</span></i><em>Not applicable</em></div>
+<div class="leg open"><b>Kystlinje</b><i class="f"></i><em>Initials · time</em></div>
+</div></section>
+
+<section class="book"><div class="head"><div class="title">Aged receivables review</div><span class="chip">Group – A/R</span><span class="due">Due today · Thu 15 Oct</span><button>Complete remaining</button></div>
+<div class="legs">
+<div class="leg open"><b>Bergtun</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Oslo</b><i class="f">OL 10:03<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg open"><b>Nordvik Bergen</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg open"><b>Havstad</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg done"><b>Solvik</b><i class="f">OL 10:11<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg na"><b>Kystlinje</b><i class="f"><span class="stamp">N/A</span></i><em>Not applicable</em></div>
+</div></section>
+
+<section class="book"><div class="head"><div class="title">Bank fee review</div><span class="chip">Group – Finance</span><span class="due">Due today · Thu 15 Oct</span><button>Complete remaining</button></div>
+<div class="legs">
+<div class="leg done"><b>Bergtun</b><i class="f">OL 09:40<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Oslo</b><i class="f">OL 09:44<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Nordvik Bergen</b><i class="f">OL 09:49<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg done"><b>Havstad</b><i class="f">OL 09:53<small>✓</small></i><em>Initials · time</em></div>
+<div class="leg open"><b>Solvik</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg open"><b>Kystlinje</b><i class="f"></i><em>Initials · time</em></div>
+</div></section>
+
+<section class="book"><div class="head"><div class="title">Customer statements</div><span class="chip">Group – A/R</span><span class="due">Due today · Thu 15 Oct</span><button>Complete remaining</button></div>
+<div class="legs">
+<div class="leg na"><b>Bergtun</b><i class="f"><span class="stamp">N/A</span></i><em>Not applicable</em></div>
+<div class="leg open"><b>Nordvik Oslo</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg open"><b>Nordvik Bergen</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg open"><b>Havstad</b><i class="f"></i><em>Initials · time</em></div>
+<div class="leg na"><b>Solvik</b><i class="f"><span class="stamp">N/A</span></i><em>Not applicable</em></div>
+<div class="leg done"><b>Kystlinje</b><i class="f">OL 11:26<small>✓</small></i><em>Initials · time</em></div>
+</div></section>
+
+</div></main></div></body></html>

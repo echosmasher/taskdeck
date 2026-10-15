@@ -1,0 +1,122 @@
+{
+  "title": "Choose the visual world for TaskDeck",
+  "question": "The roll assigned Avgang, a Nordic departure-poster timetable. Keep it, take an alternate, or re-roll.",
+  "options": [
+    {
+      "id": "assigned",
+      "label": "Avgang",
+      "kicker": "THE ROLL",
+      "lineage": "Nordic printed departure-poster timetables",
+      "thesis": "Every task read like a timetable: one row per task, one fixed column per company.",
+      "palette": ["#FFD21F", "#141414", "#FFFFFF", "#C8102E", "#1B7F4B"],
+      "materials": ["poster-yellow shell", "tabular numerals", "ruled time columns"],
+      "viewport": "Yellow rail and header; a white timetable where each task row has a fixed column per company, each cell stamped with initials and time.",
+      "risk": "Poster yellow can get loud over a long workday, so it stays on the shell and headers only.",
+      "raised": [
+        {"from": "Emission Line Rail", "raise": "State is carried by form, not hue alone: done is a filled tick, N/A is struck through, open is hollow, overdue is a doubled rule."},
+        {"from": "Jet-Age Ticket Wallet", "raise": "Nothing disappears, it cancels: N/A and reopened cells stay visible with who and when."}
+      ],
+      "html": ".impeccable/mocks/decision/assigned.html"
+    },
+    {
+      "id": "model-pick",
+      "label": "Audit Workpaper",
+      "kicker": "IMPECCABLE’S PICK",
+      "lineage": "auditors' workpaper tickmarks and sign-off columns",
+      "thesis": "Completion shown the way auditors already mark it: a tickmark, initials, a date.",
+      "palette": ["#F3F5F4", "#1D2420", "#1E7F5C", "#C2362B", "#34509A"],
+      "materials": ["pencil-green tickmarks", "sign-off columns", "tickmark legend"],
+      "viewport": "A quiet sidebar and a workpaper table; each company cell holds a tickmark with initials and date, legend at the foot.",
+      "risk": "Closest to what a finance tool already looks like, so it can read as a familiar spreadsheet."
+    ,"html": ".impeccable/mocks/decision/model-pick.html"
+    },
+    {
+      "id": "challenger-transit",
+      "label": "Midnight Transit Diagram",
+      "verdict": "competitive",
+      "lineage": "metropolitan rail map enamel mural",
+      "thesis": "A task is a line and each company a station that fills when it is done.",
+      "palette": ["#0B1E3F", "#FFFFFF", "#E4002B", "#0057B8", "#FFB000"],
+      "materials": ["midnight enamel ground", "line inks", "station ticks"],
+      "viewport": "A dark shell with each task drawn as a line of company stations, completed stations filled.",
+      "case": "Fuses closest to the fan-out mechanism; a dark ground suits a daytime desk screen less.",
+      "risk": "A diagram can read slower to scan than a table for 12 companies.",
+      "hero": "https://impeccable.style/worlds/cards/wayfinding-cartography-signage-midnight-transit-diagram-hero.webp",
+      "html": ".impeccable/mocks/decision/challenger-transit.html"
+    },
+    {
+      "id": "challenger-ticket-wallet",
+      "label": "Jet-Age Ticket Wallet",
+      "verdict": "competitive",
+      "lineage": "jet-age airline ticket coupons",
+      "thesis": "Completions are stamps on a coupon, and cancelled things stay on the page.",
+      "palette": ["#0F2A5C", "#D7263D", "#FBFBF8", "#5B3E9A"],
+      "materials": ["coupon stock", "carbon-purple figures", "red VOID stamp"],
+      "viewport": "Each task is a coupon book; company legs show validated, used or void stamps.",
+      "case": "Matches the audit idea best; nostalgia is the cost.",
+      "risk": "Can tip into retro novelty if the stamps are not kept precise.",
+      "hero": "https://impeccable.style/worlds/cards/vernacular-ephemera-jet-age-ticket-wallet-hero.webp",
+      "html": ".impeccable/mocks/decision/challenger-ticket-wallet.html"
+    },
+    {
+      "id": "challenger-jp-density",
+      "label": "Boxed-Module Density",
+      "verdict": "competitive",
+      "lineage": "Japanese high-density web",
+      "thesis": "Boxed modules and utility red fit a whole portfolio on one screen.",
+      "palette": ["#FFFFFF", "#111111", "#D6001C", "#9AA3AD"],
+      "materials": ["hairline module borders", "red header tabs", "compact gothic type"],
+      "viewport": "Ruled task modules with small red tabs, all companies visible without expanding.",
+      "case": "Strongest on density for 12-company rows; weakest on audience identification.",
+      "risk": "Tiny type tests readability for long sessions.",
+      "hero": "https://impeccable.style/worlds/cards/japanese-high-density-web-hero.webp",
+      "html": ".impeccable/mocks/decision/challenger-jp-density.html"
+    },
+    {
+      "id": "challenger-emission-line",
+      "label": "Emission Line Rail",
+      "verdict": "declined",
+      "lineage": "spectrogram viewing plate",
+      "palette": ["#2B2B2B", "#E8E2D0", "#FFD84A"],
+      "materials": ["charcoal continuum", "hairline marks"],
+      "case": "A charcoal spectrogram is a poor daytime desk screen for office staff.",
+      "kept": "State carried by line form, not hue alone.",
+      "hero": "https://impeccable.style/worlds/cards/operate-c-emission-line-rail-hero.webp"
+    },
+    {
+      "id": "challenger-character-catalog",
+      "label": "Character Goods Catalog",
+      "verdict": "declined",
+      "lineage": "mascot goods catalog",
+      "palette": ["#FBE4EC", "#FFFFFF", "#F2A65A"],
+      "materials": ["pastel grid", "name plates"],
+      "case": "Too playful for audit work, which you ruled out.",
+      "kept": "Every entity is a fixed, named cell.",
+      "hero": "https://impeccable.style/worlds/cards/pop-culture-shelf-character-goods-catalog-hero.webp"
+    },
+    {
+      "id": "challenger-acetate-manual",
+      "label": "Acetate Tab Board",
+      "verdict": "declined",
+      "lineage": "boxed-software manual tab dividers",
+      "palette": ["#E8631A", "#F2C200", "#1F8A70", "#2B3A9A"],
+      "materials": ["acetate leaves", "coloured tab board"],
+      "case": "Tab-rail navigation and single-size type fight an operating dashboard.",
+      "kept": "One hue per team division.",
+      "hero": "https://impeccable.style/worlds/cards/rw-manual-acetate-tab-board-hero.webp"
+    }
+  ],
+  "reroll": {"registers": ["safer", "bolder"]},
+  "buildPath": {"value": "code", "toggle": false},
+  "canon": true,
+  "canonCard": {
+    "label": "The category standard",
+    "thesis": "A clean task list with a blue accent, executed with full craft.",
+    "palette": ["#FFFFFF", "#111827", "#2563EB"],
+    "materials": ["clean grid", "soft borders"],
+    "viewport": "Sidebar, filter bar and an even list of task rows.",
+    "risk": "Indistinguishable from the competition by design.",
+    "html": ".impeccable/mocks/decision/canon.html"
+  },
+  "steer": true
+}

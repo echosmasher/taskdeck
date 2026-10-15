@@ -2,9 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { LayoutGrid } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
+import { LogoMark } from "./logo-mark";
 import { NAV_ITEMS, type NavItem } from "./nav-items";
 
 function NavLink({
@@ -26,7 +26,7 @@ function NavLink({
         "flex items-center gap-2.5 rounded-md px-3 py-2 text-sm font-medium transition-colors xl:justify-start",
         "justify-center",
         active
-          ? "bg-sidebar-accent text-sidebar-accent-foreground"
+          ? "bg-sidebar-accent font-semibold text-sidebar-accent-foreground"
           : "text-muted-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-foreground",
       )}
     >
@@ -59,10 +59,8 @@ export function Sidebar({
   return (
     <div className="flex h-full flex-col">
       <div className="flex items-center justify-center gap-2 border-b p-4 xl:justify-start">
-        <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-primary text-primary-foreground">
-          <LayoutGrid className="h-4 w-4" />
-        </div>
-        <span className="hidden text-lg font-semibold text-primary xl:inline">TaskDeck</span>
+        <LogoMark className="size-8 shrink-0" />
+        <span className="hidden text-lg font-semibold tracking-tight xl:inline">TaskDeck</span>
       </div>
       <nav className="flex flex-1 flex-col gap-1 p-2 xl:p-4">
         {mainItems.map((item) => (

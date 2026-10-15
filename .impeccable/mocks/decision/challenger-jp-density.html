@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TaskDeck - Boxed-Module Density</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--r:#D6001C;--g:#9AA3AD;--t:#111;--mut:#6b7480}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{width:1440px;height:900px;overflow:hidden;background:#fff;color:var(--t);font:400 12px/1.35 "Noto Sans JP",system-ui,sans-serif;display:flex}
+nav{width:148px;height:900px;border-right:1px solid var(--g);padding:14px 0;flex:none}
+.logo{font-weight:700;font-size:15px;padding:0 14px 14px;border-bottom:1px solid var(--g);margin-bottom:8px}
+.logo b{color:var(--r)}
+nav a{display:block;padding:6px 14px;font-size:12px;color:var(--t);border-left:3px solid transparent}
+nav a.on{border-left-color:var(--r);font-weight:700;background:#f3f4f6}
+.col{flex:1;height:900px;display:flex;flex-direction:column;min-width:0}
+.top{height:36px;border-bottom:1px solid var(--g);display:flex;align-items:center;justify-content:flex-end;gap:14px;padding:0 16px;font-size:12px}
+.top button{font:inherit;background:#fff;border:1px solid var(--g);padding:2px 10px;color:var(--t)}
+main{padding:12px 16px;flex:1;overflow:hidden}
+.head{display:flex;align-items:baseline;gap:16px;border-bottom:2px solid var(--t);padding-bottom:6px}
+h1{font-size:20px;line-height:1.2;margin:0;font-weight:700}
+.sum{font-size:12px;display:flex;gap:6px;align-items:center}
+.sum .od{font:inherit;font-weight:700;color:var(--r);background:#fff;border:1px solid var(--r);padding:1px 8px;cursor:pointer}
+.bar{display:flex;justify-content:space-between;margin:8px 0 10px}
+.seg{display:flex}
+.seg span{padding:3px 12px;border:1px solid var(--g);margin-left:-1px;font-size:12px}
+.seg span.on{background:var(--t);color:#fff;border-color:var(--t)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 12px}
+.mod{border:1px solid var(--g);display:flex;flex-direction:column;background:#fff}
+.mh{display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--g);padding-right:8px;height:24px}
+.tab{background:var(--r);color:#fff;font-weight:700;font-size:12px;height:24px;line-height:24px;padding:0 10px;white-space:nowrap}
+.chip{border:1px solid var(--g);padding:0 5px;font-size:10px;color:#444;line-height:15px}
+.due{font-size:11px;margin-left:auto;color:var(--mut)}
+.due.od{color:var(--r);font-weight:700}
+.badge{background:#fff;color:var(--r);border:1px solid var(--r);font-size:10px;font-weight:700;padding:0 4px;line-height:14px}
+.cnt{font-weight:700;font-size:12px;font-variant-numeric:tabular-nums}
+ul{list-style:none;margin:0;padding:0}
+li{display:grid;grid-template-columns:16px 1fr 28px 40px;align-items:center;height:20px;padding:0 8px;border-bottom:1px solid #e6e9ec;font-size:12px}
+li:last-child{border-bottom:0}
+li i{width:11px;height:11px;border:1px solid #555;display:inline-block;position:relative}
+li i.d{background:var(--t);border-color:var(--t)}
+li i.d:after{content:"";position:absolute;left:3px;top:0;width:3px;height:7px;border:solid #fff;border-width:0 1.5px 1.5px 0;transform:rotate(40deg)}
+li i.n{border-color:var(--g);background:#f3f4f6}
+li .in{color:var(--mut);font-size:10px;text-align:center;border:1px solid #d5d9de;line-height:13px}
+li .tm{text-align:right;font-variant-numeric:tabular-nums;font-size:11px}
+li.na{color:var(--g);text-decoration:line-through}
+li.na .in{border-color:#e6e9ec;color:var(--g)}
+li.late .tm{color:var(--r);font-weight:700}
+li.more{display:block;color:var(--mut);font-size:11px;background:#f7f8f9}
+.mf{border-top:1px solid var(--g);display:flex;justify-content:space-between;align-items:center;padding:3px 8px;background:#f7f8f9;font-size:11px;color:var(--mut)}
+.mf button{font:700 11px "Noto Sans JP",sans-serif;background:#fff;color:var(--r);border:1px solid var(--r);padding:2px 10px}
+.side{padding:8px 10px;font-size:11px;line-height:1.6}
+.side b{font-size:12px}.side .rw{display:flex;justify-content:space-between;border-bottom:1px dotted var(--g)}
+</style></head><body>
+<nav><div class="logo">Task<b>Deck</b></div><a class="on">Dashboard</a><a>Office calendar</a></nav>
+<div class="col">
+<div class="top"><span>Oskar Lund &middot; Member</span><button>Sign out</button></div>
+<main>
+<div class="head"><h1>Today, Thu 15 Oct</h1>
+<div class="sum">5 due today &middot; <button class="od">17 overdue</button> &middot; 12 this week</div></div>
+<div class="bar"><div class="seg"><span class="on">My tasks</span><span>All tasks</span></div>
+<div class="seg"><span class="on">Today</span><span>This week</span><span>This month</span></div></div>
+<div class="grid">
+
+<section class="mod"><div class="mh"><span class="tab">Credit control follow-up</span><span class="chip">Group &ndash; A/R</span><span class="badge">OVERDUE</span><span class="due od">Due 12 Oct</span><span class="cnt">4/12</span></div>
+<ul><li><i class="d"></i><span>Bergtun</span><span class="in">OL</span><span class="tm">09:10</span></li>
+<li><i class="d"></i><span>Nordvik Oslo</span><span class="in">OL</span><span class="tm">09:24</span></li>
+<li><i class="d"></i><span>Nordvik Bergen</span><span class="in">KS</span><span class="tm">10:02</span></li>
+<li class="na"><i class="n"></i><span>Havstad</span><span class="in">&ndash;</span><span class="tm">N/A</span></li>
+<li class="late"><i></i><span>Solvik</span><span class="in">OL</span><span class="tm">-3d</span></li>
+<li class="late"><i></i><span>Kystlinje</span><span class="in">KS</span><span class="tm">-3d</span></li>
+<li class="more">+6 more &middot; 1 done, 5 open</li></ul>
+<div class="mf"><span>8 open &middot; 1 N/A</span><button>Complete remaining</button></div></section>
+
+<section class="mod"><div class="mh"><span class="tab">Reconcile bank accounts</span><span class="chip">Group &ndash; A/R</span><span class="badge">OVERDUE</span><span class="due od">Due 13 Oct</span><span class="cnt">7/12</span></div>
+<ul><li><i class="d"></i><span>Bergtun</span><span class="in">OL</span><span class="tm">08:40</span></li>
+<li><i class="d"></i><span>Nordvik Oslo</span><span class="in">OL</span><span class="tm">08:55</span></li>
+<li><i class="d"></i><span>Nordvik Bergen</span><span class="in">OL</span><span class="tm">09:30</span></li>
+<li><i class="d"></i><span>Havstad</span><span class="in">MT</span><span class="tm">11:15</span></li>
+<li class="late"><i></i><span>Solvik</span><span class="in">MT</span><span class="tm">-2d</span></li>
+<li class="na"><i class="n"></i><span>Kystlinje</span><span class="in">&ndash;</span><span class="tm">N/A</span></li>
+<li class="more">+6 more &middot; 3 done, 3 open</li></ul>
+<div class="mf"><span>5 open &middot; 1 N/A</span><button>Complete remaining</button></div></section>
+
+<section class="mod"><div class="mh"><span class="tab">Aged receivables review</span><span class="chip">Group &ndash; A/R</span><span class="due">Due today</span><span class="cnt">2/12</span></div>
+<ul><li><i class="d"></i><span>Bergtun</span><span class="in">OL</span><span class="tm">10:20</span></li>
+<li><i class="d"></i><span>Nordvik Oslo</span><span class="in">OL</span><span class="tm">10:48</span></li>
+<li><i></i><span>Nordvik Bergen</span><span class="in">KS</span><span class="tm">14:00</span></li>
+<li><i></i><span>Havstad</span><span class="in">KS</span><span class="tm">14:00</span></li>
+<li class="na"><i class="n"></i><span>Solvik</span><span class="in">&ndash;</span><span class="tm">N/A</span></li>
+<li><i></i><span>Kystlinje</span><span class="in">MT</span><span class="tm">15:30</span></li>
+<li class="more">+6 more &middot; 0 done, 6 open</li></ul>
+<div class="mf"><span>9 open &middot; 1 N/A</span><button>Complete remaining</button></div></section>
+
+<section class="mod"><div class="mh"><span class="tab">Bank fee review</span><span class="chip">Group &ndash; A/R</span><span class="due">Due today</span><span class="cnt">6/12</span></div>
+<ul><li><i class="d"></i><span>Bergtun</span><span class="in">MT</span><span class="tm">08:15</span></li>
+<li><i class="d"></i><span>Nordvik Oslo</span><span class="in">MT</span><span class="tm">08:20</span></li>
+<li><i class="d"></i><span>Nordvik Bergen</span><span class="in">MT</span><span class="tm">08:31</span></li>
+<li><i class="d"></i><span>Havstad</span><span class="in">OL</span><span class="tm">09:05</span></li>
+<li><i class="d"></i><span>Solvik</span><span class="in">OL</span><span class="tm">09:12</span></li>
+<li><i></i><span>Kystlinje</span><span class="in">OL</span><span class="tm">13:00</span></li>
+<li class="more">+6 more &middot; 1 done, 5 open</li></ul>
+<div class="mf"><span>6 open</span><button>Complete remaining</button></div></section>
+
+<section class="mod"><div class="mh"><span class="tab">Customer statements</span><span class="chip">Group &ndash; A/R</span><span class="due">Due Fri 16 Oct</span><span class="cnt">0/12</span></div>
+<ul><li><i></i><span>Bergtun</span><span class="in">KS</span><span class="tm">Fri</span></li>
+<li><i></i><span>Nordvik Oslo</span><span class="in">KS</span><span class="tm">Fri</span></li>
+<li class="na"><i class="n"></i><span>Nordvik Bergen</span><span class="in">&ndash;</span><span class="tm">N/A</span></li>
+<li><i></i><span>Havstad</span><span class="in">OL</span><span class="tm">Fri</span></li>
+<li><i></i><span>Solvik</span><span class="in">OL</span><span class="tm">Fri</span></li>
+<li><i></i><span>Kystlinje</span><span class="in">OL</span><span class="tm">Fri</span></li>
+<li class="more">+6 more &middot; 0 done, 6 open</li></ul>
+<div class="mf"><span>11 open &middot; 1 N/A</span><button>Complete remaining</button></div></section>
+
+<section class="mod"><div class="mh"><span class="tab">Overview</span><span class="due">Thu 15 Oct</span></div>
+<div class="side"><div class="rw"><b>Overdue</b><b style="color:var(--r)">17</b></div><div class="rw"><span>Due today</span><span>5</span></div><div class="rw"><span>This week</span><span>12</span></div><div class="rw"><span>Companies done today</span><span>19 / 60</span></div><div class="rw"><span>N/A marked</span><span>5</span></div><div class="rw"><span>Next due</span><span>Customer statements, Fri</span></div></div></section>
+
+</div></main></div></body></html>

@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>TaskDeck - Midnight Transit</title>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box}
+body{margin:0;width:1440px;height:900px;overflow:hidden;background:#0B1E3F;color:#fff;font:14px/1.3 "Hanken Grotesk",sans-serif;display:flex}
+aside{width:216px;height:900px;background:#08162E;border-right:1px solid #24395f;padding:24px 16px}
+.logo{font-weight:700;font-size:22px;letter-spacing:-.01em;margin:0 8px 32px;display:flex;align-items:center;gap:10px}
+.logo i{width:22px;height:22px;display:block}
+nav a{display:block;padding:10px 12px;border-radius:6px;color:#b9c6dd;font-weight:500;margin-bottom:2px}
+nav a.on{background:#fff;color:#0B1E3F;font-weight:700}
+.main{flex:1;height:900px;position:relative}
+.top{height:56px;border-bottom:1px solid #24395f;display:flex;align-items:center;justify-content:flex-end;gap:20px;padding:0 32px;color:#b9c6dd}
+.top b{color:#fff;font-weight:600}
+.btn{font:600 13px "Hanken Grotesk",sans-serif;color:#fff;background:none;border:1.5px solid #fff;border-radius:6px;padding:7px 12px;white-space:nowrap}
+.body{padding:20px 32px 0}
+.hd{display:flex;align-items:flex-end;justify-content:space-between}
+h1{margin:0;font-size:30px;letter-spacing:-.02em;font-weight:700}
+.sum{display:flex;gap:10px;align-items:center;color:#d5deee;margin-top:6px}
+.sum .btn{border-color:#FF6B80;color:#FF8FA0;padding:4px 10px}
+.tabs{display:flex;gap:28px;margin:14px 0 0;border-bottom:1px solid #24395f;font-weight:600;color:#9fb0cc}
+.tabs span{padding:8px 0}.tabs .on{color:#fff;box-shadow:0 2px 0 #fff}
+.tabs .sp{flex:1}
+.row{display:grid;grid-template-columns:300px 1fr 160px;align-items:center;height:106px;border-bottom:1px solid #1a3157}
+.row h2{margin:0 0 6px;font-size:17px;font-weight:700}
+.chip{display:inline-block;border:1px solid #4a6490;border-radius:99px;padding:2px 9px;font-size:12px;color:#d5deee}
+.due{margin-left:8px;font-size:13px;color:#b9c6dd}.due.od{color:#FF8FA0;font-weight:600}
+svg{display:block}svg text{font:500 11.5px "Hanken Grotesk",sans-serif;fill:#d5deee;text-anchor:middle}
+.dim{opacity:.32}.d{fill:#fff;stroke:#fff}.o{fill:#0B1E3F;stroke:#fff}.v{fill:none;stroke:#fff}
+.leg{position:absolute;left:32px;right:32px;bottom:14px;display:flex;gap:26px;align-items:center;color:#b9c6dd;font-size:12.5px;border-top:1px solid #24395f;padding-top:12px}
+.leg span{display:flex;align-items:center;gap:8px}
+</style></head><body>
+<aside><div class="logo"><svg class="i" width="22" height="22" viewBox="0 0 22 22" fill="none" stroke-width="3"><path d="M2 5H12L18 11V19" stroke="#E4002B"/><circle cx="3" cy="5" r="2" fill="#fff" stroke="none"/></svg>TaskDeck</div>
+<nav><a class="on">Dashboard</a><a>Office calendar</a></nav></aside>
+<div class="main">
+<div class="top"><span><b>Oskar Lund</b> · Member</span><button class="btn">Sign out</button></div>
+<div class="body">
+<div class="hd"><div><h1>Today, Thu 15 Oct</h1>
+<div class="sum"><span>5 due today</span>·<button class="btn">17 overdue</button>·<span>12 this week</span></div></div></div>
+<div class="tabs"><span class="on">My tasks</span><span>All tasks</span><span class="sp"></span><span class="on">Today</span><span>This week</span><span>This month</span></div>
+
+<div class="row"><div><h2>Credit control follow-up</h2><span class="chip">Group – A/R</span><span class="due od">Overdue · 9 Oct</span></div>
+<svg width="640" height="100" viewBox="0 0 640 100"><g class="dim"><path d="M20 34H290L310 54H600" fill="none" stroke="#E4002B" stroke-width="8"/></g>
+<path d="M20 34H290L310 54H600" pathLength="100" stroke-dasharray="20.4 100" fill="none" stroke="#E4002B" stroke-width="8"/>
+<circle class="d" cx="40" cy="34" r="9"/><circle class="d" cx="140" cy="34" r="9"/><circle class="o" cx="240" cy="34" r="9" stroke-width="3"/><circle class="v" cx="240" cy="34" r="14" stroke-width="2"/>
+<circle class="o" cx="340" cy="54" r="9" stroke-width="3"/><circle class="v" cx="340" cy="54" r="14" stroke-width="2"/>
+<circle class="o" cx="440" cy="54" r="9" stroke-width="3"/><path d="M426 54H454" stroke="#fff" stroke-width="3"/><circle class="o" cx="540" cy="54" r="9" stroke-width="3"/>
+<text x="40" y="66">Bergtun</text><text x="140" y="66">Nordvik Oslo</text><text x="240" y="72">Nordvik Bergen</text><text x="340" y="92">Havstad</text><text x="440" y="92">Solvik</text><text x="540" y="92">Kystlinje</text></svg>
+<button class="btn">Complete remaining</button></div>
+
+<div class="row"><div><h2>Reconcile bank accounts</h2><span class="chip">Group – A/R</span><span class="due od">Overdue · 12 Oct</span></div>
+<svg width="640" height="100" viewBox="0 0 640 100"><g class="dim"><path d="M20 34H290L310 54H600" fill="none" stroke="#0057B8" stroke-width="8"/></g>
+<path d="M20 34H290L310 54H600" pathLength="100" stroke-dasharray="37.4 100" fill="none" stroke="#2F8CFF" stroke-width="8"/>
+<circle class="d" cx="40" cy="34" r="9"/><circle class="d" cx="140" cy="34" r="9"/><circle class="d" cx="240" cy="34" r="9"/>
+<circle class="o" cx="340" cy="54" r="9" stroke-width="3"/><circle class="v" cx="340" cy="54" r="14" stroke-width="2"/>
+<circle class="o" cx="440" cy="54" r="9" stroke-width="3"/><circle class="v" cx="440" cy="54" r="14" stroke-width="2"/><circle class="o" cx="540" cy="54" r="9" stroke-width="3"/>
+<text x="40" y="66">Bergtun</text><text x="140" y="66">Nordvik Oslo</text><text x="240" y="66">Nordvik Bergen</text><text x="340" y="92">Havstad</text><text x="440" y="92">Solvik</text><text x="540" y="92">Kystlinje</text></svg>
+<button class="btn">Complete remaining</button></div>
+
+<div class="row"><div><h2>Aged receivables review</h2><span class="chip">Group – A/R</span><span class="due">Due today</span></div>
+<svg width="640" height="100" viewBox="0 0 640 100"><g class="dim"><path d="M20 34H290L310 54H600" fill="none" stroke="#FFB000" stroke-width="8"/></g>
+<path d="M20 34H290L310 54H600" pathLength="100" stroke-dasharray="55.8 100" fill="none" stroke="#FFB000" stroke-width="8"/>
+<circle class="d" cx="40" cy="34" r="9"/><circle class="d" cx="140" cy="34" r="9"/><circle class="d" cx="240" cy="34" r="9"/><circle class="d" cx="340" cy="54" r="9"/>
+<circle class="o" cx="440" cy="54" r="9" stroke-width="3"/><circle class="o" cx="540" cy="54" r="9" stroke-width="3"/>
+<text x="40" y="66">Bergtun</text><text x="140" y="66">Nordvik Oslo</text><text x="240" y="66">Nordvik Bergen</text><text x="340" y="92">Havstad</text><text x="440" y="92">Solvik</text><text x="540" y="92">Kystlinje</text></svg>
+<button class="btn">Complete remaining</button></div>
+
+<div class="row"><div><h2>Bank fee review</h2><span class="chip">Group – A/R</span><span class="due">Due today</span></div>
+<svg width="640" height="100" viewBox="0 0 640 100"><g class="dim"><path d="M20 34H290L310 54H600" fill="none" stroke="#2E9E5B" stroke-width="8"/></g>
+<path d="M20 34H290L310 54H600" pathLength="100" stroke-dasharray="3.4 100" fill="none" stroke="#2E9E5B" stroke-width="8"/>
+<circle class="d" cx="40" cy="34" r="9"/><circle class="o" cx="140" cy="34" r="9" stroke-width="3"/><circle class="o" cx="240" cy="34" r="9" stroke-width="3"/>
+<circle class="o" cx="340" cy="54" r="9" stroke-width="3"/><path d="M326 54H354" stroke="#fff" stroke-width="3"/><circle class="o" cx="440" cy="54" r="9" stroke-width="3"/><circle class="o" cx="540" cy="54" r="9" stroke-width="3"/>
+<text x="40" y="66">Bergtun</text><text x="140" y="66">Nordvik Oslo</text><text x="240" y="66">Nordvik Bergen</text><text x="340" y="92">Havstad</text><text x="440" y="92">Solvik</text><text x="540" y="92">Kystlinje</text></svg>
+<button class="btn">Complete remaining</button></div>
+
+<div class="row" style="border:0"><div><h2>Customer statements</h2><span class="chip">Group – A/R</span><span class="due">Due Fri 16 Oct</span></div>
+<svg width="640" height="100" viewBox="0 0 640 100"><g class="dim"><path d="M20 34H290L310 54H600" fill="none" stroke="#2F8CFF" stroke-width="8"/></g>
+<circle class="o" cx="40" cy="34" r="9" stroke-width="3"/><circle class="o" cx="140" cy="34" r="9" stroke-width="3"/><circle class="o" cx="240" cy="34" r="9" stroke-width="3"/>
+<circle class="o" cx="340" cy="54" r="9" stroke-width="3"/><circle class="o" cx="440" cy="54" r="9" stroke-width="3"/><circle class="o" cx="540" cy="54" r="9" stroke-width="3"/>
+<text x="40" y="66">Bergtun</text><text x="140" y="66">Nordvik Oslo</text><text x="240" y="66">Nordvik Bergen</text><text x="340" y="92">Havstad</text><text x="440" y="92">Solvik</text><text x="540" y="92">Kystlinje</text></svg>
+<button class="btn">Complete remaining</button></div>
+</div>
+<div class="leg"><b style="color:#fff">Legend</b>
+<span><svg width="20" height="20"><circle class="d" cx="10" cy="10" r="7"/></svg>Completed</span>
+<span><svg width="20" height="20"><circle class="o" cx="10" cy="10" r="7" stroke-width="2.5"/></svg>Open</span>
+<span><svg width="20" height="20"><circle class="o" cx="10" cy="10" r="7" stroke-width="2.5"/><path d="M2 10H18" stroke="#fff" stroke-width="2.5"/></svg>N/A</span>
+<span><svg width="24" height="24"><circle class="o" cx="12" cy="12" r="6" stroke-width="2.5"/><circle class="v" cx="12" cy="12" r="10" stroke-width="1.5"/></svg>Overdue</span>
+<span><svg width="40" height="8"><path d="M0 4H20" stroke="#fff" stroke-width="5"/><path d="M20 4H40" stroke="#fff" stroke-width="5" opacity=".32"/></svg>Done / remaining</span>
+<span style="margin-left:auto">Line = task · Station = company</span></div>
+</div>
+</body></html>

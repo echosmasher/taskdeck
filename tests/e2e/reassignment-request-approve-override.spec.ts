@@ -19,20 +19,23 @@ test("request -> approve -> override is visible on the new assignee's dashboard"
   // "today" on the day this suite runs, so there's reliably at least
   // one task row with a "Request reassignment" button.
   await page.getByRole("tab", { name: "This month" }).click();
+  // The task list view carries the company-level labels this spec reads.
+  await page.getByRole("button", { name: "Task list" }).click();
 
   // Person-assigned only (no "Group – …" chip) — a team-assigned row's
   // override label reads "Covering for <team name>", not the requester's
   // own name, since the task itself isn't assigned to any one person.
   const taskRow = page
     .getByTestId("task-row")
-    .filter({ has: page.getByRole("button", { name: "Request reassignment" }) })
+    .filter({ has: page.getByRole("button", { name: /^More actions for/ }) })
     .filter({ hasNotText: "Group –" })
     .first();
   await expect(taskRow).toBeVisible();
   const taskTitle = await taskRow.getAttribute("data-task-title");
   expect(taskTitle).toBeTruthy();
 
-  await taskRow.getByRole("button", { name: "Request reassignment" }).click();
+  await taskRow.getByRole("button", { name: /^More actions for/ }).click();
+  await page.getByRole("menuitem", { name: "Request reassignment" }).click();
 
   await page.getByLabel("Reason").fill("E2E test — covering while I'm out.");
 
@@ -40,7 +43,7 @@ test("request -> approve -> override is visible on the new assignee's dashboard"
   await page.getByRole("option", { name: "Nora Eide" }).click();
 
   await page.getByRole("button", { name: "Send request" }).click();
-  await expect(page.getByText("Reassignment requested")).toBeVisible();
+  await expect(page.getByText("Reassignment requested").first()).toBeVisible();
 
   await signInAsAdmin(page); // Mia
   await page.goto("/requests");
@@ -58,10 +61,11 @@ test("request -> approve -> override is visible on the new assignee's dashboard"
 
   await signInManually(page, E2E_COVERING_MEMBER_EMAIL, E2E_COVERING_MEMBER_PASSWORD); // Nora
   await page.getByRole("tab", { name: "This month" }).click();
+  await page.getByRole("button", { name: "Task list" }).click();
 
   const coveringRow = page.getByTestId("task-row").filter({ hasText: taskTitle! }).first();
   await expect(coveringRow).toBeVisible();
-  await coveringRow.locator("button[aria-expanded]").click();
+  await coveringRow.locator("button[aria-expanded]").first().click();
 
   await expect(coveringRow.getByText(/Covering for Oskar Lund/)).toBeVisible();
 });

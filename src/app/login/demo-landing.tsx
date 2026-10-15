@@ -13,18 +13,18 @@ export function DemoLanding() {
     <div className="space-y-6">
       <div className="space-y-3">
         <form action={exploreAsAdminAction}>
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="h-9 w-full">
             Explore as Admin
           </Button>
         </form>
         <form action={exploreAsMemberAction}>
-          <Button type="submit" variant="secondary" className="w-full">
+          <Button type="submit" variant="outline" className="h-9 w-full border-primary text-primary hover:bg-primary/5 hover:text-primary">
             Explore as Member
           </Button>
         </form>
       </div>
       <p className="text-center text-xs text-muted-foreground">
-        Demo environment — data resets nightly.
+        Demo environment. Data resets nightly.
       </p>
       <details className="group text-sm">
         <summary className="cursor-pointer text-center text-muted-foreground select-none">

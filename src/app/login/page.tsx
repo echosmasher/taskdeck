@@ -1,5 +1,7 @@
 import { LoginForm } from "./login-form";
 import { DemoLanding } from "./demo-landing";
+import { LogoMark } from "@/components/app-shell/logo-mark";
+import { FanOutPreview } from "./fan-out-preview";
 import { isDemoMode } from "@/lib/demo/is-demo-mode";
 
 export default function LoginPage() {
@@ -14,17 +16,21 @@ export default function LoginPage() {
     !!process.env.DEMO_MEMBER_PASSWORD;
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-muted/30 px-4">
-      <div className="w-full max-w-sm space-y-6">
-        <div className="text-center">
-          <h1 className="text-2xl font-semibold">TaskDeck</h1>
-          <p className="text-sm text-muted-foreground">
+    <main className="flex min-h-screen items-center justify-center px-4 py-10">
+      <div className="w-full max-w-xl space-y-6">
+        <div className="space-y-2 text-center">
+          <h1 className="flex items-center justify-center gap-2.5 text-2xl font-semibold tracking-tight">
+            <LogoMark className="size-8" />
+            TaskDeck
+          </h1>
+          <p className="text-balance text-sm text-muted-foreground">
             {demoMode
-              ? "A recurring-task tracker for finance shared-service teams."
+              ? "The same checklist across every company, client or branch you run, each one stamped with who completed it and when."
               : "Sign in to your account"}
           </p>
         </div>
-        {demoMode ? <DemoLanding /> : <LoginForm />}
+        {demoMode && <FanOutPreview />}
+        <div className="mx-auto w-full max-w-sm">{demoMode ? <DemoLanding /> : <LoginForm />}</div>
       </div>
     </main>
   );

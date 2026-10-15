@@ -215,7 +215,10 @@ export default async function DashboardPage() {
     (i) => i.isMine && i.status === "open" && i.dueDate < todayISO,
   ).length;
 
-  const firstName = (profile.full_name ?? profile.email).split(" ")[0];
+  const weekCount = allInstances.filter(
+    (i) => i.isMine && i.status === "open" && i.dueDate > todayISO && i.dueDate <= week.end,
+  ).length;
+
   const isAdmin = profile.role === "admin" || profile.role === "master_admin";
 
   let pendingRequestsCount = 0;
@@ -231,9 +234,9 @@ export default async function DashboardPage() {
     <DashboardView
       currentProfileId={profile.id}
       isAdmin={isAdmin}
-      firstName={firstName}
       todayCount={todayOpenMineCount}
       overdueCount={overdueMineCount}
+      weekCount={weekCount}
       todayISO={todayISO}
       groups={taskGroups}
       teamOptions={teamOptions}

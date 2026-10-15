@@ -47,3 +47,6 @@ next-env.d.ts
 # Archon runtime artifacts — NEVER commit
 .archon/state/
 .archon/.env
+
+# Session handoff notes - local scratch, never committed
+HANDOFF.md
