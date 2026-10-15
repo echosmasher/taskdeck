@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -23,6 +23,36 @@ function statusVariant(status: ReassignmentStatus): "secondary" | "outline" | "d
   if (status === "approved") return "secondary";
   if (status === "rejected") return "destructive";
   return "outline";
+}
+
+/** Wraps to three lines; a toggle appears only when the text is actually clipped. */
+function ReasonCell({ reason }: { reason: string }) {
+  const ref = useRef<HTMLParagraphElement>(null);
+  const [expanded, setExpanded] = useState(false);
+  const [clipped, setClipped] = useState(false);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (el && !expanded) setClipped(el.scrollHeight > el.clientHeight + 1);
+  }, [reason, expanded]);
+
+  return (
+    <div className="max-w-64 min-w-40">
+      <p ref={ref} title={reason} className={expanded ? "break-words whitespace-pre-wrap" : "line-clamp-3 break-words"}>
+        {reason}
+      </p>
+      {(clipped || expanded) && (
+        <button
+          type="button"
+          aria-expanded={expanded}
+          onClick={() => setExpanded((e) => !e)}
+          className="mt-0.5 rounded-sm text-xs font-medium text-primary underline-offset-2 outline-none hover:underline focus-visible:ring-2 focus-visible:ring-ring"
+        >
+          {expanded ? "Show less" : "Show more"}
+        </button>
+      )}
+    </div>
+  );
 }
 
 export function RequestsTable({
@@ -96,8 +126,8 @@ export function RequestsTable({
                   </div>
                 )}
               </TableCell>
-              <TableCell className="max-w-56 truncate" title={r.reason}>
-                {r.reason}
+              <TableCell className="align-top whitespace-normal">
+                <ReasonCell reason={r.reason} />
               </TableCell>
               <TableCell>{r.suggestedAssigneeName ?? "—"}</TableCell>
               <TableCell>
