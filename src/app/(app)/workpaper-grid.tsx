@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowRightLeft, ChevronsUpDown, MoreVertical, UserCheck } from "lucide-react";
+import { ArrowRightLeft, ChevronsUpDown, MoreVertical, MoveHorizontal, UserCheck } from "lucide-react";
 import { TickMark } from "@/components/tick-mark";
 import { Button } from "@/components/ui/button";
 import {
@@ -53,6 +53,12 @@ export function WorkpaperGrid({
     .sort((a, b) => a.name.localeCompare(b.name));
 
   return (
+    <div>
+    {companies.length > 7 && (
+      <p className="mb-1.5 flex items-center gap-1 text-xs text-muted-foreground">
+        <MoveHorizontal className="size-3.5" aria-hidden /> Scroll sideways for all {companies.length} companies
+      </p>
+    )}
     <div className="relative max-h-[calc(100vh-13rem)] min-h-64 overflow-auto rounded-md border bg-card">
       <table className="w-max min-w-full border-separate border-spacing-0 text-sm">
         <caption className="sr-only">Tasks by company. Each cell is stamped with initials and date.</caption>
@@ -85,7 +91,7 @@ export function WorkpaperGrid({
             ))}
             <th
               scope="col"
-              className="sticky top-0 right-0 z-30 min-w-[10.5rem] border-b border-l bg-card px-3 py-2 text-right text-xs font-semibold"
+              className="sticky top-0 right-0 z-30 min-w-[10.5rem] border-b border-l bg-card px-3 py-2 text-right shadow-[-6px_0_8px_-6px_rgb(29_36_32/0.14)] text-xs font-semibold"
             >
               Action
             </th>
@@ -140,7 +146,7 @@ export function WorkpaperGrid({
                     </td>
                   );
                 })}
-                <td className="sticky right-0 z-10 border-b border-l bg-card px-3 py-2">
+                <td className="sticky right-0 z-10 border-b border-l bg-card px-3 py-2 shadow-[-6px_0_8px_-6px_rgb(29_36_32/0.14)]">
                   <div className="flex items-center justify-end gap-1.5">
                     {allResolved ? (
                       <span className="inline-flex items-center gap-1 text-xs font-medium text-tick">
@@ -160,7 +166,8 @@ export function WorkpaperGrid({
           })}
         </tbody>
       </table>
-      <Legend hint={companies.length > 7} />
+      <Legend />
+    </div>
     </div>
   );
 }
@@ -248,7 +255,7 @@ function GridCell({
   );
 }
 
-function Legend({ hint }: { hint: boolean }) {
+function Legend() {
   return (
     <div className="flex flex-wrap items-center gap-x-5 gap-y-1 border-t px-3 py-2 text-xs text-muted-foreground">
       <span className="font-medium text-foreground">Key</span>
@@ -261,7 +268,6 @@ function Legend({ hint }: { hint: boolean }) {
       <span className="inline-flex items-center gap-1.5">
         <StatusMark status="open" /> open, click to stamp
       </span>
-      {hint && <span className="ml-auto">Scroll sideways for more companies</span>}
     </div>
   );
 }

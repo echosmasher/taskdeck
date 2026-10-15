@@ -163,7 +163,7 @@ function InstanceRow({
           </Button>
         </div>
       ) : (
-        <div className="ml-auto flex items-center gap-2">
+        <div className="flex w-full items-center justify-between gap-2 pl-[1.625rem] sm:ml-auto sm:w-auto sm:justify-end sm:pl-0">
           <span
             data-tabular
             title={stampTitle(instance)}

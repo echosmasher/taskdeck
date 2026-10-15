@@ -42,7 +42,7 @@ export function FanOutPreview() {
     <figure className="overflow-hidden rounded-md border bg-card">
       <figcaption className="flex items-center justify-between border-b px-3 py-2 text-xs text-muted-foreground">
         <span>One task becomes one stamped cell per company</span>
-        <span className="rounded-sm border px-1.5 font-medium">Example data</span>
+        <span className="shrink-0 rounded-sm border px-1.5 font-medium whitespace-nowrap">Example</span>
       </figcaption>
       <table className="w-full table-fixed text-sm">
         <thead>
@@ -67,9 +67,14 @@ export function FanOutPreview() {
                 <td key={i} className="px-1 py-2 text-center">
                   <div className="flex min-h-11 flex-col items-center justify-center gap-0.5">
                     <StatusMark status={cell.state} />
-                    <span className="font-mono text-xs leading-none text-foreground/80">
-                      {cell.stamp ?? "open"}
-                    </span>
+                    {cell.stamp ? (
+                      <span className="flex flex-col items-center gap-0.5 font-mono text-xs leading-none text-foreground/80">
+                        <span>{cell.stamp.split(" ")[0]}</span>
+                        <span>{cell.stamp.split(" ")[1]}</span>
+                      </span>
+                    ) : (
+                      <span className="font-mono text-xs leading-none text-foreground/80">open</span>
+                    )}
                   </div>
                 </td>
               ))}

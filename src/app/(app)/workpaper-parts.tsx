@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from "@/lib/utils";
-import { dueDDMM, dueLabel, initialsOf, stampDate } from "@/lib/due-label";
+import { dueDDMM, dueLabel, formatShortDate, initialsOf, stampDate } from "@/lib/due-label";
 import { formatLongDate } from "@/lib/dates";
 import type { DashboardCompanyInstance, DashboardTaskGroup } from "./dashboard-types";
 
@@ -26,6 +26,9 @@ export function isGroupOverdue(group: DashboardTaskGroup, todayISO: string) {
 
 export function DueLabel({ group, todayISO }: { group: DashboardTaskGroup; todayISO: string }) {
   const overdue = isGroupOverdue(group, todayISO);
+  const label = dueLabel(group.dueDate, todayISO);
+  // Far-future labels already print the date; the mono form would repeat it.
+  const showMono = !label.includes(formatShortDate(group.dueDate));
   return (
     <span
       title={formatLongDate(group.dueDate)}
@@ -35,10 +38,12 @@ export function DueLabel({ group, todayISO }: { group: DashboardTaskGroup; today
       )}
     >
       {overdue && <Clock className="size-3" aria-hidden />}
-      {dueLabel(group.dueDate, todayISO)}
-      <span data-tabular className="font-mono text-[11px] text-muted-foreground">
-        {dueDDMM(group.dueDate)}
-      </span>
+      {label}
+      {showMono && (
+        <span data-tabular className="font-mono text-[11px] text-muted-foreground">
+          {dueDDMM(group.dueDate)}
+        </span>
+      )}
     </span>
   );
 }

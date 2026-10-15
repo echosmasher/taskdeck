@@ -1,0 +1,136 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-10-15T00:00:00Z",
+  "title": "Design System: TaskDeck",
+  "extensions": {
+    "colorMeta": {
+      "index-blue": { "role": "primary", "displayName": "Index Blue", "canonical": "#34509a", "tonalRamp": ["#131e39", "#20325f", "#2d4585", "#3a59ac", "#6682cc", "#a0b1df", "#d1daf0", "#eceff9"] },
+      "tick-green": { "role": "secondary", "displayName": "Pencil Tick Green", "canonical": "#176b4c", "tonalRamp": ["#0e3f2d", "#17694b", "#209368", "#29bd86", "#57dbaa", "#96e8ca", "#cdf4e6", "#eafaf4"] },
+      "review-red": { "role": "tertiary", "displayName": "Review Red", "canonical": "#b8301f", "tonalRamp": ["#41110b", "#6d1c12", "#99281a", "#c43321", "#e26150", "#ed9c92", "#f6cfcb", "#fbebe9"] },
+      "ground": { "role": "neutral", "displayName": "Cool Grey Ground", "canonical": "#f3f5f4", "tonalRamp": ["#232a26", "#3a4640", "#516159", "#687d73", "#90a299", "#b9c5bf", "#dee3e0", "#f1f3f2"] },
+      "ink": { "role": "neutral", "displayName": "Ink", "canonical": "#1d2420", "tonalRamp": ["#222a26", "#39473f", "#506358", "#667f71", "#8ea497", "#b8c6be", "#dde4e0", "#f1f4f2"] },
+      "paper": { "role": "neutral", "displayName": "Workpaper White", "canonical": "#ffffff", "tonalRamp": [] },
+      "graphite": { "role": "neutral", "displayName": "Graphite", "canonical": "#4b5852", "tonalRamp": [] },
+      "wash": { "role": "neutral", "displayName": "Pencil Wash", "canonical": "#e7ebe9", "tonalRamp": [] },
+      "hairline": { "role": "neutral", "displayName": "Hairline", "canonical": "#cbd2cf", "tonalRamp": [] },
+      "field-line": { "role": "neutral", "displayName": "Field Line", "canonical": "#b4bdb9", "tonalRamp": [] },
+      "index-wash": { "role": "neutral", "displayName": "Index Wash", "canonical": "#e8ecf6", "tonalRamp": [] }
+    },
+    "typographyMeta": {
+      "heading": { "displayName": "Heading", "purpose": "Page title." },
+      "wordmark": { "displayName": "Wordmark", "purpose": "TaskDeck in the sidebar." },
+      "body": { "displayName": "Body", "purpose": "Table text, summary line, buttons (500)." },
+      "task-title": { "displayName": "Task title", "purpose": "Row headers in grid and cards." },
+      "label": { "displayName": "Label", "purpose": "Column headers, chips, legend, due labels." },
+      "stamp": { "displayName": "Stamp", "purpose": "JetBrains Mono for initials, dd.mm dates and counts only." },
+      "stamp-small": { "displayName": "Stamp small", "purpose": "11px dd.mm beside relative due labels." }
+    },
+    "shadows": [
+      { "name": "sticky-edge", "value": "-6px 0 8px -6px rgb(29 36 32 / 0.14)", "purpose": "Left edge of the sticky Action column over scrolling company cells. The only shadow in the system." }
+    ],
+    "motion": [
+      { "name": "button-press", "value": "transition-all; active translate-y 1px", "purpose": "Stock shadcn button feedback. No decorative motion." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" },
+      { "name": "lg", "value": "1024px" },
+      { "name": "xl", "value": "1280px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Tickmark",
+      "kind": "custom",
+      "description": "The signature stroke, authored once in TickMark and reused for the cell, key, login example and logo.",
+      "html": "<span class=\"ds-tick\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\"><path d=\"M2.4 9.1 6.3 13.2 13.9 2.8\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg></span>",
+      "css": ".ds-tick { color: #176b4c; display: inline-flex; }"
+    },
+    {
+      "name": "Status marks",
+      "kind": "custom",
+      "description": "Form carries state: tick (stamped), circled n/a, dashed open box.",
+      "html": "<div class=\"ds-marks\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" style=\"color:#176b4c\"><path d=\"M2.4 9.1 6.3 13.2 13.9 2.8\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span class=\"ds-na\">n/a</span><span class=\"ds-open\"></span></div>",
+      "css": ".ds-marks { display: flex; align-items: center; gap: 20px; font-family: 'Hanken Grotesk', system-ui, sans-serif; } .ds-na { border: 1px solid #b8301f; border-radius: 9999px; padding: 0 6px; font-size: 11px; line-height: 16px; font-weight: 500; color: #b8301f; } .ds-open { display: block; width: 16px; height: 16px; border-radius: 3px; border: 1px dashed rgba(75,88,82,0.8); }"
+    },
+    {
+      "name": "Stamp cell",
+      "kind": "custom",
+      "description": "Mark above mono initials and date; an open cell is a button that stamps on click.",
+      "html": "<div class=\"ds-cell\"><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" style=\"color:#176b4c\"><path d=\"M2.4 9.1 6.3 13.2 13.9 2.8\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg><span class=\"ds-stamp\">OL 15.10</span></div>",
+      "css": ".ds-cell { display: flex; flex-direction: column; align-items: center; gap: 2px; width: 84px; min-height: 52px; justify-content: center; background: #fff; } .ds-stamp { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 12px; line-height: 1; color: rgba(29,36,32,0.8); font-variant-numeric: tabular-nums; }"
+    },
+    {
+      "name": "Stamp strip",
+      "kind": "custom",
+      "description": "One 10px square per company: filled green, red-struck, or dashed. Progress without a bar.",
+      "html": "<span class=\"ds-strip\"><i class=\"ds-s ds-s-done\"></i><i class=\"ds-s ds-s-done\"></i><i class=\"ds-s ds-s-na\"></i><i class=\"ds-s ds-s-open\"></i></span>",
+      "css": ".ds-strip { display: inline-flex; gap: 3px; } .ds-s { width: 10px; height: 10px; border-radius: 2px; border: 1px solid; box-sizing: border-box; } .ds-s-done { background: #176b4c; border-color: #176b4c; } .ds-s-na { border-color: #b8301f; background: linear-gradient(to top right, transparent 42%, #b8301f 42%, #b8301f 58%, transparent 58%); } .ds-s-open { border-style: dashed; border-color: rgba(75,88,82,0.7); }"
+    },
+    {
+      "name": "Primary button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Index-blue action; one per task row.",
+      "html": "<button class=\"ds-btn-primary\">Complete (3)</button>",
+      "css": ".ds-btn-primary { height: 32px; padding: 0 10px; border: 1px solid transparent; border-radius: 4px; background: #34509a; color: #fff; font: 500 14px 'Hanken Grotesk', system-ui, sans-serif; cursor: pointer; } .ds-btn-primary:hover { background: rgba(52,80,154,0.8); } .ds-btn-primary:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(52,80,154,0.5); } .ds-btn-primary:active { transform: translateY(1px); }"
+    },
+    {
+      "name": "Outline button",
+      "kind": "button",
+      "refersTo": "button-outline",
+      "description": "Secondary action such as N/A.",
+      "html": "<button class=\"ds-btn-outline\">N/A</button>",
+      "css": ".ds-btn-outline { height: 28px; padding: 0 10px; border: 1px solid #cbd2cf; border-radius: 3.2px; background: #f3f5f4; color: #1d2420; font: 500 12.8px 'Hanken Grotesk', system-ui, sans-serif; cursor: pointer; } .ds-btn-outline:hover { background: #e7ebe9; } .ds-btn-outline:focus-visible { outline: none; box-shadow: 0 0 0 3px rgba(52,80,154,0.5); }"
+    },
+    {
+      "name": "Chips",
+      "kind": "chip",
+      "refersTo": "chip-assignee",
+      "description": "Assignee chip (wash fill) and scope chip (hairline outline).",
+      "html": "<span class=\"ds-chip-a\">Group – A/R</span> <span class=\"ds-chip-s\">Monthly</span>",
+      "css": ".ds-chip-a, .ds-chip-s { display: inline-block; padding: 0 6px; border-radius: 2.4px; font: 400 12px 'Hanken Grotesk', system-ui, sans-serif; } .ds-chip-a { background: #e7ebe9; color: #2c3631; } .ds-chip-s { border: 1px solid #cbd2cf; color: #4b5852; }"
+    },
+    {
+      "name": "Legend",
+      "kind": "custom",
+      "description": "The Key that closes the grid.",
+      "html": "<div class=\"ds-legend\"><b>Key</b><span><svg viewBox=\"0 0 16 16\" width=\"16\" height=\"16\" fill=\"none\" style=\"color:#176b4c\"><path d=\"M2.4 9.1 6.3 13.2 13.9 2.8\" stroke=\"currentColor\" stroke-width=\"2.6\" stroke-linecap=\"round\" stroke-linejoin=\"round\"/></svg> stamped with initials and date</span><span><i class=\"ds-k-open\"></i> open, click to stamp</span></div>",
+      "css": ".ds-legend { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 20px; padding: 8px 12px; border-top: 1px solid #cbd2cf; background: #fff; font: 400 12px 'Hanken Grotesk', system-ui, sans-serif; color: #4b5852; } .ds-legend b { font-weight: 500; color: #1d2420; } .ds-legend span { display: inline-flex; align-items: center; gap: 6px; } .ds-k-open { display: block; width: 16px; height: 16px; border-radius: 3px; border: 1px dashed rgba(75,88,82,0.8); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Audit Workpaper",
+    "overview": "TaskDeck looks like the working paper an auditor signs: a cool grey ground, white sheets ruled with hairlines, and a pencil tickmark with initials and a date in every cell that has been done. The unit of design is the occurrence per company, not the task card. One task becomes one row; each company is one independently stamped cell. Progress is read from the marks themselves, never from a progress bar.\n\nState is carried by form, not hue. A completed cell holds a slanted tick; a not-applicable cell holds a circled \"n/a\"; an open cell holds a dashed empty box. Green and red only reinforce what the shape already says. The system is dense, flat and quiet, with one blue (the index colour) for links, active navigation, focus and the primary action.\n\nAdmin pages are not restyled; they inherit the tokens through the shadcn variable names and nothing more.",
+    "keyCharacteristics": [
+      "Flat sheets separated by 1px hairlines; no shadow at rest.",
+      "State by form (tick, circled n/a, dashed box); colour is secondary.",
+      "Stamps (initials plus dd.mm) are the primary evidence and are set in mono.",
+      "One tick drawing, authored once, reused for the cell, key, login example and logo.",
+      "Small corner radii (4px base), square-ish like ruled paper."
+    ],
+    "rules": [
+      { "name": "The Form-Before-Colour Rule", "body": "Every state must be legible in greyscale. If a state is distinguishable only by hue, it is wrong.", "section": "colors" },
+      { "name": "The One Blue Rule", "body": "Index blue is the only action and link colour. Green means stamped, red means reviewer's mark or overdue, and neither is ever used for decoration.", "section": "colors" },
+      { "name": "The Mono-Is-Evidence Rule", "body": "JetBrains Mono appears only for stamps (initials plus date), counts (\"3/6 stamped\") and dates. Never for labels, buttons, headings or decoration. All tabular numerals are enabled on tables and data-tabular elements.", "section": "typography" },
+      { "name": "The Flat-Sheet Rule", "body": "Surfaces carry no shadow at rest. A shadow is permitted only to mark a sticky edge over scrolling content.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do carry state by form: tick for stamped, circled n/a, dashed open box. Reinforce with colour only after.",
+      "Do put the stamp (initials plus dd.mm) in every resolved cell, in JetBrains Mono.",
+      "Do keep surfaces white on the cool grey ground, separated by hairlines (#cbd2cf).",
+      "Do use index blue as the sole action colour and keep primary actions to one per row.",
+      "Do give touch targets 44px on mobile; use title and sr-only text for full names and N/A reasons.",
+      "Do use only the data that exists. Columns and marks come from real fields (task, company cells, stamps).",
+      "Do let admin pages inherit tokens only (the shadcn variable names); restyle them as their own surface."
+    ],
+    "donts": [
+      "Don't add Ref or Reviewed columns, reviewer sign-offs, or any invented audit data. The product has no such data, and the workpaper idiom does not license fabricating it.",
+      "Don't mark overdue with a coloured side border, row tint or red-everything. Overdue is a red due-label with a clock icon and the filter in the summary line.",
+      "Don't communicate state by colour alone.",
+      "Don't use JetBrains Mono for labels, buttons, headings or decoration.",
+      "Don't replace the progress shape with a progress bar, or rebuild the card list as the desktop default.",
+      "Don't add shadows to resting surfaces.",
+      "Don't redraw the tick; import TickMark."
+    ]
+  }
+}
